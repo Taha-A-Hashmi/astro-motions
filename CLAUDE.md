@@ -166,3 +166,7 @@ project before using the form for real.
   `main` deploys production. **Live domain: https://www.astromotions.com/**
   (owner-bought; apex 308-redirects to www). Also astro-motions.vercel.app.
   Canonical/OG URLs in index.html point at www.astromotions.com.
+- Brand assets live in branding/ (SVG masters with outlined text + PNG
+  exports, same file set as Apex). Regenerate with the scratchpad
+  build-logo-astro.mjs pattern: opentype.js outlines Cormorant Garamond 500
+  (tracking 0.18em) and DM Mono 400 (0.62em); mark = orbit + star + gold dot.
