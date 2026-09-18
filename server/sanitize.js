@@ -134,7 +134,9 @@ export function cleanHtml(input) {
       continue;
     }
     if (DROP_CONTENT.has(tag)) {
-      if (!closing && !selfClosing) {
+      // drop the element with its content — but only when it is actually
+      // closed later; an unclosed <svg> must not swallow the rest of a post
+      if (!closing && !selfClosing && new RegExp(`</${tag}\\s*>`, 'i').test(html.slice(last))) {
         dropTag = tag;
         dropDepth = 1;
       }
