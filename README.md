@@ -22,11 +22,20 @@ npm start              # one process serves dist/ and /api on PORT (8787)
 
 Requires Node **22.13+** (the backend uses the built-in `node:sqlite`).
 
+## Pages
+
+Besides the 3D home page the site serves plain, fast, server-rendered pages:
+`/services/`, `/web-design/`, `/organic-seo/`, `/ppc-marketing/`,
+`/social-media-marketing/`, `/portfolio/`, `/team/`, `/contact/`, `/blog/`,
+`/blog/<post>/`, plus `/sitemap.xml` and `/blog/feed.xml`.
+
 ## Editing the site (SEO dashboard)
 
 Open `/admin/` and sign in with the editor password (`ADMIN_TOKEN`). Every
 text, link, image and meta tag the schema exposes can be changed there and
-goes live within a minute — no rebuild. Storage is Vercel Blob in
+goes live within a minute — no rebuild. Pages have their own SEO
+titles, descriptions and social images; blog posts are written and
+published from Blog → Posts. Storage is Vercel Blob in
 production and `data/cms/` locally.
 
 ## Credits

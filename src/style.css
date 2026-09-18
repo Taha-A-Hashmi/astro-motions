@@ -844,3 +844,72 @@ button { font: inherit; color: inherit; }
   .site-header .mark { width: 28px; }
   .header-link { display: none; } /* the work sheet stays reachable from stages 4 and 6 */
 }
+
+/* ── Page links in the header, statements and footer ──────────────────── */
+a.header-link, a.statement-link { text-decoration: none; display: inline-block; }
+.statement-link span[data-cms] { display: inline; }
+.social-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.4rem; pointer-events: auto; }
+.social-links:empty { display: none; }
+.social-link {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  color: rgba(242, 240, 234, 0.75);
+  border: 1px solid rgba(242, 240, 234, 0.16);
+  border-radius: 50%;
+  background: rgba(5, 6, 13, 0.35);
+  transition: color 0.25s ease, border-color 0.25s ease, transform 0.35s var(--ease-out);
+}
+.social-link:hover { color: var(--gold); border-color: var(--gold-soft); transform: translateY(-2px); }
+
+/* phone menu */
+.header-menu {
+  display: none;
+  appearance: none;
+  background: rgba(5, 6, 13, 0.32);
+  border: 1px solid rgba(242, 240, 234, 0.18);
+  border-radius: 2px;
+  color: var(--star);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  padding: 0.6rem 0.85rem;
+  cursor: pointer;
+}
+.site-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: var(--void);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6rem clamp(1.4rem, 6vw, 3rem) 3rem;
+}
+.site-menu nav { display: grid; gap: 0.2rem; }
+.site-menu nav a {
+  font: 300 clamp(2.4rem, 11vw, 3.4rem)/1.15 var(--display);
+  color: var(--star);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-soft);
+  padding: 0.35rem 0;
+}
+.site-menu .social-links { justify-content: flex-start; }
+.site-menu.is-open nav a { animation: menu-in 0.5s var(--ease-out) both; }
+.site-menu.is-open nav a:nth-child(2) { animation-delay: 0.04s; }
+.site-menu.is-open nav a:nth-child(3) { animation-delay: 0.08s; }
+.site-menu.is-open nav a:nth-child(4) { animation-delay: 0.12s; }
+.site-menu.is-open nav a:nth-child(5) { animation-delay: 0.16s; }
+@keyframes menu-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+body.menu-open .overlay > :not(.site-header):not(.header-nav) { opacity: 0; pointer-events: none; }
+body.menu-open .overlay { z-index: 31; }
+
+@media (max-width: 720px) {
+  .header-menu { display: inline-block; }
+  .header-nav .header-link { display: none; }
+}
+@media (max-width: 480px) {
+  .header-nav .header-contact { display: none; }
+}
+.site-menu[hidden] { display: none; }

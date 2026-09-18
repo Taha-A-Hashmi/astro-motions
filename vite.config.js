@@ -9,6 +9,12 @@ export default defineConfig({
     proxy: {
       '/api': { target: 'http://localhost:8787', changeOrigin: false },
       '/uploads': { target: 'http://localhost:8787', changeOrigin: false },
+      // server-rendered content pages (server/pages.js)
+      '^/(services|web-design|organic-seo|ppc-marketing|social-media-marketing|blog|portfolio|team|contact)(/.*)?$': {
+        target: 'http://localhost:8787',
+        changeOrigin: false,
+      },
+      '/sitemap.xml': { target: 'http://localhost:8787', changeOrigin: false },
     },
   },
   plugins: [

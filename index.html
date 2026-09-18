@@ -77,6 +77,18 @@
       <p data-cms="seo.description">Astro Motions builds cinematic, WebGL-powered websites with real pull: concept, motion and code by one small crew, for a handful of launches a year.</p>
       <h2>Launch log</h2>
       <p>OceanX 2025 Year in Review, Poly, Organimo, Terminal Industries.</p>
+      <h2>Explore</h2>
+      <ul>
+        <li><a href="/services/">Services</a></li>
+        <li><a href="/web-design/">Web design</a></li>
+        <li><a href="/organic-seo/">Organic SEO</a></li>
+        <li><a href="/ppc-marketing/">PPC marketing</a></li>
+        <li><a href="/social-media-marketing/">Social media marketing</a></li>
+        <li><a href="/portfolio/">Portfolio</a></li>
+        <li><a href="/team/">Team</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
     </div>
 
     <!-- Shown only when JavaScript is disabled (the 3D can't run). -->
@@ -129,12 +141,16 @@
       </header>
 
       <!-- Header, right: a way to reach the studio from any stage -->
-      <nav class="header-nav">
-        <button class="header-link" type="button" data-open="work" data-cms="nav.work">Launch log</button>
+      <nav class="header-nav" aria-label="Main">
+        <a class="header-link" href="/services/" data-cms="nav.services">Services</a>
+        <a class="header-link" href="/portfolio/" data-cms="nav.portfolio">Portfolio</a>
+        <a class="header-link" href="/team/" data-cms="nav.team">Team</a>
+        <a class="header-link" href="/blog/" data-cms="nav.blog">Blog</a>
         <button class="header-contact" type="button" data-open="contact">
           <span class="dot"></span>
           <span data-cms="nav.contact">Book a launch</span>
         </button>
+        <button class="header-menu" type="button" aria-expanded="false" aria-controls="site-menu">Menu</button>
       </nav>
 
       <!-- Beat statements: one element per beat, faded by scroll progress -->
@@ -164,6 +180,8 @@
           </ul>
           <div class="statement-links">
             <button class="statement-link" type="button" data-open="work"><span data-cms="nav.workLink">Launch log</span><span class="arrow">↗</span></button>
+            <a class="statement-link" href="/services/"><span data-cms="nav.services">Services</span><span class="arrow">↗</span></a>
+            <a class="statement-link" href="/blog/"><span data-cms="nav.blog">Blog</span><span class="arrow">↗</span></a>
           </div>
         </div>
         <div class="statement" data-beat="4">
@@ -180,12 +198,15 @@
           </button>
           <div class="statement-links">
             <button class="statement-link" type="button" data-open="work"><span data-cms="nav.workLink">Launch log</span><span class="arrow">↗</span></button>
+            <a class="statement-link" href="/services/"><span data-cms="nav.services">Services</span><span class="arrow">↗</span></a>
+            <a class="statement-link" href="/blog/"><span data-cms="nav.blog">Blog</span><span class="arrow">↗</span></a>
           </div>
           <div class="summit-footer">
             <span data-cms="footer.copyright">© 2026 Astro Motions</span>
             <span class="footer-sep">·</span>
             <button class="to-base" type="button" data-cms="footer.top">Return to the pad ↑</button>
           </div>
+          <div class="social-links" data-cms-list="socials"></div>
         </div>
       </div>
 
@@ -213,6 +234,18 @@
         <span class="hud-sep">·</span>
         <span class="hud-label">SCROLL TO LIFT OFF</span>
       </div>
+    </div>
+
+    <!-- Phone menu: the header links don't fit on a small screen -->
+    <div class="site-menu" id="site-menu" hidden>
+      <nav aria-label="Menu">
+        <a href="/services/" data-cms="nav.services">Services</a>
+        <a href="/portfolio/" data-cms="nav.portfolio">Portfolio</a>
+        <a href="/team/" data-cms="nav.team">Team</a>
+        <a href="/blog/" data-cms="nav.blog">Blog</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+      <div class="social-links" data-cms-list="socials"></div>
     </div>
 
     <!-- Custom cursor: a ring that answers whatever it crosses -->

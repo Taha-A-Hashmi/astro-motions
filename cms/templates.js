@@ -16,7 +16,9 @@ export const rich = (s) => esc(s).replace(/\*([^*]+)\*/g, '<em>$1</em>');
 export const letters = (s) =>
   [...String(s ?? '')].map((ch) => `<span class="ch">${esc(ch)}</span>`).join('');
 
-const safeHref = (h) => {
+import { socialIcon, socialLabel } from './icons.js';
+
+export const safeHref = (h) => {
   const s = String(h ?? '').trim();
   return /^(https?:)?\/\//i.test(s) || s.startsWith('/') || s.startsWith('#') ? s : '#';
 };
@@ -45,4 +47,14 @@ export const lists = {
             </a>`
       )
       .join('\n'),
+
+  // social profile icons — only entries with a real http(s) URL render
+  socials: (items) =>
+    (Array.isArray(items) ? items : [])
+      .filter((it) => it && /^https?:\/\//i.test(String(it.url || '').trim()) && socialIcon(it.network))
+      .map(
+        (it) =>
+          `<a class="social-link" href="${esc(String(it.url).trim())}" target="_blank" rel="noopener me" aria-label="${esc(socialLabel(it.network))}" title="${esc(socialLabel(it.network))}">${socialIcon(it.network)}</a>`
+      )
+      .join(''),
 };

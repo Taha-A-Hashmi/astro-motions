@@ -19,20 +19,71 @@
                                re-rendered from the item template
    ═══════════════════════════════════════════════════════════════════════ */
 
+import { text, area, list } from './fields.js';
+import { pageSections, blogSections } from './pages.js';
+import { socialNetworks } from './icons.js';
+
+/* Site identity + the chrome of the server-rendered content pages
+   (server/pages.js). Labels here are fallbacks; the dashboard wins. */
+const MARK = `<svg class="mark" viewBox="0 0 48 48" fill="none" aria-hidden="true"><ellipse cx="24" cy="24" rx="20" ry="8.5" stroke="currentColor" stroke-width="1.1" transform="rotate(-24 24 24)" opacity="0.85"/><path d="M24 14.5 L25.9 22.1 L33.5 24 L25.9 25.9 L24 33.5 L22.1 25.9 L14.5 24 L22.1 22.1 Z" fill="currentColor" opacity="0.92"/><circle cx="40.5" cy="14.2" r="2.2" fill="#EFCD7A"/></svg>`;
+
 export const site = {
   name: 'Astro Motions',
   accent: '#efcd7a',
   url: 'https://www.astromotions.com/',
+  themeColor: '#05060d',
+  ogImage: '/og-image.jpg',
+  logo: '/apple-touch-icon.png',
+  fontsHref:
+    'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Manrope:wght@400;500;600&family=DM+Mono:wght@400&display=swap',
+  mark: MARK,
+  tagline: 'Websites with their own gravity.',
+  // header menu of the content pages; `services: true` opens the dropdown
+  nav: [
+    { label: 'Services', key: 'nav.services', href: '/services/', services: true },
+    { label: 'Portfolio', key: 'nav.portfolio', href: '/portfolio/' },
+    { label: 'Team', key: 'nav.team', href: '/team/' },
+    { label: 'Blog', key: 'nav.blog', href: '/blog/' },
+  ],
+  cta: { label: 'Book a launch', key: 'nav.contact', href: '/contact/' },
+  footerStudio: [
+    { label: 'Portfolio', key: 'nav.portfolio', href: '/portfolio/' },
+    { label: 'Team', key: 'nav.team', href: '/team/' },
+    { label: 'Blog', key: 'nav.blog', href: '/blog/' },
+    { label: 'Contact', href: '/contact/' },
+  ],
+  homeLink: { label: 'The 3D experience', href: '/', menuLabel: 'Home' },
+  budgetUndecided: 'Not sure yet',
+  notFound: {
+    h1: 'This page drifted out of orbit.',
+    lede: 'The link may be old or mistyped. Try one of these instead.',
+  },
+  // decorative hero art on content pages: the orbit from the logo
+  heroArt: `<svg viewBox="0 0 400 400" fill="none"><defs><radialGradient id="hg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff1c4" stop-opacity=".55"/><stop offset=".25" stop-color="#efcd7a" stop-opacity=".18"/><stop offset="1" stop-color="#efcd7a" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="150" fill="url(#hg)"/><g transform="rotate(-24 200 200)"><ellipse cx="200" cy="200" rx="185" ry="72" stroke="rgba(242,240,234,.28)"/><ellipse cx="200" cy="200" rx="128" ry="50" stroke="rgba(242,240,234,.12)"/><circle r="5.5" fill="#efcd7a"><animateMotion dur="22s" repeatCount="indefinite" path="M15,200 a185,72 0 1,0 370,0 a185,72 0 1,0 -370,0"/></circle><circle r="3" fill="#f2f0ea" opacity=".7"><animateMotion dur="14s" repeatCount="indefinite" path="M328,200 a128,50 0 1,0 -256,0 a128,50 0 1,0 256,0"/></circle></g><path d="M200 162 L207 193 L238 200 L207 207 L200 238 L193 207 L162 200 L193 193 Z" fill="#f2f0ea" opacity=".9"/></svg>`,
 };
 
-const text = (key, label, extra = {}) => ({ key, label, type: 'text', ...extra });
-const area = (key, label, extra = {}) => ({ key, label, type: 'textarea', ...extra });
+const socialField = list(
+  'social.links',
+  'Social links',
+  [
+    { key: 'network', label: 'Network', type: 'select', options: socialNetworks },
+    text('url', 'Profile URL', { type: 'url', help: 'The full address, e.g. https://www.instagram.com/yourstudio' }),
+  ],
+  {
+    target: { list: 'socials' },
+    default: [],
+    itemLabel: 'network',
+    addLabel: 'Add social link',
+    help: 'Shown as icons in the footer of every page, the mobile menu and the contact page.',
+  }
+);
 
-export const sections = [
+const settingsAndHome = [
   {
     id: 'seo',
+    group: 'Settings',
     title: 'Site & SEO',
-    intro: 'What search engines and social networks see. Titles and descriptions have live length counters and previews.',
+    intro: 'The home page title and description, plus site-wide settings — the fallback social image, search visibility and custom head code apply to every page.',
     fields: [
       text('seo.title', 'Page title', { max: 70, target: [{ title: true }, { sel: 'seo.title' }], help: 'The browser-tab title and the headline in Google results. Aim for 50–60 characters.' }),
       area('seo.description', 'Meta description', { max: 160, target: [{ meta: 'description' }, { sel: 'seo.description' }], help: 'The grey text under the headline in Google. 120–160 characters.' }),
@@ -48,20 +99,26 @@ export const sections = [
   },
   {
     id: 'brand',
-    title: 'Brand & navigation',
-    intro: 'The name in the corner, the header buttons and the footer line.',
+    group: 'Settings',
+    title: 'Brand, menu & socials',
+    intro: 'The studio name, the menu labels used on every page, the footer line and your social profiles.',
     fields: [
-      text('brand.name', 'Studio name', { max: 40, target: { sel: 'brand.name' }, help: 'Loading screen, sheet header and fallbacks.' }),
+      text('brand.name', 'Studio name', { max: 40, target: { sel: 'brand.name' }, help: 'Loading screen, page footers, structured data and fallbacks.' }),
       text('brand.wordmark', 'Header wordmark', { max: 12, target: { sel: 'brand.wordmark' } }),
-      text('nav.work', 'Header link · work sheet', { max: 24, target: { sel: 'nav.work' } }),
-      text('nav.contact', 'Header button · contact', { max: 24, target: { sel: 'nav.contact' } }),
-      text('nav.workLink', 'In-page link to the work sheet', { max: 24, target: { sel: 'nav.workLink' } }),
+      text('nav.services', 'Menu · Services', { max: 24, target: { sel: 'nav.services' } }),
+      text('nav.portfolio', 'Menu · Portfolio', { max: 24, target: { sel: 'nav.portfolio' } }),
+      text('nav.team', 'Menu · Team', { max: 24, target: { sel: 'nav.team' } }),
+      text('nav.blog', 'Menu · Blog', { max: 24, target: { sel: 'nav.blog' } }),
+      text('nav.contact', 'Menu button · contact', { max: 24, target: { sel: 'nav.contact' } }),
+      text('nav.workLink', 'Home page · link to the launch-log sheet', { max: 24, target: { sel: 'nav.workLink' } }),
       text('footer.copyright', 'Footer line', { max: 60, target: { sel: 'footer.copyright' } }),
       text('footer.top', 'Footer · back-to-top label', { max: 30, target: { sel: 'footer.top' } }),
+      socialField,
     ],
   },
   {
     id: 'stages',
+    group: 'Home page',
     title: 'Stages',
     intro: 'The six scroll stages of the page, top to bottom. Each has a small index label and one line.',
     fields: [
@@ -86,8 +143,9 @@ export const sections = [
   },
   {
     id: 'contact',
+    group: 'Home page',
     title: 'Contact form',
-    intro: 'The panel that opens from every contact button.',
+    intro: 'The panel that opens from every contact button on the home page. The labels are shared with the Contact page form.',
     fields: [
       text('contact.eyebrow', 'Eyebrow', { max: 30, target: { sel: 'contact.eyebrow' } }),
       text('contact.title', 'Title', { max: 60, target: { sel: 'contact.title' } }),
@@ -103,8 +161,9 @@ export const sections = [
   },
   {
     id: 'work',
+    group: 'Home page',
     title: 'Launch log',
-    intro: 'The work sheet. Wrap a word in *asterisks* in the title to set it in italic gold.',
+    intro: 'The projects shown in the home-page sheet and on the Portfolio page. Wrap a word in *asterisks* in the title to set it in italic gold.',
     fields: [
       text('work.tab', 'Sheet tab label', { max: 24, target: { sel: 'work.tab' } }),
       text('work.eyebrow', 'Eyebrow', { max: 30, target: { sel: 'work.eyebrow' } }),
@@ -118,6 +177,7 @@ export const sections = [
         type: 'list',
         target: { list: 'work' },
         itemLabel: 'title',
+        addLabel: 'Add project',
         item: [
           text('title', 'Title', { max: 60 }),
           text('meta', 'Meta line', { max: 60, help: 'e.g. Client · Type · Year' }),
@@ -137,6 +197,8 @@ export const sections = [
     ],
   },
 ];
+
+export const sections = [...settingsAndHome, ...pageSections, ...blogSections];
 
 /** Every editable field, flat, keyed. */
 export const fields = Object.fromEntries(sections.flatMap((s) => s.fields.map((f) => [f.key, f])));

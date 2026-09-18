@@ -8,3 +8,6 @@ data/
 
 .vercel
 .env*
+
+# local archives
+*.rar

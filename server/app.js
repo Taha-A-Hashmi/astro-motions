@@ -21,7 +21,8 @@ import { validateInquiry } from './validate.js';
 import { createRateLimiter } from './ratelimit.js';
 import { insertInquiry, markEmailed, listInquiries, getInquiry, setStatus, countInquiries } from './db.js';
 import { sendInquiry } from './mail.js';
-import { cmsRouter, shellHandler, readShell, shellSource } from './cms.js';
+import { cmsRouter, shellHandler, readShell, shellSource, cleanPosts } from './cms.js';
+import { pagesRouter, renderNotFound, renderPostPreview } from './pages.js';
 import { storageInfo } from './content.js';
 import { uploadsDir } from './content.js';
 
@@ -145,6 +146,16 @@ export function createApp() {
   });
 
   /* ── The SEO dashboard's API (see server/cms.js) ──────────────────── */
+  // blog-post preview: render an unsaved post exactly as it will look
+  api.post('/admin/preview', requireAdmin, express.json({ limit: '6mb' }), async (req, res, next) => {
+    try {
+      const [post] = cleanPosts([req.body?.post || {}], []);
+      res.set('Cache-Control', 'no-store');
+      res.json({ ok: true, html: await renderPostPreview(post) });
+    } catch (err) {
+      next(err);
+    }
+  });
   api.use(cmsRouter({ requireAdmin }));
 
   api.use((req, res) => res.status(404).json({ ok: false, error: 'Not found' }));
@@ -154,11 +165,22 @@ export function createApp() {
      injected. On Vercel `/` is rewritten here (vercel.json); every other
      file in dist/ is served by the CDN. Locally Express serves both. ── */
   app.get(['/', '/index.html'], shellHandler);
+
+  /* ── Content pages: services, blog, sitemap… (server/pages.js). On
+     Vercel every path that isn't a static file is rewritten here. ───── */
+  app.use(pagesRouter());
+
   const dist = path.resolve('dist');
   if (!config.onVercel) {
     if (fs.existsSync(dist)) app.use(express.static(dist, { index: 'index.html', maxAge: '1h' })); // dist has no root index.html — only /admin/
     app.use('/uploads', express.static(uploadsDir(), { maxAge: '1d' }));
   }
+
+  // anything else a browser asks for gets the styled 404 page
+  app.use((req, res, next) => {
+    if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+    renderNotFound(req, res).catch(next);
+  });
 
   // JSON errors for bad bodies etc., never an HTML stack trace
   app.use((err, req, res, next) => {

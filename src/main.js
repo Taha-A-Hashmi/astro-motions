@@ -27,6 +27,7 @@ import { createInteractions } from './interactions.js';
 import { createContact } from './contact.js';
 import { createSheets } from './sheets.js';
 import { applyContent } from './content.js';
+import { createMenu } from './menu.js';
 
 const { reduced, coarse } = quality;
 
@@ -175,6 +176,7 @@ const fx = {
 
 const interactions = createInteractions({ camera, refs, canvas, fx });
 createSheets({ lenis: scroll.lenis, fx, contact, view, reduced, coarse });
+createMenu({ lenis: scroll.lenis });
 
 /* ── Mouse parallax: the camera leans toward the cursor ─────────────────── */
 const pointer = { x: 0, y: 0 };

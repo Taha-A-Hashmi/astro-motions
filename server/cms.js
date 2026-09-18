@@ -17,6 +17,14 @@ import path from 'node:path';
 import { site, sections, fields, targetsOf } from '../cms/schema.js';
 import { esc, multiline, rich, letters, lists } from '../cms/templates.js';
 import { loadContent, saveContent, saveImage, storageInfo } from './content.js';
+import { cleanHtml, slugify } from './sanitize.js';
+import crypto from 'node:crypto';
+
+/* Keys that live in the home-page HTML (have a target). Only these are
+   handed to the browser — page copy, blog drafts etc. never are. */
+const shellKeys = new Set(Object.values(fields).filter((f) => targetsOf(f).length).map((f) => f.key));
+export const shellValues = (values) =>
+  Object.fromEntries(Object.entries(values || {}).filter(([k]) => shellKeys.has(k)));
 
 /* ── The shell: dist/shell.html, read once per process ──────────────── */
 let shellCache = null;
@@ -112,7 +120,9 @@ export function readDefaults(html) {
   const out = {};
   const ld = readJsonLd(html) || {};
   for (const f of Object.values(fields)) {
-    if (f.type === 'list') { out[f.key] = f.default || []; continue; }
+    // content pages and lists carry their defaults in the schema
+    if (f.default !== undefined) { out[f.key] = f.default; continue; }
+    if (f.type === 'list' || f.type === 'posts') { out[f.key] = []; continue; }
     let v = '';
     for (const t of targetsOf(f)) {
       if (t.sel) v = readSel(html, t.sel);
@@ -164,30 +174,83 @@ export function renderShell(html, values) {
   }
   if (ldDirty && ld) out = out.replace(JSONLD_RE, (m, a, _b, c) => `${a}${JSON.stringify(ld, null, 8).replace(/\n}$/, '\n      }')}${c}`);
   // hand the values to the client too, so nothing re-fetches or flashes
-  out = out.replace('</head>', `    <script>window.__CMS__=${JSON.stringify(values).replace(/</g, '\\u003c')}</script>\n  </head>`);
+  out = out.replace('</head>', `    <script>window.__CMS__=${JSON.stringify(shellValues(values)).replace(/</g, '\\u003c')}</script>\n  </head>`);
   return out;
 }
 
 /* ── Validation of a save: only known keys, sane sizes ──────────────── */
-function cleanValues(input) {
+const str = (v, max) => String(v ?? '').trim().slice(0, max);
+const RESERVED_SLUGS = new Set(['feed.xml', 'feed', 'page']);
+const POST_KEYS = ['title', 'slug', 'status', 'date', 'excerpt', 'cover', 'coverAlt', 'body', 'tags', 'seoTitle', 'metaDescription'];
+
+/* Blog posts: stable ids, unique slugs (WordPress-style: the slug is set
+   from the title once, then stays unless edited), sanitised bodies and an
+   `updated` stamp that only moves when the post actually changed. */
+export function cleanPosts(raw, previous) {
+  if (!Array.isArray(raw)) return [];
+  const before = new Map((Array.isArray(previous) ? previous : []).map((p) => [p.id, p]));
+  const used = new Set();
+  const today = new Date().toISOString().slice(0, 10);
+  const now = new Date().toISOString();
+  return raw.slice(0, 500).map((p) => {
+    const title = str(p?.title, 200) || 'Untitled';
+    let base = slugify(p?.slug || title) || 'post';
+    if (RESERVED_SLUGS.has(base)) base += '-post';
+    let slug = base;
+    for (let n = 2; used.has(slug); n++) slug = `${base}-${n}`;
+    used.add(slug);
+    const post = {
+      id: /^[a-z0-9-]{6,64}$/i.test(String(p?.id || '')) ? p.id : crypto.randomUUID(),
+      title,
+      slug,
+      status: p?.status === 'published' ? 'published' : 'draft',
+      date: /^\d{4}-\d{2}-\d{2}$/.test(String(p?.date || '')) ? p.date : today,
+      excerpt: str(p?.excerpt, 400),
+      cover: str(p?.cover, 600),
+      coverAlt: str(p?.coverAlt, 200),
+      body: cleanHtml(p?.body).slice(0, 200000),
+      tags: str(p?.tags, 200),
+      seoTitle: str(p?.seoTitle, 120),
+      metaDescription: str(p?.metaDescription, 300),
+    };
+    const prev = before.get(post.id);
+    const same = prev && POST_KEYS.every((k) => prev[k] === post[k]);
+    post.updated = same && prev.updated ? prev.updated : now;
+    return post;
+  });
+}
+
+function cleanScalar(f, raw) {
+  const s = String(raw ?? '');
+  if (f.type === 'html') return cleanHtml(s).slice(0, 60000);
+  return s.slice(0, f.type === 'code' ? 20000 : f.type === 'textarea' ? 4000 : 800);
+}
+
+function cleanValues(input, previous = {}) {
   if (!input || typeof input !== 'object') return {};
   const out = {};
   for (const [key, raw] of Object.entries(input)) {
     const f = fields[key];
     if (!f) continue;
+    if (f.type === 'posts') {
+      out[key] = cleanPosts(raw, previous[key]);
+      continue;
+    }
     if (f.type === 'list') {
       if (!Array.isArray(raw)) continue;
-      out[key] = raw.slice(0, 40).map((it) => {
+      out[key] = raw.slice(0, 60).map((it) => {
         const o = {};
-        for (const sub of f.item) o[sub.key] = String(it?.[sub.key] ?? '').slice(0, sub.type === 'textarea' ? 2000 : 600);
+        for (const sub of f.item) {
+          const v = it?.[sub.key];
+          o[sub.key] = sub.type === 'html' ? cleanHtml(v).slice(0, 20000) : String(v ?? '').slice(0, sub.type === 'textarea' ? 2000 : 600);
+        }
         return o;
       });
       continue;
     }
     if (raw === null || raw === undefined) continue;
-    const s = String(raw);
-    if (s === '') continue; // empty = "use the default"
-    out[key] = s.slice(0, f.type === 'code' ? 20000 : f.type === 'textarea' ? 4000 : 800);
+    if (String(raw) === '') continue; // empty = "use the default"
+    out[key] = cleanScalar(f, raw);
   }
   return out;
 }
@@ -199,7 +262,7 @@ export function cmsRouter({ requireAdmin }) {
 
   r.get('/content', async (req, res) => {
     res.set('Cache-Control', 'no-store');
-    res.json({ ok: true, values: await loadContent() });
+    res.json({ ok: true, values: shellValues(await loadContent()) });
   });
 
   r.get('/admin/schema', requireAdmin, async (req, res) => {
@@ -215,7 +278,8 @@ export function cmsRouter({ requireAdmin }) {
 
   r.put('/admin/content', requireAdmin, async (req, res) => {
     try {
-      const values = await saveContent(cleanValues(req.body?.values));
+      const previous = await loadContent({ fresh: true });
+      const values = await saveContent(cleanValues(req.body?.values, previous));
       res.json({ ok: true, values, savedAt: new Date().toISOString() });
     } catch (err) {
       console.error('[cms] save failed:', err);

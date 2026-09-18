@@ -123,6 +123,52 @@ live form stores inquiries only — and on Vercel storage is `/tmp`, so they
 are effectively lost. Set `CONTACT_TO` + Resend or SMTP on the Vercel
 project before using the form for real.
 
+## Content pages & blog (server-rendered, no WebGL)
+
+Routes (exact, trailing slash canonical — `/web-design` 301s to `/web-design/`):
+`/services/` hub · `/web-design/` · `/organic-seo/` · `/ppc-marketing/` ·
+`/social-media-marketing/` · `/portfolio/` · `/team/` · `/contact/` ·
+`/blog/` · `/blog/<slug>/` · `/blog/feed.xml` (RSS) · `/sitemap.xml`.
+Unknown paths get a styled 404 (`site.notFound`).
+
+- `server/pages.js` — renders every page (layout, header with Services
+  dropdown, phone menu, footer, breadcrumbs + BreadcrumbList/Service/
+  FAQPage/BlogPosting JSON-LD) from dashboard values → schema defaults →
+  shell defaults. Templates: service, services, portfolio, team, contact,
+  blog, post, 404. `pagesRouter()` is mounted in `server/app.js` right after
+  the `/` shell handler.
+- `cms/pages.js` — Astro's page sections and ALL their default copy (the
+  four services, hub, portfolio, team, contact, blog page, starter post).
+  `cms/fields.js` — the reusable section builders (`serviceSection` etc.)
+  and field helpers. Each page is a dashboard section with `page: { path,
+  template }` and flat keys `svc.<slug>.*` / `page.<name>.*`.
+- `public/pages/pages.css` + `pages.js` — the look (Starlight tokens, CSS
+  starfield, orbit hero art from `site.heroArt`) and the small behaviours
+  (phone menu, dropdown, reveal, contact form → `/api/contact`).
+- Chrome config lives in `site` (cms/schema.js): nav, cta, footer links,
+  fonts, mark, heroArt, notFound, budget label.
+- Blog posts are one field, `blog.posts` (type `posts`), edited by the
+  WordPress-style editor in the dashboard (Blog → Posts): title, permalink
+  (slug set from the title on first save, then stable), rich text body
+  (`type: 'html'` — sanitised by `server/sanitize.js` on save and render),
+  featured image, excerpt, tags, SEO title/description, draft/publish,
+  preview (`POST /api/admin/preview`). Drafts 404 publicly and are never
+  sent to the browser (`/api/content` and `window.__CMS__` only carry
+  home-page keys — `shellValues()` in server/cms.js).
+- Portfolio reuses the home page's `work.items`; the Contact page form
+  reuses the `contact.*` labels. Team shows role cards (no names/photos by
+  default — the owner removed people from Astro on 2026-09-13; they can add
+  members with photos in Pages → Team).
+- Socials: `social.links` list (Brand, menu & socials) → icons in page
+  footers, the phone menu, the contact page and the home stage-6 footer.
+  Empty until the owner adds URLs.
+- `vercel.json` rewrites every non-static path to the function
+  (`/(.*)` → `/api/index`; Vercel serves real files first).
+- Vite dev proxies the page routes to the API server (`npm run dev:all`).
+- The 3D home page links to all of it: header nav (Services, Portfolio,
+  Team, Blog), the phone Menu (≤720px, `src/menu.js`), Services/Blog links at
+  stages 4 and 6, and a crawlable link list in `.seo-fallback`.
+
 ## Conventions
 
 - Design tokens in `src/style.css`: `--void #05060d`, `--ink #0c0f1c`,
