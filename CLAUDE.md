@@ -155,6 +155,11 @@ Unknown paths get a styled 404 (`site.notFound`).
   preview (`POST /api/admin/preview`). Drafts 404 publicly and are never
   sent to the browser (`/api/content` and `window.__CMS__` only carry
   home-page keys — `shellValues()` in server/cms.js).
+- `server/sanitize.js` is a dependency-free allowlist sanitizer. Do NOT
+  add `sanitize-html` (its ESM-only htmlparser2 crashes the Vercel function
+  at startup — it took astromotions.com down for ~6 minutes on 2026-09-18;
+  fixed by `vercel rollback`, then a new build + `vercel promote`). The same
+  file lives in the Apex repo — keep them identical.
 - Portfolio reuses the home page's `work.items`; the Contact page form
   reuses the `contact.*` labels. Team shows role cards (no names/photos by
   default — the owner removed people from Astro on 2026-09-13; they can add
