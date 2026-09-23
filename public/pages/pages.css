@@ -624,3 +624,9 @@ a:hover > .link-go i, .link-go:hover i { transform: translateX(4px); }
   .launch-rings::after { animation: none; }
   .js .reveal { opacity: 1; transform: none; }
 }
+
+/* ── Reviews strip (Trustpilot review collector) ────────────────────── */
+.reviews { background: var(--paper-2); border-top: 1px solid var(--line); }
+.reviews-in { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px 32px; padding-block: 26px; }
+.reviews-text { margin: 0; font: 500 clamp(17px, 1.5vw, 22px)/1.25 var(--display); letter-spacing: -0.03em; }
+.reviews-widget { width: min(100%, 320px); min-height: 52px; }

@@ -157,7 +157,19 @@ function footer(ctx) {
   const studio = site.footerStudio
     .map((l) => `<li><a href="${esc(l.href)}">${esc((l.key && ctx.get(l.key)) || l.label)}</a></li>`)
     .join('');
-  return `<footer class="ft">
+  return `<aside class="reviews" aria-label="Reviews">
+  <div class="wrap reviews-in">
+    <p class="reviews-text">Launched something with us? Tell others how it went.</p>
+    <div class="reviews-widget">
+      <!-- TrustBox widget - Review Collector -->
+      <div class="trustpilot-widget" data-locale="en-US" data-template-id="56278e9abfbbba0bdcd568bc" data-businessunit-id="6ab1b1954865ce6dfe8fb174" data-style-height="52px" data-style-width="100%" data-token="3c274bce-4945-47eb-89a2-6b71b47095ef">
+        <a href="https://www.trustpilot.com/review/astromotions.com" target="_blank" rel="noopener">Trustpilot</a>
+      </div>
+      <!-- End TrustBox widget -->
+    </div>
+  </div>
+</aside>
+<footer class="ft">
   <div class="wrap ft-cols">
     <div class="ft-brand">
       <p class="ft-tag">${esc(ctx.get('hero.tagline') || site.tagline)}</p>
@@ -226,6 +238,9 @@ ${page.extraHead || ''}
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="${esc(site.fontsHref)}" />
 <link rel="stylesheet" href="/pages/pages.css?v=${VERSION}" />
+<!-- TrustBox script -->
+<script type="text/javascript" src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
+<!-- End TrustBox script -->
 <script>document.documentElement.classList.add('js')</script>
 ${ld.map(ldScript).join('\n')}
 ${headCode ? `<!-- custom head code (dashboard) -->\n${headCode}` : ''}
