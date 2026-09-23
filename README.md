@@ -1,8 +1,9 @@
 # Astro Motions
 
-Immersive single-page WebGL site — one three.js scene, six stages, scroll to
-ascend from the ground into orbit — with its own small backend for the
-contact form.
+Studio site for Astro Motions — an editorial, light-first layout (paper, ink,
+cobalt, lime) with one WebGL element, a halftone dot planet in the hero —
+plus server-rendered service pages, a blog, an SEO dashboard and its own
+small backend for the contact form.
 
 ## Run it
 
@@ -24,7 +25,7 @@ Requires Node **22.13+** (the backend uses the built-in `node:sqlite`).
 
 ## Pages
 
-Besides the 3D home page the site serves plain, fast, server-rendered pages:
+Besides the home page the site serves plain, fast, server-rendered pages:
 `/services/`, `/web-design/`, `/organic-seo/`, `/ppc-marketing/`,
 `/social-media-marketing/`, `/portfolio/`, `/team/`, `/contact/`, `/blog/`,
 `/blog/<post>/`, plus `/sitemap.xml` and `/blog/feed.xml`.
@@ -37,10 +38,6 @@ goes live within a minute — no rebuild. Pages have their own SEO
 titles, descriptions and social images; blog posts are written and
 published from Blog → Posts. Storage is Vercel Blob in
 production and `data/cms/` locally.
-
-## Credits
-
-Planet, moon and Milky Way textures: [Solar System Scope](https://www.solarsystemscope.com/textures/), CC BY 4.0.
 
 ## Backend
 

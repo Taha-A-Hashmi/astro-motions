@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Astro Motions — immersive WebGL site. Websites with their own gravity.",
+  "description": "Astro Motions — studio site. Websites with their own gravity.",
   "scripts": {
     "dev": "vite",
     "dev:all": "node scripts/dev.mjs",

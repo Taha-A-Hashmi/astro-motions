@@ -8,11 +8,11 @@
     <title>Astro Motions — Websites with their own gravity</title>
     <meta
       name="description"
-      content="Astro Motions builds cinematic, WebGL-powered websites with real pull: concept, motion and code by one small crew, for a handful of launches a year."
+      content="Astro Motions is an independent studio for cinematic, fast websites — web design, organic SEO, PPC and social media marketing from one small crew."
     />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="Astro Motions" />
-    <meta name="theme-color" content="#05060d" />
+    <meta name="theme-color" content="#eeece6" />
     <link rel="canonical" href="https://www.astromotions.com/" />
 
     <!-- ── Open Graph / Twitter ─────────────────────────────────────────── -->
@@ -22,7 +22,7 @@
     <meta property="og:title" content="Astro Motions — Websites with their own gravity" />
     <meta
       property="og:description"
-      content="Cinematic WebGL websites with real pull. Most sites never leave the ground — ours stay in orbit."
+      content="Cinematic, fast websites — and the search, ads and social that bring people to them. One small crew, a few launches a year."
     />
     <meta property="og:image" content="https://www.astromotions.com/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
@@ -32,15 +32,15 @@
     <meta name="twitter:title" content="Astro Motions — Websites with their own gravity" />
     <meta
       name="twitter:description"
-      content="Cinematic WebGL websites with real pull. Most sites never leave the ground — ours stay in orbit."
+      content="Cinematic, fast websites — and the search, ads and social that bring people to them. One small crew, a few launches a year."
     />
     <meta name="twitter:image" content="https://www.astromotions.com/og-image.jpg" />
 
     <!-- ── Favicons ─────────────────────────────────────────────────────── -->
     <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
@@ -53,216 +53,355 @@
         "url": "https://www.astromotions.com/",
         "logo": "https://www.astromotions.com/apple-touch-icon.png",
         "image": "https://www.astromotions.com/og-image.jpg",
-        "description": "Astro Motions is a small studio building cinematic, WebGL-powered websites — concept, motion and code by one crew."
+        "description": "Astro Motions is an independent studio building cinematic, fast websites — plus the organic SEO, PPC and social media marketing that bring people to them."
       }
     </script>
 
-    <!-- Brand type: Cormorant Garamond (voice) · Manrope (body) · DM Mono (instruments). -->
+    <!-- Brand type: Unbounded (display) · Instrument Sans (text). -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Manrope:wght@400;500&family=DM+Mono:wght@400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap"
     />
 
+    <!-- Motion is opt-in: without JS every element renders in place. -->
+    <script>document.documentElement.classList.add('js');</script>
     <script type="module" src="/src/main.js"></script>
     <link rel="stylesheet" href="/src/style.css" />
-    <link rel="stylesheet" href="/src/sheets.css" />
   </head>
   <body>
-    <!-- ── Crawler / screen-reader fallback ─────────────────────────────────
-         The visible site is a WebGL canvas, which crawlers and assistive tech
-         can't read. This visually-hidden block is the real text equivalent. -->
-    <div class="seo-fallback">
-      <h1 data-cms="seo.title">Astro Motions — Websites with their own gravity</h1>
-      <p data-cms="seo.description">Astro Motions builds cinematic, WebGL-powered websites with real pull: concept, motion and code by one small crew, for a handful of launches a year.</p>
-      <h2>Launch log</h2>
-      <p>OceanX 2025 Year in Review, Poly, Organimo, Terminal Industries.</p>
-      <h2>Explore</h2>
-      <ul>
-        <li><a href="/services/">Services</a></li>
-        <li><a href="/web-design/">Web design</a></li>
-        <li><a href="/organic-seo/">Organic SEO</a></li>
-        <li><a href="/ppc-marketing/">PPC marketing</a></li>
-        <li><a href="/social-media-marketing/">Social media marketing</a></li>
-        <li><a href="/portfolio/">Portfolio</a></li>
-        <li><a href="/team/">Team</a></li>
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/contact/">Contact</a></li>
-      </ul>
-    </div>
+    <a class="skip" href="#main">Skip to content</a>
 
-    <!-- Shown only when JavaScript is disabled (the 3D can't run). -->
-    <noscript>
-      <div class="noscript-panel">
-        <p class="noscript-title" data-cms="brand.name">Astro Motions</p>
-        <p>
-          Websites with their own gravity. This site is a 3D experience and
-          needs JavaScript to run.
-        </p>
-      </div>
-    </noscript>
-
-    <!-- Loading veil: pale greeting sequence (Hello → Salut → …), progress
-         line + countdown, then the veil lifts and the world resolves
-         out of pixels. -->
-    <div class="veil" aria-hidden="true">
-      <p class="veil-corner" data-cms="brand.name">Astro Motions</p>
-      <p class="veil-greeting">Hello</p>
-      <div class="veil-foot">
-        <span class="veil-track"><span class="veil-bar"></span></span>
-        <span class="veil-count">000</span>
-      </div>
-    </div>
-
-    <!-- Shown by main.js only if the browser can't create a WebGL context -->
-    <div class="webgl-fail noscript-panel" hidden>
-      <p class="noscript-title" data-cms="brand.name">Astro Motions</p>
-      <p>
-        Websites with their own gravity. Your browser couldn't start the 3D
-        experience — try updating it or enabling hardware acceleration.
-      </p>
-    </div>
-
-    <!-- Fixed, full-screen WebGL canvas — the entire visible site. -->
-    <canvas class="webgl" aria-hidden="true"></canvas>
-
-    <!-- ── DOM overlay: everything readable sits above the canvas ────────── -->
-    <div class="overlay" aria-hidden="true">
-      <!-- Header: mark + wordmark, always present, fades in after load.
-           The mark: a tilted orbit around a four-point star, with the gold
-           dot riding the orbit. The dot is what leaves to become the Guide. -->
-      <header class="site-header">
-        <svg class="mark" viewBox="0 0 48 48" fill="none">
-          <ellipse cx="24" cy="24" rx="20" ry="8.5" stroke="#F2F0EA" stroke-width="1.1" transform="rotate(-24 24 24)" opacity="0.85" />
-          <path d="M24 14.5 L25.9 22.1 L33.5 24 L25.9 25.9 L24 33.5 L22.1 25.9 L14.5 24 L22.1 22.1 Z" fill="#F2F0EA" opacity="0.92" />
-          <circle class="mark-dot" cx="40.5" cy="14.2" r="2.2" fill="#EFCD7A" />
-        </svg>
-        <span class="header-name" data-cms="brand.wordmark">Astro</span>
-      </header>
-
-      <!-- Header, right: a way to reach the studio from any stage -->
-      <nav class="header-nav" aria-label="Main">
-        <a class="header-link" href="/services/" data-cms="nav.services">Services</a>
-        <a class="header-link" href="/portfolio/" data-cms="nav.portfolio">Portfolio</a>
-        <a class="header-link" href="/team/" data-cms="nav.team">Team</a>
-        <a class="header-link" href="/blog/" data-cms="nav.blog">Blog</a>
-        <button class="header-contact" type="button" data-open="contact">
-          <span class="dot"></span>
-          <span data-cms="nav.contact">Book a launch</span>
-        </button>
-        <button class="header-menu" type="button" aria-expanded="false" aria-controls="site-menu">Menu</button>
-      </nav>
-
-      <!-- Beat statements: one element per beat, faded by scroll progress -->
-      <div class="statements">
-        <div class="statement" data-beat="0">
-          <h1 class="statement-hero" aria-label="ASTRO" data-cms="hero.word">
-            <span class="ch">A</span><span class="ch">S</span><span class="ch">T</span><span class="ch">R</span><span class="ch">O</span>
-          </h1>
-          <p class="statement-hero-sub hero-reveal" data-cms="hero.sub">Motions</p>
-          <p class="statement-tagline hero-reveal" data-cms="hero.tagline">Websites with their own gravity.</p>
-        </div>
-        <div class="statement" data-beat="1">
-          <p class="statement-index" data-cms="stage1.index">01 · Liftoff</p>
-          <p data-cms="stage1.line">Most websites never leave the ground.</p>
-        </div>
-        <div class="statement" data-beat="2">
-          <p class="statement-index" data-cms="stage2.index">02 · Escape velocity</p>
-          <p data-cms="stage2.line">Yours should pull people in — and keep them.</p>
-        </div>
-        <div class="statement" data-beat="3">
-          <p class="statement-index" data-cms="stage3.index">03 · The studio</p>
-          <p data-cms="stage3.line">We build the pull.</p>
-          <ul class="disciplines">
-            <li data-cms="stage3.d1">Concept</li>
-            <li data-cms="stage3.d2">Motion</li>
-            <li data-cms="stage3.d3">Code</li>
-          </ul>
-          <div class="statement-links">
-            <button class="statement-link" type="button" data-open="work"><span data-cms="nav.workLink">Launch log</span><span class="arrow">↗</span></button>
-            <a class="statement-link" href="/services/"><span data-cms="nav.services">Services</span><span class="arrow">↗</span></a>
-            <a class="statement-link" href="/blog/"><span data-cms="nav.blog">Blog</span><span class="arrow">↗</span></a>
-          </div>
-        </div>
-        <div class="statement" data-beat="4">
-          <p class="statement-index" data-cms="stage4.index">04 · Deep field</p>
-          <p data-cms="stage4.line">Every frame earns the next.</p>
-        </div>
-        <div class="statement" data-beat="5">
-          <p class="statement-index" data-cms="stage5.index">05 · Arrival</p>
-          <p data-cms="stage5.line">One small crew. A few launches a year.</p>
-          <button class="cta" type="button" data-open="contact">
-            <span class="cta-dot"></span>
-            <span class="cta-label" data-cms="cta.summit">Book a launch</span>
-            <span class="cta-arrow">↗</span>
-          </button>
-          <div class="statement-links">
-            <button class="statement-link" type="button" data-open="work"><span data-cms="nav.workLink">Launch log</span><span class="arrow">↗</span></button>
-            <a class="statement-link" href="/services/"><span data-cms="nav.services">Services</span><span class="arrow">↗</span></a>
-            <a class="statement-link" href="/blog/"><span data-cms="nav.blog">Blog</span><span class="arrow">↗</span></a>
-          </div>
-          <div class="summit-footer">
-            <span data-cms="footer.copyright">© 2026 Astro Motions</span>
-            <span class="footer-sep">·</span>
-            <button class="to-base" type="button" data-cms="footer.top">Return to the pad ↑</button>
-          </div>
-          <div class="social-links" data-cms-list="socials"></div>
-        </div>
-      </div>
-
-      <!-- Scroll hint: hero only -->
-      <div class="scroll-hint">
-        <span>Scroll</span>
-        <span class="scroll-hint-line"></span>
-      </div>
-
-      <!-- Ascent rail: one tick per stage, click to travel -->
-      <nav class="rail">
-        <button class="rail-tick" type="button" data-stage="0"><span class="tick-label">Pad</span><span class="tick-line"></span></button>
-        <button class="rail-tick" type="button" data-stage="1"><span class="tick-label">01</span><span class="tick-line"></span></button>
-        <button class="rail-tick" type="button" data-stage="2"><span class="tick-label">02</span><span class="tick-line"></span></button>
-        <button class="rail-tick" type="button" data-stage="3"><span class="tick-label">03</span><span class="tick-line"></span></button>
-        <button class="rail-tick" type="button" data-stage="4"><span class="tick-label">04</span><span class="tick-line"></span></button>
-        <button class="rail-tick" type="button" data-stage="5"><span class="tick-label">Orbit</span><span class="tick-line"></span></button>
-      </nav>
-
-      <!-- Instrument HUD: altitude readout, bottom-left -->
-      <div class="hud">
-        <span class="hud-alt">ALT 100 KM</span>
-        <span class="hud-sep">·</span>
-        <span class="hud-stage">PAD</span>
-        <span class="hud-sep">·</span>
-        <span class="hud-label">SCROLL TO LIFT OFF</span>
-      </div>
-    </div>
-
-    <!-- Phone menu: the header links don't fit on a small screen -->
-    <div class="site-menu" id="site-menu" hidden>
-      <nav aria-label="Menu">
+    <!-- ── Header ───────────────────────────────────────────────────────── -->
+    <header class="hd">
+      <a class="hd-brand" href="/" aria-label="Astro Motions — home">
+        <svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><defs><mask id="mk-hd"><rect width="48" height="48" fill="#fff"/><path d="M2 24A22 6.5 0 0 0 46 24" transform="rotate(-24 24 24)" fill="none" stroke="#000" stroke-width="5.5"/></mask><mask id="mb-hd"><rect width="48" height="48" fill="#fff"/><circle cx="24" cy="24" r="16.4" fill="#000"/></mask></defs><circle cx="24" cy="24" r="14" fill="currentColor" mask="url(#mk-hd)"/><g transform="rotate(-24 24 24)" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 24A22 6.5 0 0 0 46 24"/><path d="M2 24A22 6.5 0 0 1 46 24" mask="url(#mb-hd)"/></g></svg>
+        <span class="hd-word" data-cms="brand.wordmark">astro motions</span>
+      </a>
+      <nav class="hd-nav" aria-label="Main">
         <a href="/services/" data-cms="nav.services">Services</a>
         <a href="/portfolio/" data-cms="nav.portfolio">Portfolio</a>
         <a href="/team/" data-cms="nav.team">Team</a>
         <a href="/blog/" data-cms="nav.blog">Blog</a>
-        <a href="/contact/">Contact</a>
       </nav>
-      <div class="social-links" data-cms-list="socials"></div>
+      <a class="btn btn-solid hd-cta" href="/contact/" data-open="contact">
+        <span data-cms="nav.contact">Book a launch</span><i class="btn-ico" aria-hidden="true">→</i>
+      </a>
+      <button class="hd-menu" type="button" aria-expanded="false" aria-controls="menu">
+        <span class="hd-menu-label">Menu</span><i aria-hidden="true"></i>
+      </button>
+    </header>
+
+    <main id="main">
+      <!-- ── Hero: a poster. Tagline top, the dot planet, the wordmark ──── -->
+      <section class="hero" id="top">
+        <div class="hero-top wrap">
+          <p class="hero-tagline" data-cms="hero.tagline">Websites with their own gravity.</p>
+          <div class="hero-aside">
+            <p class="hero-intro" data-cms="hero.intro">An independent studio for cinematic, fast websites — and for the search, ads and social that bring people to them.</p>
+            <div class="hero-actions">
+              <a class="btn btn-solid" href="/contact/" data-open="contact"><span data-cms="hero.cta">Book a launch</span><i class="btn-ico" aria-hidden="true">→</i></a>
+              <a class="btn btn-line" href="#work"><span data-cms="nav.workLink">Launch log</span><i class="btn-ico" aria-hidden="true">↓</i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-planet" aria-hidden="true">
+          <canvas class="globe"></canvas>
+        </div>
+
+        <h1 class="hero-word">
+          <span class="hw hw-1" data-cms="hero.word"><span class="ch">A</span><span class="ch">s</span><span class="ch">t</span><span class="ch">r</span><span class="ch">o</span></span>
+          <span class="hw hw-2" data-cms="hero.sub">Motions</span>
+        </h1>
+
+        <div class="hero-foot wrap" aria-hidden="true">
+          <span class="hero-coord">Web design · SEO · PPC · Social</span>
+          <span class="hero-scroll"><span>Scroll</span><i></i></span>
+        </div>
+      </section>
+
+      <!-- ── Marquee ─────────────────────────────────────────────────────── -->
+      <div class="marquee" aria-hidden="true">
+        <div class="mq-track">
+          <div class="mq-set">
+            <span data-cms="svc.web-design.name">Web design</span><b>✺</b>
+            <span data-cms="svc.organic-seo.name">Organic SEO</span><b>✺</b>
+            <span data-cms="svc.ppc-marketing.name">PPC marketing</span><b>✺</b>
+            <span data-cms="svc.social-media-marketing.name">Social media marketing</span><b>✺</b>
+            <span data-cms="stage3.d1">Concept</span><b>✺</b>
+            <span data-cms="stage3.d2">Motion</span><b>✺</b>
+            <span data-cms="stage3.d3">Code</span><b>✺</b>
+          </div>
+          <div class="mq-set">
+            <span data-cms="svc.web-design.name">Web design</span><b>✺</b>
+            <span data-cms="svc.organic-seo.name">Organic SEO</span><b>✺</b>
+            <span data-cms="svc.ppc-marketing.name">PPC marketing</span><b>✺</b>
+            <span data-cms="svc.social-media-marketing.name">Social media marketing</span><b>✺</b>
+            <span data-cms="stage3.d1">Concept</span><b>✺</b>
+            <span data-cms="stage3.d2">Motion</span><b>✺</b>
+            <span data-cms="stage3.d3">Code</span><b>✺</b>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Manifesto: three lines that ink in as you read them ────────── -->
+      <section class="manifesto" id="studio">
+        <div class="wrap">
+          <div class="mf-row">
+            <p class="label"><span class="label-n">01</span><span data-cms="stage1.index">Liftoff</span></p>
+            <p class="mf-line" data-split data-cms="stage1.line">Most websites never leave the ground.</p>
+          </div>
+          <div class="mf-row">
+            <p class="label"><span class="label-n">02</span><span data-cms="stage2.index">Escape velocity</span></p>
+            <p class="mf-line" data-split data-cms="stage2.line">Yours should pull people in — and keep them.</p>
+          </div>
+          <div class="mf-row">
+            <p class="label"><span class="label-n">03</span><span data-cms="stage3.index">The studio</span></p>
+            <p class="mf-line mf-line--accent" data-split data-cms="stage3.line">We build the pull.</p>
+          </div>
+          <ul class="disciplines">
+            <li><span class="d-n">A</span><span data-cms="stage3.d1">Concept</span></li>
+            <li><span class="d-n">B</span><span data-cms="stage3.d2">Motion</span></li>
+            <li><span class="d-n">C</span><span data-cms="stage3.d3">Code</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ── Services ───────────────────────────────────────────────────── -->
+      <section class="services" id="services">
+        <div class="wrap">
+          <div class="sec-head">
+            <p class="label"><span class="label-n">04</span><span data-cms="home.servicesLabel">Services</span></p>
+            <h2 class="h-sec" data-cms="home.servicesTitle">One crew, four orbits.</h2>
+            <a class="link-go" href="/services/"><span data-cms="home.servicesLink">All services</span> <i aria-hidden="true">→</i></a>
+          </div>
+          <ol class="svc-rows">
+            <li>
+              <a class="svc-row" href="/web-design/">
+                <span class="svc-n">01</span>
+                <span class="svc-name" data-cms="svc.web-design.name">Web design</span>
+                <span class="svc-sum" data-cms="svc.web-design.summary">Cinematic, fast, search-ready websites — designed and engineered by the same hands.</span>
+                <span class="svc-go" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="svc-row" href="/organic-seo/">
+                <span class="svc-n">02</span>
+                <span class="svc-name" data-cms="svc.organic-seo.name">Organic SEO</span>
+                <span class="svc-sum" data-cms="svc.organic-seo.summary">Technical fixes, content and authority that compound — traffic you don't pay for by the click.</span>
+                <span class="svc-go" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="svc-row" href="/ppc-marketing/">
+                <span class="svc-n">03</span>
+                <span class="svc-name" data-cms="svc.ppc-marketing.name">PPC marketing</span>
+                <span class="svc-sum" data-cms="svc.ppc-marketing.summary">Google, Microsoft and paid social campaigns built around profit, not clicks.</span>
+                <span class="svc-go" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="svc-row" href="/social-media-marketing/">
+                <span class="svc-n">04</span>
+                <span class="svc-name" data-cms="svc.social-media-marketing.name">Social media marketing</span>
+                <span class="svc-sum" data-cms="svc.social-media-marketing.summary">Strategy, content and community management that turns followers into an audience.</span>
+                <span class="svc-go" aria-hidden="true">↗</span>
+              </a>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ── Work: the launch log ───────────────────────────────────────── -->
+      <section class="work" id="work">
+        <div class="wrap">
+          <div class="sec-head sec-head--split">
+            <div>
+              <p class="label"><span class="label-n">05</span><span data-cms="work.eyebrow">Launch log</span></p>
+              <h2 class="h-sec" data-cms="work.title">Four sites that <em>stayed up.</em></h2>
+            </div>
+            <p class="sec-lede" data-cms="work.lede">In each one the 3D, the type and the motion were designed as a single thing, so the experience never breaks stride from the first frame to the last.</p>
+          </div>
+
+          <div class="work-grid" data-cms-list="work">
+            <a class="wk" href="https://2025.oceanx.org/" target="_blank" rel="noopener">
+              <figure class="wk-media"><img src="/work/oceanx-2025.jpg" alt="OceanX 2025 Year in Review — a globe over a deep-sea blue field" loading="lazy" width="1600" height="1000" /></figure>
+              <div class="wk-info">
+                <span class="wk-n">01</span>
+                <div class="wk-text">
+                  <h3 class="wk-title">A Year of Discovery</h3>
+                  <p class="wk-meta">OceanX · Year in review · 2025</p>
+                  <p class="wk-desc">Twelve months of ocean missions retold as one continuous voyage: you scroll, the globe turns, and each expedition surfaces where it happened.</p>
+                  <ul class="wk-tags"><li>WebGL</li><li>Narrative</li><li>Scroll</li></ul>
+                </div>
+                <span class="wk-go" aria-hidden="true">↗</span>
+              </div>
+            </a>
+            <a class="wk" href="https://poly.app/" target="_blank" rel="noopener">
+              <figure class="wk-media"><img src="/work/poly.jpg" alt="Poly — the intelligent file browser, shown on a laptop on a sunlit desk" loading="lazy" width="1600" height="1000" /></figure>
+              <div class="wk-info">
+                <span class="wk-n">02</span>
+                <div class="wk-text">
+                  <h3 class="wk-title">The Intelligent File Browser</h3>
+                  <p class="wk-meta">Poly · Product site</p>
+                  <p class="wk-desc">A file browser you talk to, introduced on a rendered desk the camera settles into — search, chat and sync shown in place, not in a feature grid.</p>
+                  <ul class="wk-tags"><li>3D</li><li>Product</li><li>Motion</li></ul>
+                </div>
+                <span class="wk-go" aria-hidden="true">↗</span>
+              </div>
+            </a>
+            <a class="wk" href="https://organimo.com/" target="_blank" rel="noopener">
+              <figure class="wk-media"><img src="/work/organimo.jpg" alt="Organimo — Limitless begins here: a pastel dreamscape with floating stone, a shell and a goldfish" loading="lazy" width="1600" height="1000" /></figure>
+              <div class="wk-info">
+                <span class="wk-n">03</span>
+                <div class="wk-text">
+                  <h3 class="wk-title">You Are Limitless</h3>
+                  <p class="wk-meta">Organimo · Brand commerce</p>
+                  <p class="wk-desc">A supplement sold the way a fragrance is: dark, slow, sound-led, with the product held up like an object worth wanting.</p>
+                  <ul class="wk-tags"><li>Commerce</li><li>Brand</li><li>Audio</li></ul>
+                </div>
+                <span class="wk-go" aria-hidden="true">↗</span>
+              </div>
+            </a>
+            <a class="wk" href="https://terminal-industries.com/" target="_blank" rel="noopener">
+              <figure class="wk-media"><img src="/work/terminal-industries.jpg" alt="Terminal Industries — a semi truck silhouetted against a sunset" loading="lazy" width="1600" height="1000" /></figure>
+              <div class="wk-info">
+                <span class="wk-n">04</span>
+                <div class="wk-text">
+                  <h3 class="wk-title">Yard Operating System</h3>
+                  <p class="wk-meta">Terminal Industries · Product site</p>
+                  <p class="wk-desc">Logistics software given the treatment of a car film: wide photography, product renders, and a page that moves at the pace of a trailer.</p>
+                  <ul class="wk-tags"><li>Industrial</li><li>Photography</li><li>Scroll</li></ul>
+                </div>
+                <span class="wk-go" aria-hidden="true">↗</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="work-foot">
+            <p data-cms="work.footText">Have something that needs to fly? Tell us about it and we'll answer within two days.</p>
+            <div class="work-foot-actions">
+              <a class="btn btn-lime" href="/contact/" data-open="contact"><span data-cms="work.footCta">Book a launch</span><i class="btn-ico" aria-hidden="true">→</i></a>
+              <a class="btn btn-line btn-line--light" href="/portfolio/"><span data-cms="nav.portfolio">Portfolio</span><i class="btn-ico" aria-hidden="true">↗</i></a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Process ────────────────────────────────────────────────────── -->
+      <section class="process" id="process">
+        <div class="wrap">
+          <div class="sec-head">
+            <p class="label"><span class="label-n">06</span><span data-cms="stage4.index">Process</span></p>
+            <h2 class="h-sec" data-cms="stage4.line">Every frame earns the next.</h2>
+          </div>
+          <ol class="steps" data-cms-list="process">
+            <li class="step">
+              <span class="step-n">T–3</span>
+              <h3 class="step-title">Countdown</h3>
+              <p class="step-text">A working session on goals, audience and competitors. You leave with a sitemap, a scope and a dated plan.</p>
+            </li>
+            <li class="step">
+              <span class="step-n">T–2</span>
+              <h3 class="step-title">Design</h3>
+              <p class="step-text">Key screens and the motion language, reviewed as real layouts in the browser rather than static mock-ups.</p>
+            </li>
+            <li class="step">
+              <span class="step-n">T–1</span>
+              <h3 class="step-title">Build</h3>
+              <p class="step-text">A hand-built front end, the editor wired up, and testing on real phones, tablets and desktops throughout.</p>
+            </li>
+            <li class="step">
+              <span class="step-n">T–0</span>
+              <h3 class="step-title">Orbit</h3>
+              <p class="step-text">Launch-day redirects, analytics and a speed pass — then a month of tuning, and growth work if you want it.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ── Launch: the call to action ─────────────────────────────────── -->
+      <section class="launch" id="launch">
+        <div class="launch-rings" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="wrap launch-in">
+          <p class="label label--light"><span class="label-n">07</span><span data-cms="stage5.index">Arrival</span></p>
+          <h2 class="launch-line" data-cms="stage5.line">One small crew. A few launches a year.</h2>
+          <p class="launch-text" data-cms="cta.text">Tell us what you're building. We read every message ourselves and reply within two days.</p>
+          <a class="btn btn-lime btn-xl" href="/contact/" data-open="contact"><span data-cms="cta.summit">Book a launch</span><i class="btn-ico" aria-hidden="true">→</i></a>
+        </div>
+      </section>
+    </main>
+
+    <!-- ── Footer ─────────────────────────────────────────────────────── -->
+    <footer class="ft">
+      <div class="wrap ft-cols">
+        <div class="ft-brand">
+          <p class="ft-tag" data-cms="hero.tagline">Websites with their own gravity.</p>
+          <div class="social-links" data-cms-list="socials"></div>
+        </div>
+        <nav class="ft-col" aria-label="Services">
+          <h2 data-cms="nav.services">Services</h2>
+          <ul>
+            <li><a href="/web-design/" data-cms="svc.web-design.name">Web design</a></li>
+            <li><a href="/organic-seo/" data-cms="svc.organic-seo.name">Organic SEO</a></li>
+            <li><a href="/ppc-marketing/" data-cms="svc.ppc-marketing.name">PPC marketing</a></li>
+            <li><a href="/social-media-marketing/" data-cms="svc.social-media-marketing.name">Social media marketing</a></li>
+          </ul>
+        </nav>
+        <nav class="ft-col" aria-label="Studio">
+          <h2>Studio</h2>
+          <ul>
+            <li><a href="/portfolio/" data-cms="nav.portfolio">Portfolio</a></li>
+            <li><a href="/team/" data-cms="nav.team">Team</a></li>
+            <li><a href="/blog/" data-cms="nav.blog">Blog</a></li>
+            <li><a href="/contact/">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="ft-col">
+          <h2>Elsewhere</h2>
+          <ul>
+            <li><a href="/services/">All services</a></li>
+            <li><a href="/blog/feed.xml">RSS feed</a></li>
+            <li><a href="/sitemap.xml">Sitemap</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="ft-giant" aria-hidden="true"><span data-cms="brand.wordmark">astro motions</span></p>
+      <div class="wrap ft-bottom">
+        <span data-cms="footer.copyright">© 2026 Astro Motions</span>
+        <a class="to-top" href="#top" data-cms="footer.top">Back to the pad ↑</a>
+      </div>
+    </footer>
+
+    <!-- ── Phone menu ─────────────────────────────────────────────────── -->
+    <div class="menu" id="menu" hidden>
+      <nav class="menu-nav" aria-label="Menu">
+        <a href="/services/"><span class="menu-n">01</span><span data-cms="nav.services">Services</span></a>
+        <a href="/portfolio/"><span class="menu-n">02</span><span data-cms="nav.portfolio">Portfolio</span></a>
+        <a href="/team/"><span class="menu-n">03</span><span data-cms="nav.team">Team</span></a>
+        <a href="/blog/"><span class="menu-n">04</span><span data-cms="nav.blog">Blog</span></a>
+        <a href="/contact/"><span class="menu-n">05</span><span>Contact</span></a>
+      </nav>
+      <div class="menu-foot">
+        <a class="btn btn-lime" href="/contact/" data-open="contact"><span data-cms="nav.contact">Book a launch</span><i class="btn-ico" aria-hidden="true">→</i></a>
+        <div class="social-links" data-cms-list="socials"></div>
+      </div>
     </div>
 
-    <!-- Custom cursor: a ring that answers whatever it crosses -->
-    <div class="cursor" aria-hidden="true">
-      <span class="cursor-ring"></span>
-      <span class="cursor-dot"></span>
-    </div>
-
-    <!-- ── Contact overlay: opens from "Book a launch" / header ─────────── -->
-    <div class="contact" hidden>
-      <div class="contact-backdrop"></div>
-      <div class="contact-panel" role="dialog" aria-modal="true" aria-labelledby="contact-title" data-lenis-prevent>
-        <button class="contact-close" type="button" aria-label="Close">✕</button>
-        <p class="contact-eyebrow" data-cms="contact.eyebrow">Book a launch</p>
-        <h2 id="contact-title" class="contact-title" data-cms="contact.title">What are we putting into orbit?</h2>
-        <p class="contact-lede" data-cms="contact.lede">A few sentences about the product and who it's for is enough. We answer every message ourselves, usually within two days.</p>
+    <!-- ── Contact drawer ─────────────────────────────────────────────── -->
+    <div class="drawer" id="contact" hidden>
+      <div class="drawer-backdrop"></div>
+      <div class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="contact-title" data-lenis-prevent>
+        <div class="drawer-top">
+          <p class="label"><span class="label-n">→</span><span data-cms="contact.eyebrow">Book a launch</span></p>
+          <button class="drawer-close" type="button" aria-label="Close">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4l12 12M16 4 4 16" stroke="currentColor" stroke-width="1.8" fill="none" /></svg>
+          </button>
+        </div>
+        <h2 id="contact-title" class="drawer-title" data-cms="contact.title">What are we putting into orbit?</h2>
+        <p class="drawer-lede" data-cms="contact.lede">A few sentences about the product and who it's for is enough. We answer every message ourselves, usually within two days.</p>
 
         <form class="contact-form" novalidate>
           <label class="contact-field">
@@ -270,17 +409,15 @@
             <input class="contact-input" name="name" type="text" autocomplete="name" placeholder="Your name" required />
             <span class="contact-err" data-for="name">Please enter your name</span>
           </label>
-
           <label class="contact-field">
             <span class="contact-label" data-cms="contact.emailLabel">Email</span>
             <input class="contact-input" name="email" type="email" autocomplete="email" placeholder="you@company.com" required />
             <span class="contact-err" data-for="email">Enter a valid email address</span>
           </label>
-
           <label class="contact-field">
             <span class="contact-label" data-cms="contact.messageLabel">The project</span>
             <textarea class="contact-input contact-textarea" name="message" rows="4" placeholder="What it is, who it's for, and when it needs to fly." required></textarea>
-            <span class="contact-err" data-for="message">Tell us a little more</span>
+            <span class="contact-err" data-for="message">Tell us a little more (10+ characters)</span>
           </label>
 
           <!-- Honeypot: humans never see this; bots fill it and get a polite 200 -->
@@ -298,120 +435,22 @@
           </fieldset>
 
           <div class="contact-actions">
-            <button class="contact-submit" type="submit">
-              <span class="cta-dot"></span>
-              <span class="submit-label" data-cms="contact.submit">Launch</span>
-              <span class="submit-arrow">↑</span>
+            <button class="btn btn-solid contact-submit" type="submit">
+              <span data-cms="contact.submit">Launch</span><i class="btn-ico" aria-hidden="true">↑</i>
             </button>
             <p class="contact-status" role="status"></p>
           </div>
         </form>
 
         <div class="contact-done" role="status">
-          <span class="done-dot"></span>
+          <span class="done-mark" aria-hidden="true"></span>
           <h3 data-cms="contact.doneTitle">Received. Countdown started.</h3>
           <p data-cms="contact.doneText">We answer every message ourselves, usually within two days. Keep an eye on your inbox.</p>
         </div>
       </div>
     </div>
 
-    <!-- ── Work sheet: the launch log ─────────────────────────────────── -->
-    <div class="sheet" data-sheet="work" hidden>
-      <div class="sheet-backdrop"></div>
-      <nav class="sheet-tabs" aria-label="Studio">
-        <span class="sheet-tabs-brand" data-cms="brand.wordmark">Astro</span>
-        <button class="sheet-tab" type="button" data-open="work" aria-current="page" data-cms="work.tab">Launch log</button>
-      </nav>
-      <div class="sheet-scroll" data-lenis-prevent role="dialog" aria-modal="true" aria-labelledby="work-title">
-        <div class="sheet-inner">
-          <header class="sheet-head">
-            <p class="sheet-eyebrow" data-cms="work.eyebrow">Launch log</p>
-            <h2 id="work-title" class="sheet-title" data-cms="work.title">Four sites that <em>stayed up.</em></h2>
-            <p class="sheet-lede" data-cms="work.lede">In each one the 3D, the type and the motion were designed as a single thing, so the experience never breaks stride from the first frame to the last.</p>
-          </header>
-
-          <div class="work-grid" data-cms-list="work">
-            <a class="sheet-card tilt work-card" href="https://2025.oceanx.org/" target="_blank" rel="noopener">
-              <div class="work-thumb">
-                <span class="work-index">01</span>
-                <img src="/work/oceanx-2025.jpg" alt="OceanX 2025 Year in Review — a globe over a deep-sea blue field" loading="lazy" />
-              </div>
-              <div class="work-body">
-                <p class="work-meta">OceanX · Year in review · 2025</p>
-                <h3 class="work-title">A Year of Discovery <span class="arrow">↗</span></h3>
-                <p class="work-desc">
-                  Twelve months of ocean missions retold as one continuous voyage: you
-                  scroll, the globe turns, and each expedition surfaces where it happened.
-                </p>
-                <ul class="work-tags"><li>WebGL</li><li>Narrative</li><li>Scroll</li></ul>
-              </div>
-            </a>
-
-            <a class="sheet-card tilt work-card" href="https://poly.app/" target="_blank" rel="noopener">
-              <div class="work-thumb">
-                <span class="work-index">02</span>
-                <img src="/work/poly.jpg" alt="Poly — the intelligent file browser, shown on a laptop on a sunlit desk" loading="lazy" />
-              </div>
-              <div class="work-body">
-                <p class="work-meta">Poly · Product site</p>
-                <h3 class="work-title">The Intelligent File Browser <span class="arrow">↗</span></h3>
-                <p class="work-desc">
-                  A file browser you talk to, introduced on a rendered desk the camera
-                  settles into — search, chat and sync shown in place, not in a feature grid.
-                </p>
-                <ul class="work-tags"><li>3D</li><li>Product</li><li>Motion</li></ul>
-              </div>
-            </a>
-
-            <a class="sheet-card tilt work-card" href="https://organimo.com/" target="_blank" rel="noopener">
-              <div class="work-thumb">
-                <span class="work-index">03</span>
-                <img src="/work/organimo.jpg" alt="Organimo — Limitless begins here: a pastel dreamscape with floating stone, a shell and a goldfish" loading="lazy" />
-              </div>
-              <div class="work-body">
-                <p class="work-meta">Organimo · Brand commerce</p>
-                <h3 class="work-title">You Are Limitless <span class="arrow">↗</span></h3>
-                <p class="work-desc">
-                  A supplement sold the way a fragrance is: dark, slow, sound-led, with
-                  the product held up like an object worth wanting.
-                </p>
-                <ul class="work-tags"><li>Commerce</li><li>Brand</li><li>Audio</li></ul>
-              </div>
-            </a>
-
-            <a class="sheet-card tilt work-card" href="https://terminal-industries.com/" target="_blank" rel="noopener">
-              <div class="work-thumb">
-                <span class="work-index">04</span>
-                <img src="/work/terminal-industries.jpg" alt="Terminal Industries — a semi truck silhouetted against a sunset" loading="lazy" />
-              </div>
-              <div class="work-body">
-                <p class="work-meta">Terminal Industries · Product site</p>
-                <h3 class="work-title">Yard Operating System <span class="arrow">↗</span></h3>
-                <p class="work-desc">
-                  Logistics software given the treatment of a car film: wide photography,
-                  product renders, and a page that moves at the pace of a trailer.
-                </p>
-                <ul class="work-tags"><li>Industrial</li><li>Photography</li><li>Scroll</li></ul>
-              </div>
-            </a>
-          </div>
-
-          <footer class="sheet-foot">
-            <p data-cms="work.footText">Have something that needs to fly? Tell us about it and we'll answer within two days.</p>
-            <button class="cta" type="button" data-open="contact">
-              <span class="cta-dot"></span>
-              <span class="cta-label" data-cms="work.footCta">Book a launch</span>
-              <span class="cta-arrow">↗</span>
-            </button>
-          </footer>
-          <p class="sheet-credit">Planet textures by <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener">Solar System Scope</a> (CC BY 4.0).</p>
-        </div>
-      </div>
-      <button class="sheet-close" type="button" aria-label="Close">✕</button>
-    </div>
-
-    <!-- Empty, tall element that generates the page's scroll height.
-         Its height (in vh) is set from src/scroll.js — SCROLL_LENGTH_VH. -->
-    <div class="scroll-proxy"></div>
+    <!-- A label that follows the pointer over the work cards (fine pointers only) -->
+    <div class="peek" aria-hidden="true"><span>View ↗</span></div>
   </body>
 </html>

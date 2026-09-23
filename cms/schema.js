@@ -25,18 +25,21 @@ import { socialNetworks } from './icons.js';
 
 /* Site identity + the chrome of the server-rendered content pages
    (server/pages.js). Labels here are fallbacks; the dashboard wins. */
-const MARK = `<svg class="mark" viewBox="0 0 48 48" fill="none" aria-hidden="true"><ellipse cx="24" cy="24" rx="20" ry="8.5" stroke="currentColor" stroke-width="1.1" transform="rotate(-24 24 24)" opacity="0.85"/><path d="M24 14.5 L25.9 22.1 L33.5 24 L25.9 25.9 L24 33.5 L22.1 25.9 L14.5 24 L22.1 22.1 Z" fill="currentColor" opacity="0.92"/><circle cx="40.5" cy="14.2" r="2.2" fill="#EFCD7A"/></svg>`;
+/* The mark: a cobalt planet cut by its ring. Masks need ids that are
+   unique on the page, so every copy is minted with its own suffix. */
+export const mark = (id = 'm') =>
+  `<svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><defs><mask id="mk-${id}"><rect width="48" height="48" fill="#fff"/><path d="M2 24A22 6.5 0 0 0 46 24" transform="rotate(-24 24 24)" fill="none" stroke="#000" stroke-width="5.5"/></mask><mask id="mb-${id}"><rect width="48" height="48" fill="#fff"/><circle cx="24" cy="24" r="16.4" fill="#000"/></mask></defs><circle cx="24" cy="24" r="14" fill="currentColor" mask="url(#mk-${id})"/><g transform="rotate(-24 24 24)" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 24A22 6.5 0 0 0 46 24"/><path d="M2 24A22 6.5 0 0 1 46 24" mask="url(#mb-${id})"/></g></svg>`;
 
 export const site = {
   name: 'Astro Motions',
-  accent: '#efcd7a',
+  accent: '#2b3bff',
   url: 'https://www.astromotions.com/',
-  themeColor: '#05060d',
+  themeColor: '#eeece6',
   ogImage: '/og-image.jpg',
   logo: '/apple-touch-icon.png',
   fontsHref:
-    'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Manrope:wght@400;500;600&family=DM+Mono:wght@400&display=swap',
-  mark: MARK,
+    'https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap',
+  mark,
   tagline: 'Websites with their own gravity.',
   // header menu of the content pages; `services: true` opens the dropdown
   nav: [
@@ -52,14 +55,12 @@ export const site = {
     { label: 'Blog', key: 'nav.blog', href: '/blog/' },
     { label: 'Contact', href: '/contact/' },
   ],
-  homeLink: { label: 'The 3D experience', href: '/', menuLabel: 'Home' },
+  homeLink: { label: 'Home', href: '/', menuLabel: 'Home' },
   budgetUndecided: 'Not sure yet',
   notFound: {
     h1: 'This page drifted out of orbit.',
     lede: 'The link may be old or mistyped. Try one of these instead.',
   },
-  // decorative hero art on content pages: the orbit from the logo
-  heroArt: `<svg viewBox="0 0 400 400" fill="none"><defs><radialGradient id="hg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff1c4" stop-opacity=".55"/><stop offset=".25" stop-color="#efcd7a" stop-opacity=".18"/><stop offset="1" stop-color="#efcd7a" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="150" fill="url(#hg)"/><g transform="rotate(-24 200 200)"><ellipse cx="200" cy="200" rx="185" ry="72" stroke="rgba(242,240,234,.28)"/><ellipse cx="200" cy="200" rx="128" ry="50" stroke="rgba(242,240,234,.12)"/><circle r="5.5" fill="#efcd7a"><animateMotion dur="22s" repeatCount="indefinite" path="M15,200 a185,72 0 1,0 370,0 a185,72 0 1,0 -370,0"/></circle><circle r="3" fill="#f2f0ea" opacity=".7"><animateMotion dur="14s" repeatCount="indefinite" path="M328,200 a128,50 0 1,0 -256,0 a128,50 0 1,0 256,0"/></circle></g><path d="M200 162 L207 193 L238 200 L207 207 L200 238 L193 207 L162 200 L193 193 Z" fill="#f2f0ea" opacity=".9"/></svg>`,
 };
 
 const socialField = list(
@@ -85,8 +86,8 @@ const settingsAndHome = [
     title: 'Site & SEO',
     intro: 'The home page title and description, plus site-wide settings — the fallback social image, search visibility and custom head code apply to every page.',
     fields: [
-      text('seo.title', 'Page title', { max: 70, target: [{ title: true }, { sel: 'seo.title' }], help: 'The browser-tab title and the headline in Google results. Aim for 50–60 characters.' }),
-      area('seo.description', 'Meta description', { max: 160, target: [{ meta: 'description' }, { sel: 'seo.description' }], help: 'The grey text under the headline in Google. 120–160 characters.' }),
+      text('seo.title', 'Page title', { max: 70, target: { title: true }, help: 'The browser-tab title and the headline in Google results. Aim for 50–60 characters.' }),
+      area('seo.description', 'Meta description', { max: 160, target: { meta: 'description' }, help: 'The grey text under the headline in Google. 120–160 characters.' }),
       text('seo.canonical', 'Canonical URL', { type: 'url', target: { link: 'canonical' }, help: 'The one true address of this page. Leave as-is unless the domain changes.' }),
       { key: 'seo.robots', label: 'Search engine visibility', type: 'select', target: { meta: 'robots' }, options: [['index, follow', 'Visible — allow indexing'], ['noindex, nofollow', 'Hidden — discourage indexing']] },
       text('seo.ogTitle', 'Social title', { max: 70, target: [{ prop: 'og:title' }, { meta: 'twitter:title' }], help: 'Used when the link is shared on LinkedIn, X, Slack, WhatsApp…' }),
@@ -104,13 +105,13 @@ const settingsAndHome = [
     intro: 'The studio name, the menu labels used on every page, the footer line and your social profiles.',
     fields: [
       text('brand.name', 'Studio name', { max: 40, target: { sel: 'brand.name' }, help: 'Loading screen, page footers, structured data and fallbacks.' }),
-      text('brand.wordmark', 'Header wordmark', { max: 12, target: { sel: 'brand.wordmark' } }),
+      text('brand.wordmark', 'Wordmark (header + footer)', { max: 20, target: { sel: 'brand.wordmark' }, help: 'Set in the display face next to the mark, and huge across the home-page footer.' }),
       text('nav.services', 'Menu · Services', { max: 24, target: { sel: 'nav.services' } }),
       text('nav.portfolio', 'Menu · Portfolio', { max: 24, target: { sel: 'nav.portfolio' } }),
       text('nav.team', 'Menu · Team', { max: 24, target: { sel: 'nav.team' } }),
       text('nav.blog', 'Menu · Blog', { max: 24, target: { sel: 'nav.blog' } }),
       text('nav.contact', 'Menu button · contact', { max: 24, target: { sel: 'nav.contact' } }),
-      text('nav.workLink', 'Home page · link to the launch-log sheet', { max: 24, target: { sel: 'nav.workLink' } }),
+      text('nav.workLink', 'Home page · hero link to the launch log', { max: 24, target: { sel: 'nav.workLink' } }),
       text('footer.copyright', 'Footer line', { max: 60, target: { sel: 'footer.copyright' } }),
       text('footer.top', 'Footer · back-to-top label', { max: 30, target: { sel: 'footer.top' } }),
       socialField,
@@ -119,33 +120,50 @@ const settingsAndHome = [
   {
     id: 'stages',
     group: 'Home page',
-    title: 'Stages',
-    intro: 'The six scroll stages of the page, top to bottom. Each has a small index label and one line.',
+    title: 'Sections',
+    intro: 'The home page from top to bottom: the hero, the three-line manifesto, the services list, the process and the closing call to action. (Service names and summaries come from each service page.)',
     fields: [
-      text('hero.word', 'Stage 1 · Hero wordmark', { max: 8, target: { sel: 'hero.word', letters: true }, help: 'Also the word the stars spell at stage 4 after the next deploy. Keep it short — each letter animates in.' }),
-      text('hero.sub', 'Stage 1 · Sub-line', { max: 24, target: { sel: 'hero.sub' } }),
-      text('hero.tagline', 'Stage 1 · Tagline', { max: 60, target: { sel: 'hero.tagline' } }),
-      text('stage1.index', 'Stage 2 · Index', { max: 30, target: { sel: 'stage1.index' } }),
-      text('stage1.line', 'Stage 2 · Line', { max: 60, target: { sel: 'stage1.line' } }),
-      text('stage2.index', 'Stage 3 · Index', { max: 30, target: { sel: 'stage2.index' } }),
-      text('stage2.line', 'Stage 3 · Line', { max: 60, target: { sel: 'stage2.line' } }),
-      text('stage3.index', 'Stage 4 · Index', { max: 30, target: { sel: 'stage3.index' } }),
-      text('stage3.line', 'Stage 4 · Line', { max: 60, target: { sel: 'stage3.line' } }),
-      text('stage3.d1', 'Stage 4 · Discipline 1', { max: 16, target: { sel: 'stage3.d1' } }),
-      text('stage3.d2', 'Stage 4 · Discipline 2', { max: 16, target: { sel: 'stage3.d2' } }),
-      text('stage3.d3', 'Stage 4 · Discipline 3', { max: 16, target: { sel: 'stage3.d3' } }),
-      text('stage4.index', 'Stage 5 · Index', { max: 30, target: { sel: 'stage4.index' } }),
-      text('stage4.line', 'Stage 5 · Line', { max: 60, target: { sel: 'stage4.line' } }),
-      text('stage5.index', 'Stage 6 · Index', { max: 30, target: { sel: 'stage5.index' } }),
-      text('stage5.line', 'Stage 6 · Line', { max: 60, target: { sel: 'stage5.line' } }),
-      text('cta.summit', 'Stage 6 · Button label', { max: 24, target: { sel: 'cta.summit' } }),
+      text('hero.word', 'Hero · wordmark, line 1', { max: 8, target: { sel: 'hero.word', letters: true }, help: 'Set huge across the hero. Keep it short — each letter rises in on load.' }),
+      text('hero.sub', 'Hero · wordmark, line 2', { max: 12, target: { sel: 'hero.sub' } }),
+      text('hero.tagline', 'Hero · tagline', { max: 60, target: { sel: 'hero.tagline' }, help: 'Also shown at the top of the footer.' }),
+      area('hero.intro', 'Hero · intro', { max: 200, target: { sel: 'hero.intro' } }),
+      text('hero.cta', 'Hero · button', { max: 24, target: { sel: 'hero.cta' } }),
+      text('stage1.index', 'Manifesto · label 1', { max: 30, target: { sel: 'stage1.index' } }),
+      text('stage1.line', 'Manifesto · line 1', { max: 60, target: { sel: 'stage1.line' } }),
+      text('stage2.index', 'Manifesto · label 2', { max: 30, target: { sel: 'stage2.index' } }),
+      text('stage2.line', 'Manifesto · line 2', { max: 60, target: { sel: 'stage2.line' } }),
+      text('stage3.index', 'Manifesto · label 3', { max: 30, target: { sel: 'stage3.index' } }),
+      text('stage3.line', 'Manifesto · line 3 (in cobalt)', { max: 60, target: { sel: 'stage3.line' } }),
+      text('stage3.d1', 'Discipline 1', { max: 16, target: { sel: 'stage3.d1' }, help: 'The three disciplines under the manifesto; they also run in the cobalt marquee.' }),
+      text('stage3.d2', 'Discipline 2', { max: 16, target: { sel: 'stage3.d2' } }),
+      text('stage3.d3', 'Discipline 3', { max: 16, target: { sel: 'stage3.d3' } }),
+      text('home.servicesLabel', 'Services · label', { max: 30, target: { sel: 'home.servicesLabel' } }),
+      text('home.servicesTitle', 'Services · heading', { max: 60, target: { sel: 'home.servicesTitle' } }),
+      text('home.servicesLink', 'Services · link label', { max: 30, target: { sel: 'home.servicesLink' } }),
+      text('stage4.index', 'Process · label', { max: 30, target: { sel: 'stage4.index' } }),
+      text('stage4.line', 'Process · heading', { max: 60, target: { sel: 'stage4.line' } }),
+      list('process.items', 'Process · steps', [text('n', 'Marker', { max: 6, help: 'e.g. T–3' }), text('title', 'Step', { max: 40 }), area('text', 'Text', { max: 240 })], {
+        target: { list: 'process' },
+        itemLabel: 'title',
+        addLabel: 'Add step',
+        default: [
+          { n: 'T–3', title: 'Countdown', text: 'A working session on goals, audience and competitors. You leave with a sitemap, a scope and a dated plan.' },
+          { n: 'T–2', title: 'Design', text: 'Key screens and the motion language, reviewed as real layouts in the browser rather than static mock-ups.' },
+          { n: 'T–1', title: 'Build', text: 'A hand-built front end, the editor wired up, and testing on real phones, tablets and desktops throughout.' },
+          { n: 'T–0', title: 'Orbit', text: 'Launch-day redirects, analytics and a speed pass — then a month of tuning, and growth work if you want it.' },
+        ],
+      }),
+      text('stage5.index', 'Call to action · label', { max: 30, target: { sel: 'stage5.index' } }),
+      text('stage5.line', 'Call to action · heading', { max: 60, target: { sel: 'stage5.line' } }),
+      area('cta.text', 'Call to action · text', { max: 200, target: { sel: 'cta.text' } }),
+      text('cta.summit', 'Call to action · button', { max: 24, target: { sel: 'cta.summit' } }),
     ],
   },
   {
     id: 'contact',
     group: 'Home page',
     title: 'Contact form',
-    intro: 'The panel that opens from every contact button on the home page. The labels are shared with the Contact page form.',
+    intro: 'The drawer that slides in from every "Book a launch" button on the home page. The labels are shared with the Contact page form.',
     fields: [
       text('contact.eyebrow', 'Eyebrow', { max: 30, target: { sel: 'contact.eyebrow' } }),
       text('contact.title', 'Title', { max: 60, target: { sel: 'contact.title' } }),
@@ -163,14 +181,13 @@ const settingsAndHome = [
     id: 'work',
     group: 'Home page',
     title: 'Launch log',
-    intro: 'The projects shown in the home-page sheet and on the Portfolio page. Wrap a word in *asterisks* in the title to set it in italic gold.',
+    intro: 'The projects on the home page and the Portfolio page. Wrap words in *asterisks* in the title to set them in the accent colour.',
     fields: [
-      text('work.tab', 'Sheet tab label', { max: 24, target: { sel: 'work.tab' } }),
       text('work.eyebrow', 'Eyebrow', { max: 30, target: { sel: 'work.eyebrow' } }),
       text('work.title', 'Title', { max: 60, type: 'rich', target: { sel: 'work.title' } }),
       area('work.lede', 'Intro text', { max: 260, target: { sel: 'work.lede' } }),
-      area('work.footText', 'Footer text', { max: 200, target: { sel: 'work.footText' } }),
-      text('work.footCta', 'Footer button', { max: 24, target: { sel: 'work.footCta' } }),
+      area('work.footText', 'Closing line', { max: 200, target: { sel: 'work.footText' } }),
+      text('work.footCta', 'Closing button', { max: 24, target: { sel: 'work.footCta' } }),
       {
         key: 'work.items',
         label: 'Projects',

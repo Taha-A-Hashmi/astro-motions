@@ -1,58 +1,40 @@
 # Astro Motions
 
-Immersive single-page WebGL site ("Starlight" brand): the entire visible site
-is one three.js scene; scrolling ascends from the ground into orbit through
-six stages. Geometry is procedural; the planets, moons and the Milky Way sky
-are textured with Solar System Scope maps (CC BY 4.0 — credited in the
-Launch-log sheet; keep that credit). Was "Astra Motions" until 2026-09-15.
+Editorial studio site in the "Signal" identity (redesigned 2026-09-24): a
+light, Swiss-poster layout — warm paper, ink, one electric cobalt and a lime
+signal — with ordinary crawlable HTML sections and exactly one WebGL
+element, a halftone dot planet in the hero. Was "Astra Motions" until
+2026-09-15; until 2026-09-24 it was a fixed full-screen three.js ascent
+like Apex's ("Starlight": indigo void, gold, serif) — that is all gone.
 
 Astro is a sibling of the Apex Motions Studio site (`E:\Work\Apex Motions
-Studio`) with the same architecture and a distinct brand: indigo void, one
-pale-gold "starlight" accent, serif display type, rectangular hairline
-controls with a diamond spark, and an orbital (not alpine) scene. Keep the
-two visually distinct — never copy Apex's ember/obsidian look back in.
+Studio`) and shares its backend, SEO dashboard and blog engine, but the
+owner asked for it to look like Apex **not at all** and in a different
+colour theme. Keep it that way: no dark full-screen canvas, no scroll
+"stages", no ember/obsidian, no tracked-mono uppercase labels, no rail or
+HUD, no greeting veil, no custom cursor ring, no Guide.
 
-## Stage vocabulary (use these names — the owner refers to stages, not beats)
+## The home page (`index.html`, top to bottom)
 
-| Stage | Code beat index | Scene | refs |
-|-------|-----------------|-------|------|
-| Stage 1 | beat 0 | Ringed gas giant (textured sphere, cooled to indigo) with a Saturn-style band + dust ring, a small grey moon, and the gold "moon" dot riding the ring. Hover warms it; click sends a shockwave torus out through the ring | `planet`, `heroRing` (group), `heroBand`, `heroWave`, `heroMoon`, `heroDot`, `heroDotLight` |
-| Stage 2 | beat 1 | Belt of identical grey textured moons on two counter-rotating rings, **no mouse interaction**, no gold light | `orbitals`, `modules` |
-| Stage 3 | beat 2 | The Guide is introduced — the gold dot detaches from the header mark's orbit (the mark's dot shrinks away) and flies into the scene as a wisp with particle tail + orbiting chips; follows the ascent to the star | `guide` (origin = `.mark-dot` unprojected) |
-| Stage 4 | beat 3 | Starline particles spelling "ASTRO" in the brand serif; pushed by both cursor and the Guide. Re-laid-out via `trail.userData.relayout()` once webfonts load | `trail` |
-| Stage 5 | beat 4 | Nebula deck filling the frame — violet puffs; the camera rides above it toward the star | `clouds` |
-| Stage 6 | beat 5 | The star: gold core, thin ring, dust halo, a Mars-textured world and a moon in orbit; the Guide merges into the core | `star{core,ring,halo,planets,glowLight,sprite,center,flare}` |
+| Section | id / class | Editable keys |
+|---|---|---|
+| Header — mark + wordmark, nav, cobalt "Book a launch" | `.hd` | `brand.wordmark`, `nav.*` |
+| Hero — tagline, intro, buttons, the dot planet, huge two-line wordmark | `#top.hero`, `canvas.globe` | `hero.tagline/intro/cta/word/sub`, `nav.workLink` |
+| Cobalt marquee — service names + disciplines | `.marquee` | `svc.<slug>.name`, `stage3.d1-3` |
+| Manifesto — three lines that ink in word by word | `#studio.manifesto` | `stage1-3.index/line`, `stage3.d1-3` |
+| Services — four rows that flood cobalt on hover | `#services` | `home.services*`, `svc.<slug>.name/summary` |
+| Launch log — ink section, staggered work cards | `#work` | `work.*` (list `work`) |
+| Process — four steps, a cobalt rule draws across | `#process` | `stage4.index/line`, `process.items` (list `process`) |
+| Launch — cobalt CTA with CSS ringed planet | `#launch` | `stage5.index/line`, `cta.text`, `cta.summit` |
+| Footer — ink, columns, socials, full-width cobalt wordmark | `.ft` | `footer.*`, `social.links` |
+| Contact drawer (slides from the right) | `#contact.drawer` | `contact.*` |
+| Phone menu (cobalt, ≤1100px) | `#menu` | `nav.*` |
 
-Beat centers: `beatCenter(i) = (0, i*ELEV(6), -i*DEPTH(26))`. Stage N lives at
-beat index N-1. Scroll progress `p` runs 0→1 over the ascent; stage N's
-statement is centered at `p = (N-1)/5`. The star's `center` sits above the
-beat-5 statement (`c.y + 3.6`), so the words sit under the ring, not behind
-the core.
-
-The passage between stages 2 and 4 is filled with drifting noise-displaced
-asteroids (`debris`, rock texture) and gold dust motes (`motes`). Behind
-everything: a Milky Way sky dome (`sky`, inside-out sphere, fog-free) plus
-two star Points layers. Nothing in the scene is sharp-edged on purpose —
-the owner asked for "stars and planetary objects instead of sharp and solid
-objects" (2026-09-15).
-
-## Textures
-
-`public/tex/{1k,2k}/{gas-giant,ice-giant,moon,mars,rock,milky-way}.jpg` +
-`public/tex/ring-alpha.png`, resized from Solar System Scope 2k maps with the
-scratchpad `resize-tex.mjs`. `quality.textures` picks 1k on mid/low tiers.
-
-## Mobile performance (`src/quality.js`)
-
-One tier decision at boot — `high` (desktop), `mid` (few cores / tablets),
-`low` (phones) — from pointer type, `deviceMemory`, `hardwareConcurrency`
-and viewport. It drives: particle counts (`N()` in world.js), sphere
-segments (`SEG()`), the post pipeline (`full` bloom+pixel+grade / `lite`
-half-res bloom+grade / `none` direct render), antialias, DPR cap
-(2 / 1.5 / 1.2), texture set, and whether statements get the CSS blur.
-`?q=low|mid|high` forces a tier for testing. main.js also watches frame
-time and steps DPR down to 0.75 if the 90-frame average exceeds 26 ms.
-Touch devices also lose `backdrop-filter` on the glass (style.css).
+The `stageN.*` keys are historical names from the old scroll stages; they
+now feed the sections above (labels in the dashboard say what goes where).
+`[data-open="contact"]` opens the drawer (header, hero, work, CTA, menu);
+the links fall back to `/contact/` without JS. `/?open=contact|work` opens
+the drawer / scrolls to the work after load and is stripped from the URL.
 
 ## Commands
 
@@ -64,32 +46,26 @@ Touch devices also lose `backdrop-filter` on the glass (style.css).
 
 ## Architecture — frontend
 
-- `src/main.js` — renderer, post pipeline (RenderPass → UnrealBloom(0.45/0.7/0.85)
-  → Pixel(break effect) → Grade(vignette+grain+edge chromatic split) → Output),
-  greeting-veil intro, hero letter reveal, cursor-following gold point light,
-  custom cursor ring, ascent-rail clicks, portrait FOV framing, frame loop.
-- `src/world.js` — builds all stages, exports `ELEV/DEPTH/BEATS/beatCenter/
-  createWorld/tickWorld`. `tickWorld` = scroll-independent idle motion.
-  `refs.stageObjects[i]` lists each stage's meshes so choreography can cull
-  distant stages. Every `Points` material uses the shared soft dot texture
-  (`makePointTexture`) — never ship square points. `makeDustRing` builds the
-  planet ring and the star halo.
-- `src/scroll.js` — Lenis + ScrollTrigger scrub → single progress value.
-- `src/choreography.js` — maps `p` to camera spline, statement opacity/blur,
-  rail + HUD (altitude 100 km → 35,786 km; stage names PAD/STAGE 0N/ORBIT),
-  stage culling, nebula roll-in (`refs.cloudsFade`), star wake-up (light,
-  sprite, ring emissive, core colour dim→lit) + nebula gold tint, Guide anchor.
-- `src/interactions.js` — Raycaster layer: planet crack/burst, Guide
-  shy-away, starline push (cursor + Guide), star flare (click the core, ring
-  or a planet). Receives `fx.pixelPulse`; exposes `isHot()` for the cursor.
-- `src/contact.js` — contact overlay. POSTs to `/api/contact`; handles 422
-  field errors, 429, and the sent state. Returns `{ show, hide, isOpen }`.
-- `src/sheets.js` + `src/sheets.css` — the Launch-log (work) sheet and the
-  router for every `[data-open]` control (`work` / `contact`). Scrollable
-  sheet/contact panels carry `data-lenis-prevent`. **There is no Team sheet
-  and no named people anywhere on the site** — the owner removed them on
-  2026-09-13; don't add portraits, names or founder metadata back. Work:
-  the same four reference sites as Apex (thumbnails in `public/work/`).
+- `src/main.js` — Lenis smooth scroll + GSAP ScrollTrigger; header (solid
+  once scrolled, hides on the way down); hero entrance (`html.is-ready`,
+  letters rise); manifesto word split + scrubbed ink-in; reveal-on-scroll
+  (`[data-reveal]`, only below the fold); process rule `--progress`; the
+  lime "View ↗" disc over work images (fine pointers); `[data-open]`
+  routing; footer wordmark fit-to-width. A 2.6 s failsafe always reveals
+  the hero. Loads `globe.js` lazily and `content.js` only in Vite dev.
+- `src/globe.js` — the hero planet: Fibonacci sphere of points sized by
+  value noise (halftone "land"), cobalt on paper; a depth-only occluder
+  sphere hides the far side; a ring of ink dots in five rows; an ink moon.
+  Dots under the pointer swell and turn ink; drag spins with inertia
+  (`touch-action: pan-y` keeps vertical swipes scrolling); scroll adds
+  spin; renders only while on screen. No post-processing, no bloom.
+- `src/quality.js` — tier (`high`/`mid`/`low`, `?q=` forces) → planet dot
+  count and DPR cap. Nothing else needs tiers now.
+- `src/contact.js` — the drawer: open/close, focus trap, Esc, validation,
+  POST `/api/contact` (422 field errors, 429, sent state).
+- `src/menu.js` — phone menu; `src/content.js` — dev-only dashboard apply.
+- `src/style.css` — the home page. `public/pages/pages.css` repeats the
+  same tokens/atoms for the content pages — change both together.
 
 ## Architecture — backend (`server/`)
 
@@ -103,19 +79,23 @@ admin `GET/PATCH /api/inquiries[/:id]` behind `Authorization: Bearer ADMIN_TOKEN
 Vercel project; see it in Vercel → Settings → Environment Variables). Files:
 `cms/schema.js` (every editable field, its label/type/limits and where it
 lands: `sel` → `data-cms="key"` element, `meta`/`prop`/`title`/`link`/
-`jsonld`/`headHtml`, or `list` → `data-cms-list="work"`), `cms/templates.js`
-(escaping + the work-card template), `server/content.js` (storage: Vercel
-Blob store `astro-cms` via `BLOB_READ_WRITE_TOKEN`, else `DATA_DIR/cms/`),
-`server/cms.js` (renders `dist/shell.html` with saved values injected + the
-`/api/admin/*` routes), `src/content.js` (dev-only client apply),
-`public/admin/*` (the editor UI). The Vite build renames `index.html` →
-`shell.html` and `vercel.json` rewrites `/` to the function, so crawlers see
-edited titles/meta without a rebuild; saved values also ride on
-`window.__CMS__`. To add an editable field: add it to the schema and put
-`data-cms="key"` on the element (wrap button text in a span if the button
-also holds an arrow). Empty value = "use the HTML default". The function
-reads the shell from disk (`includeFiles`) or fetches `/shell.html` from
-the CDN as fallback; `/api/health` reports which (`shell`).
+`jsonld`/`headHtml`, or `list` → `data-cms-list="work|process|socials"`),
+`cms/templates.js` (escaping + the work-card, process-step and social
+templates), `server/content.js` (storage: Vercel Blob store `astro-cms` via
+`BLOB_READ_WRITE_TOKEN`, else `DATA_DIR/cms/`), `server/cms.js` (renders
+`dist/shell.html` with saved values injected + the `/api/admin/*` routes),
+`src/content.js` (dev-only client apply), `public/admin/*` (the editor UI,
+shared with Apex). The Vite build renames `index.html` → `shell.html` and
+`vercel.json` rewrites `/` to the function, so crawlers see edited copy
+without a rebuild; saved values also ride on `window.__CMS__`. To add an
+editable field: add it to the schema and put `data-cms="key"` on the element
+(wrap button text in a span if the button also holds an arrow). The same
+key may sit on several elements (service names appear in the marquee, the
+rows and the footer) — all are replaced. Service `name`/`summary` fields
+carry a `sel` target (cms/fields.js) for exactly that reason. Empty value =
+"use the HTML default". The function reads the shell from disk
+(`includeFiles`) or fetches `/shell.html` from the CDN as fallback;
+`/api/health` reports which (`shell`).
 
 **Mail is NOT configured for Astro.** There is no Astro mailbox; `CONTACT_TO`
 is empty in `.env.example` and no mail env vars are set on Vercel, so the
@@ -129,24 +109,32 @@ Routes (exact, trailing slash canonical — `/web-design` 301s to `/web-design/`
 `/services/` hub · `/web-design/` · `/organic-seo/` · `/ppc-marketing/` ·
 `/social-media-marketing/` · `/portfolio/` · `/team/` · `/contact/` ·
 `/blog/` · `/blog/<slug>/` · `/blog/feed.xml` (RSS) · `/sitemap.xml`.
-Unknown paths get a styled 404 (`site.notFound`).
+Unknown paths get a styled 404 (`site.notFound`, a giant "4◐4").
 
 - `server/pages.js` — renders every page (layout, header with Services
-  dropdown, phone menu, footer, breadcrumbs + BreadcrumbList/Service/
-  FAQPage/BlogPosting JSON-LD) from dashboard values → schema defaults →
-  shell defaults. Templates: service, services, portfolio, team, contact,
-  blog, post, 404. `pagesRouter()` is mounted in `server/app.js` right after
-  the `/` shell handler.
+  mega-dropdown, cobalt phone menu, ink footer, breadcrumbs +
+  BreadcrumbList/Service/FAQPage/BlogPosting JSON-LD) from dashboard values
+  → schema defaults → shell defaults. Templates: service, services,
+  portfolio, team, contact, blog, post, 404. **Its markup diverged from
+  Apex's copy in the 2026-09-24 redesign** — the data plumbing (getCtx,
+  publishedPosts, sitemap, feed, router) is the same shape, so carry
+  structural fixes across by hand, never the markup.
+  Page anatomy: `.phero` (crumbs + halftone `.sticker`, index chip, huge
+  H1, ruled foot with lede + actions) → bands (`.deliver` ruled grid,
+  `.steps` on ink, `.longform` prose with a side label, sticky-side FAQ,
+  `.svc-rows`) → cobalt `.launch` CTA. Cards without images get CSS
+  `.halftone` art.
 - `cms/pages.js` — Astro's page sections and ALL their default copy (the
   four services, hub, portfolio, team, contact, blog page, starter post).
   `cms/fields.js` — the reusable section builders (`serviceSection` etc.)
   and field helpers. Each page is a dashboard section with `page: { path,
   template }` and flat keys `svc.<slug>.*` / `page.<name>.*`.
-- `public/pages/pages.css` + `pages.js` — the look (Starlight tokens, CSS
-  starfield, orbit hero art from `site.heroArt`) and the small behaviours
-  (phone menu, dropdown, reveal, contact form → `/api/contact`).
+- `public/pages/pages.css` + `pages.js` — the look and the small behaviours
+  (phone menu, header tuck-away, dropdown, reveal, footer wordmark fit,
+  contact form → `/api/contact`).
 - Chrome config lives in `site` (cms/schema.js): nav, cta, footer links,
-  fonts, mark, heroArt, notFound, budget label.
+  fonts, `mark(id)` (the mark SVG — masks need a unique id per copy),
+  notFound, budget label.
 - Blog posts are one field, `blog.posts` (type `posts`), edited by the
   WordPress-style editor in the dashboard (Blog → Posts): title, permalink
   (slug set from the title on first save, then stable), rich text body
@@ -160,52 +148,43 @@ Unknown paths get a styled 404 (`site.notFound`).
   at startup — it took astromotions.com down for ~6 minutes on 2026-09-18;
   fixed by `vercel rollback`, then a new build + `vercel promote`). The same
   file lives in the Apex repo — keep them identical.
-- Portfolio reuses the home page's `work.items`; the Contact page form
-  reuses the `contact.*` labels. Team shows role cards (no names/photos by
-  default — the owner removed people from Astro on 2026-09-13; they can add
-  members with photos in Pages → Team).
-- Socials: `social.links` list (Brand, menu & socials) → icons in page
-  footers, the phone menu, the contact page and the home stage-6 footer.
-  Empty until the owner adds URLs.
+- Portfolio reuses the home page's `work.items` (same `lists.work` card);
+  the Contact page form reuses the `contact.*` labels. Team shows role
+  cards (no names/photos by default — the owner removed people from Astro
+  on 2026-09-13; they can add members with photos in Pages → Team).
+- Socials: `social.links` list (Brand, menu & socials) → icons in the home
+  and page footers, the phone menus and the contact page. Empty until the
+  owner adds URLs.
 - `vercel.json` rewrites every non-static path to the function
   (`/(.*)` → `/api/index`; Vercel serves real files first).
 - Vite dev proxies the page routes to the API server (`npm run dev:all`).
-- The 3D home page links to all of it: header nav (Services, Portfolio,
-  Team, Blog), the phone Menu (≤720px, `src/menu.js`), Services/Blog links at
-  stages 4 and 6, and a crawlable link list in `.seo-fallback`.
+  The API server reads `dist/shell.html` for defaults — run `npm run build`
+  after editing index.html or the content pages show stale defaults.
 
-## Conventions
+## Conventions (the "Signal" system)
 
-- Design tokens in `src/style.css`: `--void #05060d`, `--ink #0c0f1c`,
-  `--star #f2f0ea` (text), `--haze #8b90a8`, `--gold #efcd7a`. One accent
-  only; the nebula tints (violet/teal/rose) stay in the background.
-- Type: Cormorant Garamond (display, 300/400/500 + italic), Manrope (body),
-  DM Mono (instruments). The hero wordmark is Cormorant 400 tracked 0.18em.
-- Copy voice is launch/orbit, deliberately unlike Apex's cadence: stage
-  indexes Liftoff / Escape velocity / The studio / Deep field / Arrival;
-  CTA "Book a launch"; the work sheet is the "Launch log"; HUD reads
-  PAD … ORBIT and "SCROLL TO LIFT OFF" / "ORBIT REACHED". Keep it that way.
-- Ornament: `✦` flanks statement indexes and sheet eyebrows (no rules).
-  Controls are 2px-radius rectangles; the glyph is a rotated-square
-  "spark" (`.cta-dot`, `.header-contact .dot`, rail ticks, cursor dot).
-- Bloom threshold is 0.85 on purpose — only true emitters may bloom
-  (gold dots, Guide head, star core). Materials brighter than ~0x50xxxx
-  risk blooming. The star core starts dim (`coreDim`) and is lifted by
-  choreography, so it never blooms before stage 6.
-- Idle motion lives in `tickWorld`; scroll-driven state in `choreography`;
-  cursor-driven state in `interactions`. Cross-layer values ride on
-  `refs.*.userData` or dedicated refs fields (e.g. `star.flare`).
-- GSAP tween on an element centered with CSS `translate(-50%,-50%)` must set
-  `xPercent:-50, yPercent:-50` or it destroys the centering.
-- Every `<button>` in the overlay must reset `appearance`/`background`.
-- `.statement p` has high specificity; style special statement children as
-  `.statement p.foo`, not `.foo`.
+- Tokens (in both `src/style.css` and `public/pages/pages.css`):
+  `--paper #eeece6` ground, `--paper-2 #e4e1d8`, `--ink #0d0d12`,
+  `--cobalt #2b3bff` (the brand colour), `--lime #d4ff3f` (signal — only on
+  ink or cobalt, never as text on paper), `--mute #66645e`.
+- Type: Unbounded (display: 500 headings, 600–700 wordmarks, tight
+  negative tracking) + Instrument Sans (text). No serif, no mono.
+- Section label = cobalt index chip (`.label-n`, Unbounded 10.5px) + a plain
+  word; on ink/cobalt the chip turns lime. No ✦, no tracked caps.
+- Square corners everywhere. Buttons (`.btn`) are solid blocks with a
+  square arrow "key" (`.btn-ico`) that turns −45° on hover while an ink
+  (or white, for lime) fill wipes up: `btn-solid` cobalt, `btn-lime`,
+  `btn-line` outline. Every `<button>` resets `appearance`/`background`.
+- Rhythm: a 20% label column + content (`minmax(170px, 20%) 1fr`) on
+  section heads, manifesto rows, service rows, prose and posts.
+- Motion is opt-in: `html.js` gates hidden initial states, reduced motion
+  disables smoothing, marquee, reveals and the planet's auto-spin.
+- The mark: a cobalt planet cut by its ring (front arc masks the disc,
+  back arc hidden behind it). Masks → unique ids per inline copy.
 - Verify visually before shipping: headless Chrome (puppeteer-core +
-  `C:\Program Files\Google\Chrome\Application\chrome.exe`), screenshot each
-  stage plus interactions, check console errors.
-- Icons, OG image and `branding/*.svg` are generated from the mark SVG
-  (orbit ellipse + four-point star + gold dot) with a puppeteer script;
-  regenerate all of them together if the mark changes.
+  `C:\Program Files\Google\Chrome\Application\chrome.exe`), screenshot the
+  home page desktop + 390px, every content-page template, the drawer, the
+  phone menus and the dropdown; check console errors.
 
 ## Accounts / deployment (IMPORTANT)
 
@@ -214,10 +193,16 @@ Unknown paths get a styled 404 (`site.notFound`).
   knwn4official account or email anywhere in this project.
 - Vercel: project `astro-motions` (renamed from astra-motions; team
   taha-a-hashmis-projects), connected to the GitHub repo, so every push to
-  `main` deploys production. **Live domain: https://www.astromotions.com/**
-  (owner-bought; apex 308-redirects to www). Also astro-motions.vercel.app.
-  Canonical/OG URLs in index.html point at www.astromotions.com.
-- Brand assets live in branding/ (SVG masters with outlined text + PNG
-  exports, same file set as Apex). Regenerate with the scratchpad
-  build-logo-astro.mjs pattern: opentype.js outlines Cormorant Garamond 500
-  (tracking 0.18em) and DM Mono 400 (0.62em); mark = orbit + star + gold dot.
+  `main` deploys production; other branches get preview URLs.
+  **Live domain: https://www.astromotions.com/** (owner-bought; apex
+  308-redirects to www). Also astro-motions.vercel.app. Canonical/OG URLs
+  in index.html point at www.astromotions.com.
+- Brand assets: `branding/` (logo-mark, -horizontal, -stacked, on-dark and
+  white variants; SVG masters with the wordmark outlined to paths + PNG
+  exports), `public/favicon.svg|ico|-16|-32|-96.png`, `apple-touch-icon`,
+  `icon-192/512` (white mark on a cobalt tile) and `og-image.jpg` (the
+  hero poster with an SVG halftone planet). All generated together by the
+  scratchpad `build-brand.mjs` pattern: opentype.js outlines Unbounded
+  SemiBold "astro motions" at −0.03em, puppeteer rasterises, a tiny
+  PNG-in-ICO writer makes favicon.ico. Regenerate all of them if the mark
+  changes.

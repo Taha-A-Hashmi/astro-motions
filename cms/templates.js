@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   cms/templates.js — HTML for list-type content (the work cards) plus the
+   cms/templates.js — HTML for list-type content (work cards, process steps, socials) plus the
    escaping helpers, shared by the server renderer and the dev client.
    ═══════════════════════════════════════════════════════════════════════ */
 
@@ -28,23 +28,38 @@ export const lists = {
     items
       .map(
         (it, i) => `
-            <a class="sheet-card tilt work-card" href="${esc(safeHref(it.href))}" target="_blank" rel="noopener">
-              <div class="work-thumb">
-                <span class="work-index">${String(i + 1).padStart(2, '0')}</span>
-                <img src="${esc(it.image || '')}" alt="${esc(it.alt || it.title || '')}" loading="lazy" />
-              </div>
-              <div class="work-body">
-                <p class="work-meta">${esc(it.meta)}</p>
-                <h3 class="work-title">${esc(it.title)} <span class="arrow">↗</span></h3>
-                <p class="work-desc">${multiline(it.description)}</p>
-                <ul class="work-tags">${String(it.tags || '')
-                  .split(',')
-                  .map((t) => t.trim())
-                  .filter(Boolean)
-                  .map((t) => `<li>${esc(t)}</li>`)
-                  .join('')}</ul>
+            <a class="wk" href="${esc(safeHref(it.href))}" target="_blank" rel="noopener">
+              <figure class="wk-media">${it.image ? `<img src="${esc(it.image)}" alt="${esc(it.alt || it.title || '')}" loading="lazy" width="1600" height="1000" />` : ''}</figure>
+              <div class="wk-info">
+                <span class="wk-n">${String(i + 1).padStart(2, '0')}</span>
+                <div class="wk-text">
+                  <h3 class="wk-title">${esc(it.title)}</h3>
+                  <p class="wk-meta">${esc(it.meta)}</p>
+                  <p class="wk-desc">${multiline(it.description)}</p>
+                  <ul class="wk-tags">${String(it.tags || '')
+                    .split(',')
+                    .map((t) => t.trim())
+                    .filter(Boolean)
+                    .map((t) => `<li>${esc(t)}</li>`)
+                    .join('')}</ul>
+                </div>
+                <span class="wk-go" aria-hidden="true">↗</span>
               </div>
             </a>`
+      )
+      .join('\n'),
+
+  // the home page's process steps
+  process: (items) =>
+    (Array.isArray(items) ? items : [])
+      .filter((it) => it && (it.title || it.text))
+      .map(
+        (it, i) => `
+            <li class="step">
+              <span class="step-n">${esc(it.n || String(i + 1).padStart(2, '0'))}</span>
+              <h3 class="step-title">${esc(it.title)}</h3>
+              <p class="step-text">${multiline(it.text)}</p>
+            </li>`
       )
       .join('\n'),
 

@@ -58,8 +58,8 @@ export function serviceSection(slug, d) {
     intro: pageIntro(path, 'listed on the Services hub and in the Services menu'),
     fields: [
       ...seoFields(p, d),
-      text(`${p}.name`, 'Service name', { max: 40, default: d.name, help: 'Used in menus, breadcrumbs and service cards.' }),
-      area(`${p}.summary`, 'Card summary', { max: 160, default: d.summary, help: 'One line for the Services hub and the "other services" cards.' }),
+      text(`${p}.name`, 'Service name', { max: 40, default: d.name, target: { sel: `${p}.name` }, help: 'Used in menus, breadcrumbs, the home-page services list and marquee.' }),
+      area(`${p}.summary`, 'Summary', { max: 160, default: d.summary, target: { sel: `${p}.summary` }, help: 'One line for the home page, the Services hub and the "other services" list.' }),
       ...heroFields(p, d),
       text(`${p}.featuresTitle`, 'Deliverables · heading', { max: 60, default: d.featuresTitle }),
       list(`${p}.features`, 'Deliverables', [text('title', 'Title', { max: 60 }), area('text', 'Text', { max: 300 })], {

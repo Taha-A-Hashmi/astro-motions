@@ -3,6 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export default defineConfig({
+  // three.js is its own lazy chunk (the hero planet) and is ~500 kB on its own
+  build: { chunkSizeWarningLimit: 700 },
   server: {
     // `npm run server` hosts the API on 8787; the dev site talks to it
     // through this proxy so the browser only ever sees one origin.

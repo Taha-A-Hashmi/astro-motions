@@ -33,9 +33,10 @@ function apply(values) {
   }
 }
 
+/** Resolves once the copy is in place (immediately in production). */
 export function applyContent() {
-  if (window.__CMS__) return; // server-rendered
-  fetch('/api/content', { headers: { Accept: 'application/json' } })
+  if (window.__CMS__) return Promise.resolve(); // server-rendered
+  return fetch('/api/content', { headers: { Accept: 'application/json' } })
     .then((r) => (r.ok ? r.json() : null))
     .then((body) => body?.values && apply(body.values))
     .catch(() => {});
