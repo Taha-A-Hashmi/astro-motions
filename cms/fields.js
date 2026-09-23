@@ -170,7 +170,6 @@ export function contactSection(d) {
       ...seoFields(p, d),
       ...heroFields(p, d),
       text(`${p}.formTitle`, 'Form · heading', { max: 60, default: d.formTitle }),
-      text(`${p}.servicesLabel`, 'Form · services question', { max: 60, default: d.servicesLabel }),
       text(`${p}.email`, 'Public email address', { max: 120, default: d.email || '', help: 'Optional. Shown on the page when set.' }),
       text(`${p}.responseLine`, 'Response time line', { max: 120, default: d.responseLine }),
     ],

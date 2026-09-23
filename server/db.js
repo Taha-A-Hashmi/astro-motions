@@ -33,16 +33,26 @@ export function openDb() {
     );
     CREATE INDEX IF NOT EXISTS inquiries_created ON inquiries (created_at DESC);
   `);
+  // 2026-09 form: first/last name, country and phone. Older databases get
+  // the columns added in place; `name` keeps the full name for listings.
+  const have = new Set(db.prepare('PRAGMA table_info(inquiries)').all().map((c) => c.name));
+  for (const col of ['first_name', 'last_name', 'country', 'phone']) {
+    if (!have.has(col)) db.exec(`ALTER TABLE inquiries ADD COLUMN ${col} TEXT`);
+  }
   return db;
 }
 
-export function insertInquiry({ name, email, message, budget, ip, userAgent, referrer }) {
+export function insertInquiry({ name, firstName, lastName, email, country, phone, message, budget = '', ip, userAgent, referrer }) {
   const d = openDb();
   const row = {
     id: crypto.randomUUID(),
     created_at: new Date().toISOString(),
     name,
+    first_name: firstName || null,
+    last_name: lastName || null,
     email,
+    country: country || null,
+    phone: phone || null,
     message,
     budget,
     ip: ip || null,
@@ -50,8 +60,8 @@ export function insertInquiry({ name, email, message, budget, ip, userAgent, ref
     referrer: referrer || null,
   };
   d.prepare(
-    `INSERT INTO inquiries (id, created_at, name, email, message, budget, ip, user_agent, referrer)
-     VALUES (@id, @created_at, @name, @email, @message, @budget, @ip, @user_agent, @referrer)`
+    `INSERT INTO inquiries (id, created_at, name, first_name, last_name, email, country, phone, message, budget, ip, user_agent, referrer)
+     VALUES (@id, @created_at, @name, @first_name, @last_name, @email, @country, @phone, @message, @budget, @ip, @user_agent, @referrer)`
   ).run(row);
   return row;
 }

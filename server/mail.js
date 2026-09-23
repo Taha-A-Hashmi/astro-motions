@@ -15,29 +15,37 @@ const esc = (s) =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 function studioNotification(inq) {
-  const subject = `Astro inquiry — ${inq.name} (${inq.budget})`;
+  const first = inq.first_name || inq.name;
+  const last = inq.last_name || '';
+  const subject = `Astro inquiry — ${inq.name} (${inq.country || 'no country'})`;
   const text = [
-    `New launch request from the site`,
+    `New inquiry from astromotions.com`,
     ``,
-    `Name:    ${inq.name}`,
-    `Email:   ${inq.email}`,
-    `Budget:  ${inq.budget}`,
-    `When:    ${inq.created_at}`,
+    `First name: ${first}`,
+    `Last name:  ${last}`,
+    `Email:      ${inq.email}`,
+    `Phone:      ${inq.phone || ''}`,
+    `Country:    ${inq.country || ''}`,
+    `Received:   ${new Date(inq.created_at).toUTCString().replace('GMT', 'UTC')}`,
     ``,
-    `— The project —`,
+    `— Description —`,
     inq.message,
     ``,
     `Reply directly to this email to answer them.`,
   ].join('\n');
   const html = `
     <div style="font-family:'Instrument Sans',Segoe UI,system-ui,sans-serif;background:#eeece6;color:#0d0d12;padding:32px;max-width:640px;border-top:8px solid #2b3bff">
-      <p style="margin:0 0 14px"><span style="display:inline-block;background:#2b3bff;color:#ffffff;font-size:11px;font-weight:600;padding:4px 8px">→</span> <span style="font-size:13px;font-weight:600">New launch request</span></p>
-      <h1 style="font-size:24px;font-weight:600;letter-spacing:-.02em;margin:0 0 24px">${esc(inq.name)} — ${esc(inq.budget)}</h1>
+      <p style="margin:0 0 14px"><span style="display:inline-block;background:#2b3bff;color:#ffffff;font-size:11px;font-weight:600;padding:4px 8px">→</span> <span style="font-size:13px;font-weight:600">New inquiry</span></p>
+      <h1 style="font-size:24px;font-weight:600;letter-spacing:-.02em;margin:0 0 24px">${esc(inq.name)}</h1>
       <table style="border-collapse:collapse;font-size:14px;color:#66645e">
-        <tr><td style="padding:4px 16px 4px 0">Email</td><td style="color:#0d0d12"><a href="mailto:${esc(inq.email)}" style="color:#2b3bff">${esc(inq.email)}</a></td></tr>
-        <tr><td style="padding:4px 16px 4px 0">Received</td><td style="color:#0d0d12">${esc(inq.created_at)}</td></tr>
+        <tr><td style="padding:5px 18px 5px 0;white-space:nowrap">First name</td><td style="color:#0d0d12">${esc(first)}</td></tr>
+        <tr><td style="padding:5px 18px 5px 0;white-space:nowrap">Last name</td><td style="color:#0d0d12">${esc(last)}</td></tr>
+        <tr><td style="padding:5px 18px 5px 0;white-space:nowrap">Email</td><td style="color:#0d0d12"><a href="mailto:${esc(inq.email)}" style="color:#2b3bff">${esc(inq.email)}</a></td></tr>
+        <tr><td style="padding:5px 18px 5px 0;white-space:nowrap">Phone</td><td style="color:#0d0d12"><a href="tel:${esc(String(inq.phone || '').replace(/[^\d+]/g, ''))}" style="color:#2b3bff">${esc(inq.phone || '')}</a></td></tr>
+        <tr><td style="padding:5px 18px 5px 0;white-space:nowrap">Country</td><td style="color:#0d0d12">${esc(inq.country || '')}</td></tr>
+        <tr><td style="padding:5px 18px 5px 0;white-space:nowrap">Received</td><td style="color:#0d0d12">${esc(new Date(inq.created_at).toUTCString().replace('GMT', 'UTC'))}</td></tr>
       </table>
-      <p style="font-size:13px;font-weight:600;color:#66645e;margin:28px 0 8px">The project</p>
+      <p style="font-size:13px;font-weight:600;color:#66645e;margin:28px 0 8px">Description</p>
       <p style="font-size:15px;line-height:1.6;white-space:pre-wrap;margin:0;border-left:3px solid #2b3bff;padding-left:14px">${esc(inq.message)}</p>
     </div>`;
   return { subject, text, html };
@@ -46,7 +54,7 @@ function studioNotification(inq) {
 function visitorReceipt(inq) {
   const subject = `Countdown started — Astro Motions`;
   const text = [
-    `Hi ${inq.name},`,
+    `Hi ${inq.first_name || inq.name},`,
     ``,
     `Your message landed. Countdown started. We answer every message ourselves, usually within two days.`,
     ``,
@@ -61,7 +69,7 @@ function visitorReceipt(inq) {
     <div style="font-family:'Instrument Sans',Segoe UI,system-ui,sans-serif;background:#eeece6;color:#0d0d12;padding:32px;max-width:640px;border-top:8px solid #2b3bff">
       <p style="margin:0 0 14px"><span style="display:inline-block;background:#2b3bff;color:#ffffff;font-size:11px;font-weight:600;padding:4px 8px">→</span> <span style="font-size:13px;font-weight:600">Received</span></p>
       <h1 style="font-size:24px;font-weight:600;letter-spacing:-.02em;margin:0 0 20px">Your message landed. Countdown started.</h1>
-      <p style="font-size:15px;line-height:1.6;color:#66645e;margin:0 0 24px">Hi ${esc(inq.name)} — we answer every message ourselves, usually within two days.</p>
+      <p style="font-size:15px;line-height:1.6;color:#66645e;margin:0 0 24px">Hi ${esc(inq.first_name || inq.name)} — we answer every message ourselves, usually within two days.</p>
       <p style="font-size:13px;font-weight:600;color:#66645e;margin:0 0 8px">Your message</p>
       <p style="font-size:15px;line-height:1.6;white-space:pre-wrap;margin:0 0 32px;border-left:3px solid #0d0d12;padding-left:14px">${esc(inq.message)}</p>
       <p style="font-size:13px;color:#66645e;margin:0">— Astro Motions<br/>Websites with their own gravity.</p>

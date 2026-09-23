@@ -104,9 +104,14 @@
     const status = form.querySelector('.form-status');
     const submit = form.querySelector('button[type="submit"]');
     const done = form.parentElement.querySelector('.form-done');
+    // every field is required (mirrors server/validate.js)
+    const digits = (v) => v.replace(/\D/g, '').length;
     const rules = {
-      name: (v) => v.length >= 2,
+      firstName: (v) => v.length >= 1,
+      lastName: (v) => v.length >= 1,
       email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v),
+      country: (v) => v.length > 0,
+      phone: (v) => /^\+?[0-9\s().\-]{6,24}$/.test(v) && digits(v) >= 6 && digits(v) <= 15,
       message: (v) => v.length >= 10,
     };
     const fieldOf = (name) => form.querySelector(`[name="${name}"]`)?.closest('.field');
@@ -121,9 +126,6 @@
       }
       if (!ok) return;
       const data = new FormData(form);
-      const services = data.getAll('services');
-      let message = String(data.get('message') || '').trim();
-      if (services.length) message = `Interested in: ${services.join(', ')}\n\n${message}`;
       submit.disabled = true;
       status.textContent = 'Sending…';
       try {
@@ -131,10 +133,12 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({
-            name: data.get('name'),
+            firstName: data.get('firstName'),
+            lastName: data.get('lastName'),
             email: data.get('email'),
-            message,
-            budget: data.get('budget') || 'Undecided',
+            country: data.get('country'),
+            phone: data.get('phone'),
+            message: String(data.get('message') || '').trim(),
             company: data.get('company') || '',
             elapsed: Math.round(performance.now() - openedAt),
           }),

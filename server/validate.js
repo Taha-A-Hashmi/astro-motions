@@ -1,15 +1,20 @@
 /* ═══════════════════════════════════════════════════════════════════════
    server/validate.js — the contact payload, checked server-side.
    Mirrors the client rules so the API is safe to hit directly.
-   ═══════════════════════════════════════════════════════════════════════ */
 
-export const BUDGETS = ['< $5k', '$5k – $15k', '$15k+', 'Undecided'];
+   Every field is required: first name, last name, email, country (one of
+   cms/countries.js), phone, and a description of at least 10 characters.
+   ═══════════════════════════════════════════════════════════════════════ */
+import { COUNTRIES } from '../cms/countries.js';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+// digits with the usual separators, an optional leading +
+const PHONE_RE = /^\+?[0-9\s().\-]{6,24}$/;
+const COUNTRY_SET = new Set(COUNTRIES);
 
 const clean = (v, max) =>
   String(v ?? '')
-    .replace(/[\u200B-\u200D\uFEFF]/g, '') // zero-width junk
+    .replace(/[​-‍﻿]/g, '') // zero-width junk
     .trim()
     .slice(0, max);
 
@@ -18,19 +23,27 @@ const clean = (v, max) =>
  */
 export function validateInquiry(body) {
   const errors = {};
-  const name = clean(body.name, 80);
+  const firstName = clean(body.firstName, 60);
+  const lastName = clean(body.lastName, 60);
   const email = clean(body.email, 160).toLowerCase();
+  const country = clean(body.country, 80);
+  const phone = clean(body.phone, 30);
   const message = clean(body.message, 4000);
-  const budget = clean(body.budget, 24) || 'Undecided';
+  const digits = phone.replace(/\D/g, '').length;
 
-  if (name.length < 2) errors.name = 'Please enter your name';
+  if (!firstName) errors.firstName = 'Please enter your first name';
+  if (!lastName) errors.lastName = 'Please enter your last name';
   if (!EMAIL_RE.test(email)) errors.email = 'Enter a valid email address';
-  if (message.length < 10) errors.message = 'Tell us a little more (10+ characters)';
-  if (!BUDGETS.includes(budget)) errors.budget = 'Pick one of the listed ranges';
+  if (!COUNTRY_SET.has(country)) errors.country = 'Please choose your country';
+  if (!PHONE_RE.test(phone) || digits < 6 || digits > 15) errors.phone = 'Enter a valid phone number';
+  if (message.length < 10) errors.message = 'Please write at least 10 characters';
 
   // Crude link-spam guard: real briefs rarely contain more than 3 URLs
   if ((message.match(/https?:\/\//gi) || []).length > 3) errors.message = 'Too many links';
 
   if (Object.keys(errors).length) return { ok: false, errors };
-  return { ok: true, data: { name, email, message, budget } };
+  return {
+    ok: true,
+    data: { firstName, lastName, name: `${firstName} ${lastName}`, email, country, phone, message },
+  };
 }

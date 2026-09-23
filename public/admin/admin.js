@@ -950,11 +950,11 @@
       const c = res.counts || {};
       card.append(h('div', { class: 'card-head' }, h('h2', {}, `${c.total || 0} entries`), h('span', { class: 'field-help' }, `${c.new || 0} new · ${c.replied || 0} replied · ${c.archived || 0} archived`)));
       if (!items.length) return card.append(h('div', { class: 'empty' }, 'No entries yet. Note: on Vercel, entries are only kept when email delivery is configured — the notification email is the durable record.'));
-      const table = h('table', {}, h('thead', {}, h('tr', {}, h('th', {}, 'From'), h('th', {}, 'Budget'), h('th', {}, 'Received'), h('th', {}, 'Status'))));
+      const table = h('table', {}, h('thead', {}, h('tr', {}, h('th', {}, 'From'), h('th', {}, items.some((i) => i.phone) ? 'Country · phone' : 'Budget'), h('th', {}, 'Received'), h('th', {}, 'Status'))));
       const tbody = h('tbody');
       for (const it of items) {
         tbody.append(
-          h('tr', { class: `row${it.status === 'new' ? ' is-new' : ''}`, onclick: () => showInquiry(it) }, h('td', {}, it.name, h('div', { class: 'field-help' }, it.email)), h('td', {}, it.budget), h('td', {}, new Date(it.created_at).toLocaleString()), h('td', {}, h('span', { class: `pill ${it.status}` }, it.status)))
+          h('tr', { class: `row${it.status === 'new' ? ' is-new' : ''}`, onclick: () => showInquiry(it) }, h('td', {}, it.name, h('div', { class: 'field-help' }, it.email)), h('td', {}, it.phone ? `${it.country || ''} · ${it.phone}` : it.budget), h('td', {}, new Date(it.created_at).toLocaleString()), h('td', {}, h('span', { class: `pill ${it.status}` }, it.status)))
         );
       }
       table.append(tbody);
@@ -974,7 +974,7 @@
       h(
         'div',
         { class: 'card-body detail' },
-        h('dl', {}, h('dt', {}, 'Email'), h('dd', {}, h('a', { href: `mailto:${it.email}` }, it.email)), h('dt', {}, 'Budget'), h('dd', {}, it.budget), h('dt', {}, 'Received'), h('dd', {}, new Date(it.created_at).toLocaleString()), h('dt', {}, 'Emailed'), h('dd', {}, it.emailed ? 'yes' : `no${it.email_error ? ` — ${it.email_error}` : ''}`)),
+        h('dl', {}, h('dt', {}, 'Email'), h('dd', {}, h('a', { href: `mailto:${it.email}` }, it.email)), ...(it.phone ? [h('dt', {}, 'Phone'), h('dd', {}, h('a', { href: `tel:${String(it.phone).replace(/[^\d+]/g, '')}` }, it.phone)), h('dt', {}, 'Country'), h('dd', {}, it.country || '')] : [h('dt', {}, 'Budget'), h('dd', {}, it.budget)]), h('dt', {}, 'Received'), h('dd', {}, new Date(it.created_at).toLocaleString()), h('dt', {}, 'Emailed'), h('dd', {}, it.emailed ? 'yes' : `no${it.email_error ? ` — ${it.email_error}` : ''}`)),
         h('pre', {}, it.message),
         h(
           'div',

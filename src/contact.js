@@ -34,7 +34,7 @@ export function createContact({ lenis }) {
     document.documentElement.style.overflow = 'hidden';
     requestAnimationFrame(() => {
       root.classList.add('is-open');
-      const first = root.classList.contains('sent') ? closeBtn : form.querySelector('input[name="name"]');
+      const first = root.classList.contains('sent') ? closeBtn : form.querySelector('input[name="firstName"]');
       // wait for the slide before focusing, or the page jumps on iOS
       setTimeout(() => first.focus({ preventScroll: true }), 350);
     });
@@ -66,7 +66,7 @@ export function createContact({ lenis }) {
     if (e.key === 'Escape') hide();
     // keep Tab inside the drawer
     if (e.key === 'Tab') {
-      const items = [...panel.querySelectorAll('button, input, textarea, a[href]')].filter(
+      const items = [...panel.querySelectorAll('button, input, select, textarea, a[href]')].filter(
         (el) => !el.disabled && el.offsetParent !== null && el.tabIndex !== -1
       );
       if (!items.length) return;
@@ -83,9 +83,14 @@ export function createContact({ lenis }) {
   });
 
   /* ── Validation + submit ────────────────────────────────────────────── */
+  // every field is required (mirrors server/validate.js)
+  const digits = (v) => v.replace(/\D/g, '').length;
   const rules = {
-    name: (v) => v.length >= 2,
+    firstName: (v) => v.length >= 1,
+    lastName: (v) => v.length >= 1,
     email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v),
+    country: (v) => v.length > 0,
+    phone: (v) => /^\+?[0-9\s().\-]{6,24}$/.test(v) && digits(v) >= 6 && digits(v) <= 15,
     message: (v) => v.length >= 10,
   };
 

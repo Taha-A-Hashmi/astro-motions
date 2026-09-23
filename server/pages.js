@@ -20,7 +20,7 @@ import { esc, multiline, lists } from '../cms/templates.js';
 import { cleanHtml, textOf } from './sanitize.js';
 import { loadContent } from './content.js';
 import { readShell, readDefaults } from './cms.js';
-import { BUDGETS } from './validate.js';
+import { countryOptions } from '../cms/countries.js';
 
 const VERSION = (process.env.VERCEL_GIT_COMMIT_SHA || String(Date.now())).slice(0, 8);
 const ORIGIN = site.url.replace(/\/$/, '');
@@ -520,9 +520,7 @@ ${ctaBand(P('ctaTitle'), P('ctaText'), P('ctaLabel'))}`;
     const trail = [home, { label: 'Contact', href: sec.page.path }];
     const socials = lists.socials(ctx.get('social.links'));
     const email = String(P('email') || '').trim();
-    const svc = serviceLinks(ctx);
     const L = (k, fb) => ctx.get(`contact.${k}`) || fb;
-    const budgetLabel = (b) => (b === 'Undecided' ? site.budgetUndecided || 'Not sure yet' : b);
     const body = `
 <section class="contact-page">
   <div class="contact-side">
@@ -542,15 +540,16 @@ ${ctaBand(P('ctaTitle'), P('ctaText'), P('ctaLabel'))}`;
   <div class="contact-main">
     <h2 class="contact-form-title">${esc(P('formTitle'))}</h2>
     <form class="cform" data-contact novalidate>
-      <label class="field"><span>${esc(L('nameLabel', 'Name'))}</span><input name="name" type="text" autocomplete="name" placeholder="Your name" required /><em class="err" data-for="name">Please enter your name</em></label>
+      <div class="field-row">
+        <label class="field"><span>${esc(L('firstNameLabel', 'First name'))}</span><input name="firstName" type="text" autocomplete="given-name" placeholder="First name" required /><em class="err" data-for="firstName">Please enter your first name</em></label>
+        <label class="field"><span>${esc(L('lastNameLabel', 'Last name'))}</span><input name="lastName" type="text" autocomplete="family-name" placeholder="Last name" required /><em class="err" data-for="lastName">Please enter your last name</em></label>
+      </div>
       <label class="field"><span>${esc(L('emailLabel', 'Email'))}</span><input name="email" type="email" autocomplete="email" placeholder="you@company.com" required /><em class="err" data-for="email">Enter a valid email address</em></label>
-      <fieldset class="field chips"><legend>${esc(P('servicesLabel'))}</legend>${svc
-        .map((s) => `<label class="chip"><input type="checkbox" name="services" value="${esc(s.name)}" /><span>${esc(s.name)}</span></label>`)
-        .join('')}</fieldset>
-      <label class="field"><span>${esc(L('messageLabel', 'Message'))}</span><textarea name="message" rows="5" placeholder="What it is, who it's for, and when it needs to fly." required></textarea><em class="err" data-for="message">Tell us a little more (10+ characters)</em></label>
-      <fieldset class="field chips"><legend>${esc(L('budgetLabel', 'Budget'))}</legend>${BUDGETS.map(
-        (b) => `<label class="chip"><input type="radio" name="budget" value="${esc(b)}"${b === 'Undecided' ? ' checked' : ''} /><span>${esc(budgetLabel(b))}</span></label>`
-      ).join('')}</fieldset>
+      <div class="field-row">
+        <label class="field"><span>${esc(L('countryLabel', 'Country'))}</span><select name="country" autocomplete="country-name" required>${countryOptions()}</select><em class="err" data-for="country">Please choose your country</em></label>
+        <label class="field"><span>${esc(L('phoneLabel', 'Phone'))}</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+1 555 000 0000" required /><em class="err" data-for="phone">Enter a valid phone number</em></label>
+      </div>
+      <label class="field"><span>${esc(L('messageLabel', 'Description'))}</span><textarea name="message" rows="5" minlength="10" placeholder="What it is, who it's for, and when it needs to fly." required></textarea><em class="err" data-for="message">Please write at least 10 characters</em></label>
       <label class="hp" aria-hidden="true">Company<input name="company" type="text" tabindex="-1" autocomplete="off" /></label>
       <div class="form-actions"><button class="btn btn-solid" type="submit"><span>${esc(L('submit', 'Send'))}</span>${ico('↑')}</button><p class="form-status" role="status"></p></div>
     </form>

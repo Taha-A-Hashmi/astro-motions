@@ -255,7 +255,6 @@ const contact = contactSection({
   h1: 'Book a launch.',
   lede: 'Tell us what you are building. A few sentences is plenty — we read every message ourselves and reply within two days.',
   formTitle: 'Tell us about the project',
-  servicesLabel: 'What do you need?',
   email: '',
   responseLine: 'Replies within two working days.',
 });

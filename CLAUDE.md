@@ -129,11 +129,21 @@ carry a `sel` target (cms/fields.js) for exactly that reason. Empty value =
 (`includeFiles`) or fetches `/shell.html` from the CDN as fallback;
 `/api/health` reports which (`shell`).
 
-**Mail is NOT configured for Astro.** There is no Astro mailbox; `CONTACT_TO`
-is empty in `.env.example` and no mail env vars are set on Vercel, so the
-live form stores inquiries only — and on Vercel storage is `/tmp`, so they
-are effectively lost. Set `CONTACT_TO` + Resend or SMTP on the Vercel
-project before using the form for real.
+**Mail: info@astromotions.com** is a Namecheap **Private Email** mailbox
+(MX mx1/mx2.privateemail.com, SPF includes spf.privateemail.com — unlike
+Apex, which is cPanel shared hosting). SMTP: `mail.privateemail.com`, 465,
+SSL, user = the address, pass = the mailbox password (Vercel env only,
+never committed). `CONTACT_TO` and `CONTACT_FROM` are the same address.
+Until those env vars are on the Vercel project, live submissions are only
+stored in /tmp (effectively lost).
+
+**The contact form** (home drawer + /contact/): first name, last name,
+email, country (`<select>` from cms/countries.js — index.html's copy is
+generated from the same list), phone, description (≥10 chars); all
+required, checked in the browser and again in server/validate.js. db.js
+adds the first_name/last_name/country/phone columns to older databases on
+open; `name` keeps the full name. Budget and services pickers were removed
+(2026-09-24).
 
 ## Content pages & blog (server-rendered, no WebGL)
 

@@ -108,7 +108,7 @@ export function createApp() {
     }
 
     console.log(
-      `[contact] ${row.created_at} ${row.name} <${row.email}> ${row.budget} — mail: ${
+      `[contact] ${row.created_at} ${row.name} <${row.email}> ${row.country} — mail: ${
         delivery.sent ? 'sent' : `not sent (${delivery.reason || 'error'})`
       }`
     );
