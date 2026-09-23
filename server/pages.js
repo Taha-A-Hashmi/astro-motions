@@ -14,6 +14,7 @@
    shape as Apex's, so structural fixes can be carried across by hand.
    ═══════════════════════════════════════════════════════════════════════ */
 import express from 'express';
+import fs from 'node:fs';
 import { site, sections, fields } from '../cms/schema.js';
 import { esc, multiline, lists } from '../cms/templates.js';
 import { cleanHtml, textOf } from './sanitize.js';
@@ -23,6 +24,27 @@ import { BUDGETS } from './validate.js';
 
 const VERSION = (process.env.VERCEL_GIT_COMMIT_SHA || String(Date.now())).slice(0, 8);
 const ORIGIN = site.url.replace(/\/$/, '');
+
+// The content pages' 3D (src/gl/pages.js). Built to a fixed name; in Vite
+// dev (no build yet) the source is served through the dev server's proxy.
+const GL_SRC =
+  process.env.VERCEL || fs.existsSync('dist/assets/pages-gl.js') ? `/assets/pages-gl.js?v=${VERSION}` : '/src/gl/pages.js';
+
+// Which dot shape each page's hero settles into (src/gl/dots.js shapes).
+const SHAPES = {
+  'web-design': 'browser',
+  'organic-seo': 'helix',
+  'ppc-marketing': 'bars',
+  'social-media-marketing': 'network',
+  services: 'cube',
+  portfolio: 'galaxy',
+  team: 'torus',
+  contact: 'sphere',
+  blog: 'galaxy',
+  post: 'sphere',
+  404: 'dust',
+};
+const glShape = (name, cls = 'phero-gl') => `<div class="${cls}" data-gl="shape" data-shape="${name}" aria-hidden="true"></div>`;
 
 export const pageSections = sections.filter((s) => s.page);
 const byPath = new Map(pageSections.map((s) => [s.page.path, s]));
@@ -255,6 +277,7 @@ ${page.body}
 ${footer(ctx)}
 ${mobileMenu(ctx, page.path)}
 <script src="/pages/pages.js?v=${VERSION}" defer></script>
+<script type="module" src="${GL_SRC}"></script>
 </body>
 </html>`;
 }
@@ -276,10 +299,11 @@ const crumbsLd = (trail) => ({
 /* The page hero: crumbs, an index chip, a huge H1 across the grid, then
    the lede and actions offset to the right column. `n` is the chip text
    (a service's number, "Blog", …); `planet` adds the halftone sticker. */
-function hero({ trail, n = '→', eyebrow, h1, lede, actions = '', planet = true, className = '' }) {
+function hero({ trail, n = '→', eyebrow, h1, lede, actions = '', shape = 'sphere', className = '' }) {
   return `<section class="phero ${className}">
+  ${shape ? glShape(shape) : ''}
   <div class="wrap">
-    <div class="phero-top">${trail ? crumbs(trail) : '<span></span>'}${planet ? '<span class="sticker" aria-hidden="true"><i></i></span>' : ''}</div>
+    <div class="phero-top">${trail ? crumbs(trail) : '<span></span>'}</div>
     ${eyebrow ? label(n, eyebrow) : ''}
     <h1 class="phero-h1">${esc(h1)}</h1>
     ${lede || actions ? `<div class="phero-foot">${lede ? `<p class="lede">${multiline(lede)}</p>` : '<span></span>'}${actions ? `<div class="actions">${actions}</div>` : ''}</div>` : ''}
@@ -294,7 +318,7 @@ function secHead(n, title, extra = '') {
 function ctaBand(title, text, labelText) {
   if (!title && !text) return '';
   return `<section class="launch">
-  <div class="launch-rings" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="launch-gl" data-gl="warp" aria-hidden="true"></div>
   <div class="wrap launch-in">
     ${title ? `<h2 class="launch-line">${esc(title)}</h2>` : ''}
     ${text ? `<p class="launch-text">${multiline(text)}</p>` : ''}
@@ -340,6 +364,7 @@ const templates = {
     const body = `
 ${hero({
   trail,
+  shape: SHAPES[sec.page.path.replace(/\//g, '')] || 'sphere',
   n: pad(me?.i || 1),
   eyebrow: P('eyebrow'),
   h1: P('h1'),
@@ -416,7 +441,7 @@ ${ctaBand(P('ctaTitle'), P('ctaText'), P('ctaLabel'))}`;
     const trail = [home, { label: ctx.get('nav.services') || 'Services', href: sec.page.path }];
     const svc = serviceLinks(ctx).map((s, i) => ({ ...s, i: i + 1 }));
     const body = `
-${hero({ trail, n: pad(svc.length), eyebrow: P('eyebrow'), h1: P('h1'), lede: P('lede'), actions: ctaButton(P('ctaLabel') || site.cta.label) })}
+${hero({ trail, shape: SHAPES.services, n: pad(svc.length), eyebrow: P('eyebrow'), h1: P('h1'), lede: P('lede'), actions: ctaButton(P('ctaLabel') || site.cta.label) })}
 <section class="band"><div class="wrap">
   ${secHead('A', { label: P('eyebrow'), text: P('cardsTitle') })}
   ${serviceRows(svc)}
@@ -439,7 +464,7 @@ ${ctaBand(P('ctaTitle'), P('ctaText'), P('ctaLabel'))}`;
     const trail = [home, { label: ctx.get('nav.portfolio') || 'Portfolio', href: sec.page.path }];
     const items = arr(ctx.get('work.items')).filter((it) => it && it.title);
     const body = `
-${hero({ trail, n: pad(items.length), eyebrow: P('eyebrow'), h1: P('h1'), lede: P('lede') })}
+${hero({ trail, shape: SHAPES.portfolio, n: pad(items.length), eyebrow: P('eyebrow'), h1: P('h1'), lede: P('lede') })}
 <section class="band band-ink"><div class="wrap">
   <div class="work-grid">${lists.work(items)}</div>
 </div></section>
@@ -453,7 +478,7 @@ ${ctaBand(P('ctaTitle'), P('ctaText'), P('ctaLabel'))}`;
     const members = arr(P('members')).filter((m) => m && (m.name || m.role));
     const values = arr(P('values')).filter((v) => v && v.title);
     const body = `
-${hero({ trail, n: pad(members.length || 1), eyebrow: P('eyebrow'), h1: P('h1'), lede: P('lede') })}
+${hero({ trail, shape: SHAPES.team, n: pad(members.length || 1), eyebrow: P('eyebrow'), h1: P('h1'), lede: P('lede') })}
 ${
   members.length
     ? `<section class="band"><div class="wrap">
@@ -511,7 +536,7 @@ ${ctaBand(P('ctaTitle'), P('ctaText'), P('ctaLabel'))}`;
         ${P('responseLine') ? `<li><span class="fact-k">Response</span><span>${esc(P('responseLine'))}</span></li>` : ''}
       </ul>
       ${socials ? `<div class="social-links">${socials}</div>` : ''}
-      <span class="sticker sticker--lg" aria-hidden="true"><i></i></span>
+      ${glShape(SHAPES.contact, 'contact-gl')}
     </div>
   </div>
   <div class="contact-main">
@@ -540,7 +565,7 @@ ${ctaBand(P('ctaTitle'), P('ctaText'), P('ctaLabel'))}`;
     const trail = [home, { label: ctx.get('nav.blog') || 'Blog', href: sec.page.path }];
     const posts = publishedPosts(ctx);
     const body = `
-${hero({ trail, n: pad(posts.length), eyebrow: P('eyebrow'), h1: P('h1'), lede: P('lede') })}
+${hero({ trail, shape: SHAPES.blog, n: pad(posts.length), eyebrow: P('eyebrow'), h1: P('h1'), lede: P('lede') })}
 <section class="band band-tight"><div class="wrap">${
       posts.length
         ? `<div class="posts">${posts.map((p, i) => postCard(p, i, i === 0)).join('')}</div>`
@@ -600,7 +625,7 @@ export function postPage(ctx, post, { preview = false } = {}) {
   </div></header>
   ${post.cover ? `<figure class="post-cover wrap"><img src="${esc(post.cover)}" alt="${esc(post.coverAlt || post.title)}" /></figure>` : ''}
   <div class="wrap post-grid">
-    <aside class="post-aside" aria-hidden="true"><span class="sticker"><i></i></span></aside>
+    <aside class="post-aside" aria-hidden="true">${glShape(SHAPES.post, 'post-gl')}</aside>
     <div class="prose post-body">${body}</div>
   </div>
   <footer class="wrap post-foot">
@@ -659,6 +684,7 @@ function notFoundPage(ctx, path) {
     noindex: true,
     bodyClass: 'pg-404',
     body: `<section class="nf">
+  ${glShape(SHAPES[404], 'nf-gl')}
   <div class="wrap">
     <p class="nf-code" aria-hidden="true">4<span class="sticker sticker--xl"><i></i></span>4</p>
     ${label('404', 'Lost signal')}

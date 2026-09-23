@@ -3,8 +3,18 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export default defineConfig({
-  // three.js is its own lazy chunk (the hero planet) and is ~500 kB on its own
-  build: { chunkSizeWarningLimit: 700 },
+  // three.js is its own lazy chunk (the 3D layer) and is ~500 kB on its own
+  build: {
+    chunkSizeWarningLimit: 700,
+    rollupOptions: {
+      // the home page, plus the content pages' 3D as a second entry with a
+      // fixed file name (server/pages.js links /assets/pages-gl.js)
+      input: { main: 'index.html', pages: 'src/gl/pages.js' },
+      output: {
+        entryFileNames: (chunk) => (chunk.name === 'pages' ? 'assets/pages-gl.js' : 'assets/[name]-[hash].js'),
+      },
+    },
+  },
   server: {
     // `npm run server` hosts the API on 8787; the dev site talks to it
     // through this proxy so the browser only ever sees one origin.
@@ -17,6 +27,8 @@ export default defineConfig({
         changeOrigin: false,
       },
       '/sitemap.xml': { target: 'http://localhost:8787', changeOrigin: false },
+      // the content pages' built 3D bundle (npm run build first)
+      '/assets': { target: 'http://localhost:8787', changeOrigin: false },
     },
   },
   plugins: [

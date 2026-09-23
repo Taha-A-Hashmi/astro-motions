@@ -12,7 +12,7 @@
     />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="Astro Motions" />
-    <meta name="theme-color" content="#eeece6" />
+    <meta name="theme-color" content="#06070b" />
     <link rel="canonical" href="https://www.astromotions.com/" />
 
     <!-- ── Open Graph / Twitter ─────────────────────────────────────────── -->
@@ -111,9 +111,7 @@
           </div>
         </div>
 
-        <div class="hero-planet" aria-hidden="true">
-          <canvas class="globe"></canvas>
-        </div>
+        <div class="hero-planet" data-gl="planet" aria-hidden="true"></div>
 
         <h1 class="hero-word">
           <span class="hw hw-1" data-cms="hero.word"><span class="ch">A</span><span class="ch">s</span><span class="ch">t</span><span class="ch">r</span><span class="ch">o</span></span>
@@ -150,21 +148,31 @@
         </div>
       </div>
 
-      <!-- ── Manifesto: three lines that ink in as you read them ────────── -->
+      <!-- ── Manifesto: pinned; 12k particles morph under three lines ─────
+           dust → ground → galaxy → the wordmark, scrubbed by the scroll. -->
       <section class="manifesto" id="studio">
+        <div class="mf-sticky">
+          <div class="mf-gl" data-gl="manifesto" aria-hidden="true"></div>
+          <div class="wrap mf-lines">
+            <div class="mf-row" data-line="1">
+              <p class="label"><span class="label-n">01</span><span data-cms="stage1.index">Liftoff</span></p>
+              <p class="mf-line" data-cms="stage1.line">Most websites never leave the ground.</p>
+            </div>
+            <div class="mf-row" data-line="2">
+              <p class="label"><span class="label-n">02</span><span data-cms="stage2.index">Escape velocity</span></p>
+              <p class="mf-line" data-cms="stage2.line">Yours should pull people in — and keep them.</p>
+            </div>
+            <div class="mf-row" data-line="3">
+              <p class="label"><span class="label-n">03</span><span data-cms="stage3.index">The studio</span></p>
+              <p class="mf-line mf-line--accent" data-cms="stage3.line">We build the pull.</p>
+            </div>
+          </div>
+          <div class="mf-meter" aria-hidden="true"><i></i><i></i><i></i></div>
+        </div>
+      </section>
+
+      <section class="disciplines-band" aria-label="Disciplines">
         <div class="wrap">
-          <div class="mf-row">
-            <p class="label"><span class="label-n">01</span><span data-cms="stage1.index">Liftoff</span></p>
-            <p class="mf-line" data-split data-cms="stage1.line">Most websites never leave the ground.</p>
-          </div>
-          <div class="mf-row">
-            <p class="label"><span class="label-n">02</span><span data-cms="stage2.index">Escape velocity</span></p>
-            <p class="mf-line" data-split data-cms="stage2.line">Yours should pull people in — and keep them.</p>
-          </div>
-          <div class="mf-row">
-            <p class="label"><span class="label-n">03</span><span data-cms="stage3.index">The studio</span></p>
-            <p class="mf-line mf-line--accent" data-split data-cms="stage3.line">We build the pull.</p>
-          </div>
           <ul class="disciplines">
             <li><span class="d-n">A</span><span data-cms="stage3.d1">Concept</span></li>
             <li><span class="d-n">B</span><span data-cms="stage3.d2">Motion</span></li>
@@ -181,6 +189,7 @@
             <h2 class="h-sec" data-cms="home.servicesTitle">One crew, four orbits.</h2>
             <a class="link-go" href="/services/"><span data-cms="home.servicesLink">All services</span> <i aria-hidden="true">→</i></a>
           </div>
+          <div class="svc-layout">
           <ol class="svc-rows">
             <li>
               <a class="svc-row" href="/web-design/">
@@ -215,6 +224,8 @@
               </a>
             </li>
           </ol>
+          <div class="svc-gl" data-gl="services" aria-hidden="true"></div>
+          </div>
         </div>
       </section>
 
@@ -301,6 +312,8 @@
             <p class="label"><span class="label-n">06</span><span data-cms="stage4.index">Process</span></p>
             <h2 class="h-sec" data-cms="stage4.line">Every frame earns the next.</h2>
           </div>
+          <div class="process-layout">
+          <div class="orrery" data-gl="orrery" aria-hidden="true"></div>
           <ol class="steps" data-cms-list="process">
             <li class="step">
               <span class="step-n">T–3</span>
@@ -323,12 +336,13 @@
               <p class="step-text">Launch-day redirects, analytics and a speed pass — then a month of tuning, and growth work if you want it.</p>
             </li>
           </ol>
+          </div>
         </div>
       </section>
 
       <!-- ── Launch: the call to action ─────────────────────────────────── -->
       <section class="launch" id="launch">
-        <div class="launch-rings" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="launch-gl" data-gl="warp" aria-hidden="true"></div>
         <div class="wrap launch-in">
           <p class="label label--light"><span class="label-n">07</span><span data-cms="stage5.index">Arrival</span></p>
           <h2 class="launch-line" data-cms="stage5.line">One small crew. A few launches a year.</h2>

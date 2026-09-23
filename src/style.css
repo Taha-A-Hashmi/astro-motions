@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   style.css — the Astro Motions home page.
+   style.css — the Astro Motions home page (dark "Signal" edition).
 
    The system (shared with public/pages/pages.css — keep them in step):
      paper  #eeece6   warm light ground, the default surface
@@ -12,18 +12,21 @@
    ═══════════════════════════════════════════════════════════════════════ */
 
 :root {
-  --paper: #eeece6;
-  --paper-2: #e4e1d8;
-  --ink: #0d0d12;
-  --ink-2: #17171f;
-  --cobalt: #2b3bff;
-  --cobalt-deep: #1d29d6;
+  /* dark "Signal": --paper is the ground, --ink the text */
+  --paper: #06070b;
+  --paper-2: #0d0f16;
+  --ink: #eeece6;
+  --ink-2: #12141c;
+  --cobalt: #3346ff;
+  --cobalt-deep: #2231d9;
+  --blue: #8a94ff;
   --lime: #d4ff3f;
-  --mute: #66645e;
-  --mute-light: #9c9aa6;
-  --ghost: #bdbab1;
-  --line: rgba(13, 13, 18, 0.14);
-  --line-light: rgba(238, 236, 230, 0.16);
+  --mute: #9391a0;
+  --mute-light: #9391a0;
+  --ghost: #2e3040;
+  --line: rgba(238, 236, 230, 0.12);
+  --line-light: rgba(238, 236, 230, 0.12);
+  --glass: rgba(10, 12, 18, 0.72);
   --danger: #d6331f;
 
   --display: 'Unbounded', 'Arial Black', system-ui, sans-serif;
@@ -33,7 +36,7 @@
   --hd-h: 72px;
   --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
 
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 *,
@@ -143,7 +146,7 @@ button {
 }
 .label--light .label-n {
   background: var(--lime);
-  color: var(--ink);
+  color: #06070b;
 }
 
 .h-sec {
@@ -156,7 +159,7 @@ button {
 }
 .h-sec em {
   font-style: normal;
-  color: var(--cobalt);
+  color: var(--lime);
 }
 
 .link-go {
@@ -205,7 +208,7 @@ button {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: var(--ink);
+  background: #fff;
   transform: scaleY(0);
   transform-origin: 50% 100%;
   transition: transform 0.45s var(--ease);
@@ -229,15 +232,15 @@ button {
   transform: rotate(-45deg);
 }
 .btn-solid:hover {
-  color: #fff;
+  color: var(--paper);
 }
 .btn-solid:hover .btn-ico {
   background: var(--cobalt);
 }
 .btn-lime {
   --bg: var(--lime);
-  --fg: var(--ink);
-  --key: var(--ink);
+  --fg: #06070b;
+  --key: #06070b;
   --key-fg: var(--lime);
 }
 .btn-lime::before {
@@ -259,6 +262,9 @@ button {
 .btn-line:hover .btn-ico {
   background: var(--cobalt);
   color: #fff;
+}
+.btn-solid {
+  box-shadow: 0 0 40px -8px rgba(51, 70, 255, 0.7);
 }
 .btn-line--light {
   --fg: var(--paper);
@@ -298,7 +304,7 @@ button {
   transition: transform 0.45s var(--ease), background 0.3s, box-shadow 0.3s, color 0.3s;
 }
 .hd.is-solid {
-  background: rgba(238, 236, 230, 0.9);
+  background: rgba(6, 7, 11, 0.72);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   box-shadow: 0 1px 0 var(--line);
@@ -413,7 +419,7 @@ button {
 }
 .menu-open .hd-menu {
   background: var(--lime);
-  color: var(--ink);
+  color: #06070b;
 }
 
 /* ── Hero ───────────────────────────────────────────────────────────── */
@@ -759,15 +765,15 @@ button {
   .svc-row:hover .svc-go {
     background: var(--lime);
     border-color: var(--lime);
-    color: var(--ink);
+    color: #06070b;
     transform: rotate(45deg);
   }
 }
 
 /* ── Work ───────────────────────────────────────────────────────────── */
 .work {
-  background: var(--ink);
-  color: var(--paper);
+  background: linear-gradient(180deg, transparent, var(--glass) 12%, var(--glass) 88%, transparent);
+  color: var(--ink);
   padding-block: clamp(80px, 14vh, 170px) clamp(60px, 10vh, 120px);
 }
 .work .h-sec em {
@@ -869,8 +875,8 @@ button {
   place-items: center;
   width: 44px;
   height: 44px;
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
   font-size: 18px;
   transition: transform 0.5s var(--ease), background 0.3s;
 }
@@ -912,6 +918,7 @@ button {
   pointer-events: none;
 }
 .peek span {
+  color: #06070b;
   display: grid;
   place-items: center;
   width: 104px;
@@ -919,7 +926,7 @@ button {
   margin: -52px 0 0 -52px;
   border-radius: 50%;
   background: var(--lime);
-  color: var(--ink);
+  color: #06070b;
   font-weight: 600;
   font-size: 14px;
   transform: scale(0);
@@ -973,7 +980,7 @@ button {
   font-size: clamp(34px, 3.6vw, 60px);
   line-height: 1;
   letter-spacing: -0.05em;
-  color: var(--cobalt);
+  color: var(--blue);
 }
 .step-title {
   margin: 0 0 10px;
@@ -1064,8 +1071,9 @@ button {
 
 /* ── Footer ─────────────────────────────────────────────────────────── */
 .ft {
-  background: var(--ink);
-  color: var(--paper);
+  position: relative;
+  background: linear-gradient(180deg, transparent, var(--paper) 40%);
+  color: var(--ink);
   padding-top: clamp(70px, 10vh, 120px);
   overflow: hidden;
 }
@@ -1127,7 +1135,7 @@ button {
 }
 .to-top {
   text-decoration: none;
-  color: var(--paper);
+  color: var(--ink);
   font-weight: 500;
 }
 .to-top:hover {
@@ -1159,7 +1167,7 @@ button {
 .social-link:hover {
   background: var(--lime);
   border-color: var(--lime);
-  color: var(--ink);
+  color: #06070b;
 }
 
 /* ── Phone menu ─────────────────────────────────────────────────────── */
@@ -1221,7 +1229,7 @@ button {
 .drawer-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(13, 13, 18, 0.5);
+  background: rgba(3, 4, 8, 0.66);
   opacity: 0;
   transition: opacity 0.4s;
 }
@@ -1306,7 +1314,7 @@ button {
   transition: border-color 0.2s;
 }
 .contact-input::placeholder {
-  color: #a19e95;
+  color: #5f5e6b;
 }
 .contact-input:focus {
   border-color: var(--cobalt);
@@ -1650,7 +1658,7 @@ button {
   .hd.is-solid {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    background: var(--paper);
+    background: rgba(6, 7, 11, 0.94);
   }
 }
 
@@ -1689,4 +1697,298 @@ button {
 .reviews-widget {
   width: min(100%, 320px);
   min-height: 52px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   3D layer — one fixed WebGL stage (src/gl/stage.js) behind the content.
+   Every [data-gl] element is a transparent window the stage draws into,
+   so nothing that holds a 3D view may have an opaque background.
+   ═══════════════════════════════════════════════════════════════════════ */
+.gl-stage {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+main,
+.reviews,
+.ft {
+  position: relative;
+  z-index: 1;
+}
+body {
+  background:
+    radial-gradient(80% 60% at 70% 0%, rgba(51, 70, 255, 0.16), transparent 70%),
+    var(--paper);
+  background-attachment: fixed;
+}
+[data-gl] {
+  touch-action: pan-y;
+}
+
+/* Hero: a bigger planet, dragged and nudged */
+.hero-planet {
+  width: min(84vh, 58vw, 960px);
+  transform: translate(-46%, -54%);
+  pointer-events: auto;
+  cursor: grab;
+}
+.hero-planet:active {
+  cursor: grabbing;
+}
+.hero-word .hw-2 {
+  color: var(--cobalt);
+}
+
+/* Manifesto: pinned; the lines cross-fade over the morphing cloud */
+.manifesto {
+  height: 420vh;
+  padding: 0;
+}
+.mf-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+.mf-gl {
+  position: absolute;
+  inset: 0;
+}
+.mf-lines {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(48px, 11vh, 120px);
+  pointer-events: none;
+}
+.mf-row {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: 0;
+  display: block;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s var(--ease), transform 0.8s var(--ease);
+}
+.mf-row.is-on {
+  opacity: 1;
+  transform: none;
+}
+.mf-row .label {
+  transform: none;
+  margin-bottom: 20px;
+}
+.mf-line {
+  max-width: 15ch;
+  font-size: clamp(34px, 5.6vw, 96px);
+  text-shadow: 0 2px 40px rgba(6, 7, 11, 0.85);
+}
+.mf-line--accent {
+  color: var(--lime);
+}
+/* without JS the three lines simply stack */
+html:not(.js) .manifesto {
+  height: auto;
+  padding-block: 120px;
+}
+html:not(.js) .mf-sticky,
+html:not(.js) .mf-lines,
+html:not(.js) .mf-row {
+  position: static;
+  height: auto;
+  opacity: 1;
+  transform: none;
+}
+html:not(.js) .mf-row {
+  margin: 0 var(--gutter) 48px;
+}
+.mf-meter {
+  position: absolute;
+  right: var(--gutter);
+  top: 50%;
+  display: grid;
+  gap: 8px;
+  transform: translateY(-50%);
+}
+.mf-meter i {
+  display: block;
+  width: 3px;
+  height: 44px;
+  background: var(--line);
+  transition: background 0.4s;
+}
+.mf-meter i.on {
+  background: var(--lime);
+  box-shadow: 0 0 16px rgba(212, 255, 63, 0.6);
+}
+.disciplines-band {
+  padding-block: clamp(40px, 8vh, 90px);
+}
+.disciplines-band .disciplines {
+  margin: 0;
+  border-top-color: var(--ink);
+}
+
+/* Services: rows on the left, the morphing cloud pinned on the right */
+.svc-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 56px);
+  align-items: start;
+}
+.svc-layout .svc-row {
+  grid-template-columns: 52px minmax(0, 1.2fr) minmax(0, 1fr) 52px;
+}
+.svc-layout .svc-row::before {
+  inset: 0 -14px;
+}
+.svc-layout .svc-name {
+  font-size: clamp(22px, 2.5vw, 40px);
+}
+.svc-gl {
+  position: sticky;
+  top: 14vh;
+  height: 72vh;
+  cursor: crosshair;
+}
+
+/* Process: the orrery pinned on the left, the steps scroll on the right */
+.process-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(20px, 4vw, 72px);
+  align-items: start;
+}
+.orrery {
+  position: sticky;
+  top: 10vh;
+  height: 80vh;
+}
+.process-layout .steps {
+  grid-template-columns: 1fr;
+  border-top: 0;
+}
+.process-layout .steps::before {
+  display: none;
+}
+.process-layout .step,
+.process-layout .step + .step {
+  padding: clamp(40px, 12vh, 120px) 0;
+  border-left: 0;
+  border-top: 1px solid var(--line);
+  transition: opacity 0.5s;
+}
+.process-layout .step-n {
+  margin-bottom: 20px;
+  font-size: clamp(44px, 5vw, 84px);
+}
+.js .process-layout .step:not(.is-active) {
+  opacity: 0.38;
+}
+.process-layout .step.is-active .step-n {
+  color: var(--lime);
+  text-shadow: 0 0 40px rgba(212, 255, 63, 0.4);
+}
+.process-layout .step-text {
+  max-width: 440px;
+  font-size: 17px;
+}
+
+/* Launch: the warp tunnel fills the section */
+.launch {
+  background: transparent;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+.launch-gl {
+  position: absolute;
+  inset: 0;
+}
+.launch::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(70% 60% at 50% 50%, transparent 30%, var(--paper) 100%);
+}
+.launch-in {
+  z-index: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.launch-line {
+  max-width: 16ch;
+  text-shadow: 0 0 60px rgba(6, 7, 11, 0.9);
+}
+.launch-text {
+  color: var(--mute);
+}
+
+.reviews {
+  background: var(--paper-2);
+}
+
+@media (max-width: 900px) {
+  .svc-layout,
+  .process-layout {
+    grid-template-columns: 1fr;
+  }
+  .svc-gl {
+    position: relative;
+    top: 0;
+    order: -1;
+    height: 52vh;
+  }
+  .orrery {
+    position: relative;
+    top: 0;
+    height: 56vh;
+  }
+  .js .process-layout .step:not(.is-active) {
+    opacity: 1;
+  }
+  .process-layout .step,
+  .process-layout .step + .step {
+    padding: 28px 0;
+  }
+}
+@media (max-width: 760px) {
+  .hero-planet {
+    width: min(100vw, 520px);
+    margin: -30px auto -50px;
+    transform: none;
+  }
+  .manifesto {
+    height: 380vh;
+  }
+  .mf-line {
+    font-size: clamp(30px, 9vw, 44px);
+  }
+  .mf-meter {
+    display: none;
+  }
+}
+
+/* Trustpilot renders a light widget: keep its iframe transparent on the dark page */
+.reviews-widget {
+  color-scheme: light;
+}
+@media (max-width: 760px) {
+  .svc-layout .svc-row {
+    grid-template-columns: 1fr 44px;
+  }
+  .svc-layout .svc-name {
+    font-size: clamp(24px, 7vw, 32px);
+  }
 }

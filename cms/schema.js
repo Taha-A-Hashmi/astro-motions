@@ -34,7 +34,7 @@ export const site = {
   name: 'Astro Motions',
   accent: '#2b3bff',
   url: 'https://www.astromotions.com/',
-  themeColor: '#eeece6',
+  themeColor: '#06070b',
   ogImage: '/og-image.jpg',
   logo: '/apple-touch-icon.png',
   fontsHref:

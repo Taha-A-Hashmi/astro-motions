@@ -1,32 +1,70 @@
 # Astro Motions
 
-Editorial studio site in the "Signal" identity (redesigned 2026-09-24): a
-light, Swiss-poster layout — warm paper, ink, one electric cobalt and a lime
-signal — with ordinary crawlable HTML sections and exactly one WebGL
-element, a halftone dot planet in the hero. Was "Astra Motions" until
-2026-09-15; until 2026-09-24 it was a fixed full-screen three.js ascent
-like Apex's ("Starlight": indigo void, gold, serif) — that is all gone.
+Studio site in the "Signal" identity — **dark edition, heavy on 3D**
+(branch `redesign-dark`, 2026-09-24). Near-black ground, electric cobalt
+and a lime signal, Unbounded + Instrument Sans, square blocks, editorial
+grid — with a WebGL layer built entirely from glowing dots. Was "Astra
+Motions" until 2026-09-15; until 2026-09-24 it was a fixed full-screen
+three.js ascent like Apex's ("Starlight": indigo void, gold, serif).
 
-Astro is a sibling of the Apex Motions Studio site (`E:\Work\Apex Motions
-Studio`) and shares its backend, SEO dashboard and blog engine, but the
-owner asked for it to look like Apex **not at all** and in a different
-colour theme. Keep it that way: no dark full-screen canvas, no scroll
-"stages", no ember/obsidian, no tracked-mono uppercase labels, no rail or
-HUD, no greeting veil, no custom cursor ring, no Guide.
+History of the redesign: the owner asked for a site that looks like Apex
+**not at all** in a different colour theme. A light edition was built
+first (branch `redesign`, kept as its own preview); the owner then asked
+for "a darker theme and way more 3D" → this branch. Keep it unlike Apex:
+no ember/obsidian, no camera flight through one world with scroll
+"stages", no tracked-mono uppercase labels, no rail/HUD, no greeting veil,
+no custom cursor ring, no Guide. The 3D here is DOM-anchored objects in an
+editorial page, all made of dots.
+
+## The 3D layer (`src/gl/`)
+
+- `stage.js` — ONE fixed full-viewport canvas behind the content
+  (`.gl-stage`, z-index 0; `main`, `.reviews`, `.ft` sit at z-index 1).
+  Each `[data-gl]` placeholder is a *view*: every frame the stage renders
+  that view's scene with scissor + viewport into the placeholder's rect,
+  skips views off screen, and steps DPR down if frames run long.
+  Placeholders (and their ancestors up to `main`) must stay transparent or
+  they hide what is drawn behind them.
+- `dots.js` — the additive, twinkling dot material (pointer push turns
+  dots lime), the shape library (dust, sphere, ground, galaxy, torus,
+  browser, helix, bars, network, cube, text sampled from a 2D canvas) and
+  `Morph` (a GPU blend between two shapes: `scrub(s)` for scroll-driven,
+  `goTo(i)` for animated).
+- `views.js` — `stars` (full viewport, scroll parallax), `planet` (hero:
+  halftone dot planet, lime ring, two dot moons, drag to spin), `manifesto`
+  (pinned 420vh section: dust → ground → galaxy → the hero word; its `s`
+  is owned by main.js, which also cross-fades the three lines), `services`
+  (morphs to the hovered row; cycles by itself on touch), `orrery` (the
+  process: a sun and a planet per step; the step in view lights up),
+  `warp` (the CTA star tunnel; speeds up while the button is hovered),
+  `shape` (content-page heroes: dust settling into a shape).
+- `home.js` binds the home placeholders (lazy-loaded by main.js).
+  `pages.js` is a second Vite entry built to the fixed name
+  `dist/assets/pages-gl.js`, which server/pages.js links (`GL_SRC`);
+  `SHAPES` there maps each page to its hero shape (web design → browser,
+  SEO → helix, PPC → bars, social → network, hub → cube, portfolio/blog →
+  galaxy, team → torus, contact/post → sphere, 404 → dust).
+- Dev gotchas: Vite proxies `/assets` to the API server, so run
+  `npm run build` before checking content pages in dev; and the API server
+  caches dist/shell.html, so restart it after a build or the home page
+  points at stale hashed CSS.
+- Colour tokens kept their *roles*: `--paper #06070b` is the ground,
+  `--ink #eeece6` the text, `--glass` a translucent band. Lime is only a
+  background, always with dark `#06070b` text on it.
 
 ## The home page (`index.html`, top to bottom)
 
 | Section | id / class | Editable keys |
 |---|---|---|
 | Header — mark + wordmark, nav, cobalt "Book a launch" | `.hd` | `brand.wordmark`, `nav.*` |
-| Hero — tagline, intro, buttons, the dot planet, huge two-line wordmark | `#top.hero`, `canvas.globe` | `hero.tagline/intro/cta/word/sub`, `nav.workLink` |
+| Hero — tagline, intro, buttons, the 3D dot planet, huge two-line wordmark | `#top.hero`, `[data-gl=planet]` | `hero.tagline/intro/cta/word/sub`, `nav.workLink` |
 | Cobalt marquee — service names + disciplines | `.marquee` | `svc.<slug>.name`, `stage3.d1-3` |
-| Manifesto — three lines that ink in word by word | `#studio.manifesto` | `stage1-3.index/line`, `stage3.d1-3` |
-| Services — four rows that flood cobalt on hover | `#services` | `home.services*`, `svc.<slug>.name/summary` |
-| Launch log — ink section, staggered work cards | `#work` | `work.*` (list `work`) |
-| Process — four steps, a cobalt rule draws across | `#process` | `stage4.index/line`, `process.items` (list `process`) |
-| Launch — cobalt CTA with CSS ringed planet | `#launch` | `stage5.index/line`, `cta.text`, `cta.summit` |
-| Footer — ink, columns, socials, full-width cobalt wordmark | `.ft` | `footer.*`, `social.links` |
+| Manifesto — pinned; three lines over the particle morph, then the disciplines | `#studio.manifesto`, `.disciplines-band` | `stage1-3.index/line`, `stage3.d1-3` |
+| Services — rows that flood cobalt on hover + the morphing cloud | `#services`, `[data-gl=services]` | `home.services*`, `svc.<slug>.name/summary` |
+| Launch log — glass band, staggered work cards | `#work` | `work.*` (list `work`) |
+| Process — the orrery pinned left, steps scrolling right | `#process`, `[data-gl=orrery]` | `stage4.index/line`, `process.items` (list `process`) |
+| Launch — CTA over the warp tunnel | `#launch`, `[data-gl=warp]` | `stage5.index/line`, `cta.text`, `cta.summit` |
+| Reviews strip (Trustpilot) + footer with full-width cobalt wordmark | `.reviews`, `.ft` | `footer.*`, `social.links` |
 | Contact drawer (slides from the right) | `#contact.drawer` | `contact.*` |
 | Phone menu (cobalt, ≤1100px) | `#menu` | `nav.*` |
 
@@ -48,19 +86,13 @@ the drawer / scrolls to the work after load and is stripped from the URL.
 
 - `src/main.js` — Lenis smooth scroll + GSAP ScrollTrigger; header (solid
   once scrolled, hides on the way down); hero entrance (`html.is-ready`,
-  letters rise); manifesto word split + scrubbed ink-in; reveal-on-scroll
-  (`[data-reveal]`, only below the fold); process rule `--progress`; the
+  letters rise); the pinned manifesto (progress → `manifestoState.s` +
+  which line shows); reveal-on-scroll (`[data-reveal]`, below the fold); the
   lime "View ↗" disc over work images (fine pointers); `[data-open]`
   routing; footer wordmark fit-to-width. A 2.6 s failsafe always reveals
-  the hero. Loads `globe.js` lazily and `content.js` only in Vite dev.
-- `src/globe.js` — the hero planet: Fibonacci sphere of points sized by
-  value noise (halftone "land"), cobalt on paper; a depth-only occluder
-  sphere hides the far side; a ring of ink dots in five rows; an ink moon.
-  Dots under the pointer swell and turn ink; drag spins with inertia
-  (`touch-action: pan-y` keeps vertical swipes scrolling); scroll adds
-  spin; renders only while on screen. No post-processing, no bloom.
-- `src/quality.js` — tier (`high`/`mid`/`low`, `?q=` forces) → planet dot
-  count and DPR cap. Nothing else needs tiers now.
+  the hero. Loads `gl/home.js` lazily and `content.js` only in Vite dev.
+- `src/quality.js` — tier (`high`/`mid`/`low`, `?q=` forces) → dot counts
+  in every 3D view and the stage DPR cap.
 - `src/contact.js` — the drawer: open/close, focus trap, Esc, validation,
   POST `/api/contact` (422 field errors, 429, sent state).
 - `src/menu.js` — phone menu; `src/content.js` — dev-only dashboard apply.

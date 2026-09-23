@@ -4,9 +4,11 @@
    The page is ordinary, crawlable HTML; this file only adds motion on top:
      · Lenis smooth scrolling + GSAP ScrollTrigger for scroll-linked bits
      · the header (solid once scrolled, hides on the way down)
-     · the hero entrance and the halftone planet (src/globe.js, loaded lazily)
-     · the manifesto lines inking in word by word
-     · reveal-on-scroll, the process progress line, the work-card pointer
+     · the hero entrance, and the 3D layer (src/gl/*, loaded lazily): one
+       WebGL stage drawing the planet, the manifesto morph, the services
+       cloud, the orrery and the warp tunnel into their placeholders
+     · the pinned manifesto: which line shows, and the morph position
+     · reveal-on-scroll and the work-card pointer
      · the contact drawer and phone menu, routed through [data-open]
    Everything degrades to a static page if JS or WebGL are missing.
    ═══════════════════════════════════════════════════════════════════════ */
@@ -23,13 +25,15 @@ const root = document.documentElement;
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 
-/* ── The planet starts loading straight away, in parallel with fonts ── */
-const globeCanvas = $('canvas.globe');
-if (globeCanvas) {
-  import('./globe.js')
-    .then(({ createGlobe }) => createGlobe(globeCanvas, { quality }))
-    .catch(() => globeCanvas.remove());
-}
+/* ── The 3D layer loads straight away, in parallel with fonts ───────── */
+// main.js owns the manifesto's scroll position; the 3D just reads it.
+const manifestoState = { s: 0 };
+import('./gl/home.js')
+  .then(({ initHome }) => initHome({ quality, manifestoState }))
+  .catch((err) => {
+    console.warn('3D layer unavailable:', err);
+    root.classList.add('no-gl');
+  });
 
 /* ── Smooth scroll ──────────────────────────────────────────────────── */
 const lenis = reduced ? null : new Lenis({ lerp: 0.1, smoothWheel: true });
@@ -89,13 +93,23 @@ if (openParam) {
   history.replaceState(null, '', url.pathname + url.search + url.hash);
 }
 
-/* ── Split the manifesto lines into words ───────────────────────────── */
-function splitWords(el) {
-  const words = el.textContent.trim().split(/\s+/);
-  el.setAttribute('aria-label', el.textContent.trim());
-  el.innerHTML = words.map((w) => `<span class="w" aria-hidden="true">${w.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c])}</span>`).join(' ');
-  return $$('.w', el);
+/* ── Manifesto: the pinned section's progress picks the line on show ── */
+const mf = $('.manifesto');
+const mfRows = $$('.mf-row');
+const mfTicks = $$('.mf-meter i');
+function onManifesto() {
+  if (!mf) return;
+  const r = mf.getBoundingClientRect();
+  const p = Math.min(Math.max(-r.top / Math.max(r.height - window.innerHeight, 1), 0), 1);
+  // 0 → dust, 1 → ground, 2 → galaxy, 3 → the word; hold each shape a while
+  const s = Math.min(Math.max(p * 3.6 - 0.25, 0), 3);
+  manifestoState.s = s;
+  const line = s < 0.55 ? 0 : Math.min(3, Math.round(s));
+  mfRows.forEach((row, i) => row.classList.toggle('is-on', i + 1 === line));
+  mfTicks.forEach((t, i) => t.classList.toggle('on', i < line));
 }
+window.addEventListener('scroll', onManifesto, { passive: true });
+onManifesto();
 
 /* ── Once the copy (and, briefly, the fonts) are in place ───────────── */
 const fontsReady = Promise.race([document.fonts?.ready ?? Promise.resolve(), new Promise((r) => setTimeout(r, 1400))]);
@@ -107,38 +121,6 @@ const contentReady = Promise.race([applied.catch(() => {}), new Promise((r) => s
 Promise.all([fontsReady, contentReady]).then(() => {
   // hero entrance
   requestAnimationFrame(() => root.classList.add('is-ready'));
-
-  // manifesto: words ink in as each line crosses the middle of the screen
-  for (const line of $$('[data-split]')) {
-    const words = splitWords(line);
-    if (reduced) {
-      words.forEach((w) => w.classList.add('on'));
-      continue;
-    }
-    ScrollTrigger.create({
-      trigger: line,
-      start: 'top 82%',
-      end: 'bottom 48%',
-      scrub: true,
-      onUpdate: (st) => {
-        const n = Math.round(st.progress * words.length);
-        words.forEach((w, i) => w.classList.toggle('on', i < n));
-      },
-    });
-  }
-
-  // process: the cobalt rule draws across as the steps scroll past
-  const steps = $('.steps');
-  if (steps && !reduced) {
-    steps.style.setProperty('--progress', 0);
-    ScrollTrigger.create({
-      trigger: steps,
-      start: 'top 78%',
-      end: 'bottom 55%',
-      scrub: 0.4,
-      onUpdate: (st) => steps.style.setProperty('--progress', st.progress.toFixed(3)),
-    });
-  }
 
   reveal();
   ScrollTrigger.refresh();
@@ -155,7 +137,6 @@ function reveal() {
     '.svc-rows > li',
     '.work-grid > .wk',
     '.work-foot',
-    '.steps > .step',
     '.disciplines > li',
     '.launch-in > *',
     '.ft-cols > *',
