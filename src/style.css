@@ -2018,3 +2018,26 @@ html:not(.js) .mf-row {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── The original Astro logo: orbit + four-point star + gold dot, and the
+   ASTRO wordmark in Cormorant Garamond, tracked wide ────────────────── */
+.mark {
+  color: var(--ink);
+}
+.hd-word {
+  font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  line-height: 1;
+  padding-top: 0.08em;
+}
+.ft-giant {
+  text-transform: lowercase;
+}
+@media (max-width: 760px) {
+  .hd-word {
+    font-size: 19px;
+  }
+}

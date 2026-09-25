@@ -25,10 +25,11 @@ import { socialNetworks } from './icons.js';
 
 /* Site identity + the chrome of the server-rendered content pages
    (server/pages.js). Labels here are fallbacks; the dashboard wins. */
-/* The mark: a cobalt planet cut by its ring. Masks need ids that are
-   unique on the page, so every copy is minted with its own suffix. */
-export const mark = (id = 'm') =>
-  `<svg class="mark" viewBox="0 0 48 48" aria-hidden="true"><defs><mask id="mk-${id}"><rect width="48" height="48" fill="#fff"/><path d="M2 24A22 6.5 0 0 0 46 24" transform="rotate(-24 24 24)" fill="none" stroke="#000" stroke-width="5.5"/></mask><mask id="mb-${id}"><rect width="48" height="48" fill="#fff"/><circle cx="24" cy="24" r="16.4" fill="#000"/></mask></defs><circle cx="24" cy="24" r="14" fill="currentColor" mask="url(#mk-${id})"/><g transform="rotate(-24 24 24)" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 24A22 6.5 0 0 0 46 24"/><path d="M2 24A22 6.5 0 0 1 46 24" mask="url(#mb-${id})"/></g></svg>`;
+/* The mark — Astro's original: a tilted orbit around a four-point star,
+   the gold dot riding the orbit. Takes an (unused) id so callers written
+   for the masked redesign mark keep working. */
+export const mark = () =>
+  `<svg class="mark" viewBox="0 0 48 48" fill="none" aria-hidden="true"><ellipse cx="24" cy="24" rx="20" ry="8.5" stroke="currentColor" stroke-width="1.1" transform="rotate(-24 24 24)" opacity="0.85"/><path d="M24 14.5 L25.9 22.1 L33.5 24 L25.9 25.9 L24 33.5 L22.1 25.9 L14.5 24 L22.1 22.1 Z" fill="currentColor" opacity="0.92"/><circle class="mark-dot" cx="40.5" cy="14.2" r="2.2" fill="#EFCD7A"/></svg>`;
 
 export const site = {
   name: 'Astro Motions',
@@ -38,7 +39,7 @@ export const site = {
   ogImage: '/og-image.jpg',
   logo: '/apple-touch-icon.png',
   fontsHref:
-    'https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap',
+    'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Unbounded:wght@400;500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap',
   mark,
   tagline: 'Websites with their own gravity.',
   // header menu of the content pages; `services: true` opens the dropdown

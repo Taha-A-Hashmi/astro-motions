@@ -221,8 +221,6 @@ Unknown paths get a styled 404 (`site.notFound`, a giant "4◐4").
   section heads, manifesto rows, service rows, prose and posts.
 - Motion is opt-in: `html.js` gates hidden initial states, reduced motion
   disables smoothing, marquee, reveals and the planet's auto-spin.
-- The mark: a cobalt planet cut by its ring (front arc masks the disc,
-  back arc hidden behind it). Masks → unique ids per inline copy.
 - Verify visually before shipping: headless Chrome (puppeteer-core +
   `C:\Program Files\Google\Chrome\Application\chrome.exe`), screenshot the
   home page desktop + 390px, every content-page template, the drawer, the
@@ -239,12 +237,13 @@ Unknown paths get a styled 404 (`site.notFound`, a giant "4◐4").
   **Live domain: https://www.astromotions.com/** (owner-bought; apex
   308-redirects to www). Also astro-motions.vercel.app. Canonical/OG URLs
   in index.html point at www.astromotions.com.
-- Brand assets: `branding/` (logo-mark, -horizontal, -stacked, on-dark and
-  white variants; SVG masters with the wordmark outlined to paths + PNG
-  exports), `public/favicon.svg|ico|-16|-32|-96.png`, `apple-touch-icon`,
-  `icon-192/512` (white mark on a cobalt tile) and `og-image.jpg` (the
-  hero poster with an SVG halftone planet). All generated together by the
-  scratchpad `build-brand.mjs` pattern: opentype.js outlines Unbounded
-  SemiBold "astro motions" at −0.03em, puppeteer rasterises, a tiny
-  PNG-in-ICO writer makes favicon.ico. Regenerate all of them if the mark
-  changes.
+- **Logo = Astro's ORIGINAL mark and wordmark** (restored 2026-09-25 at the
+  owner's request, after the redesign had swapped in a "planet cut by its
+  ring" mark): a tilted orbit ellipse around a four-point star with a gold
+  (#EFCD7A) dot riding the orbit, and the wordmark "ASTRO" in Cormorant
+  Garamond 500, uppercase, tracked 0.22em. `site.mark()` in cms/schema.js
+  and the header SVG in index.html (currentColor + gold dot); the
+  Cormorant face is loaded only for the wordmark. `branding/` and the
+  favicons/app icons are the original files (from commit 0c556a2). The
+  footer's giant text is the studio name in Unbounded, not the logo.
+  Don't redesign the mark again unless the owner asks.

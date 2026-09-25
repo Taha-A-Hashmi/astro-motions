@@ -203,7 +203,7 @@ function footer(ctx) {
     <nav class="ft-col" aria-label="Studio"><h2>Studio</h2><ul>${studio}</ul></nav>
     <div class="ft-col"><h2>Elsewhere</h2><ul><li><a href="${esc(site.homeLink.href)}">${esc(site.homeLink.label)}</a></li><li><a href="/services/">All services</a></li><li><a href="/blog/feed.xml">RSS feed</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul></div>
   </div>
-  <p class="ft-giant" aria-hidden="true"><span>${esc(ctx.wordmark)}</span></p>
+  <p class="ft-giant" aria-hidden="true"><span>${esc(ctx.brand)}</span></p>
   <div class="wrap ft-bottom"><span>${esc(copyright)}</span><a href="#top" class="to-top">${esc(ctx.get('footer.top') || 'Back to top ↑')}</a></div>
 </footer>`;
 }
@@ -251,7 +251,6 @@ export function layout(ctx, page) {
 <meta name="twitter:image" content="${esc(ogImage)}" />
 ${page.extraHead || ''}
 <link rel="icon" href="/favicon.ico" sizes="any" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
