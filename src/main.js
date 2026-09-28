@@ -25,15 +25,43 @@ const root = document.documentElement;
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 
-/* ── The 3D layer loads straight away, in parallel with fonts ───────── */
-// main.js owns the manifesto's scroll position; the 3D just reads it.
+/* ── The 3D layer loads once the page itself has painted ────────────── */
+// three.js is ~140 kB gzipped and its first frames are heavy, so it waits
+// for the load event and an idle moment: the copy (and the H1, the LCP
+// element) never queue behind it. main.js owns the manifesto's scroll
+// position; the 3D just reads it.
 const manifestoState = { s: 0 };
-import('./gl/home.js')
-  .then(({ initHome }) => initHome({ quality, manifestoState }))
-  .catch((err) => {
-    console.warn('3D layer unavailable:', err);
-    root.classList.add('no-gl');
-  });
+const whenIdle = (fn, timeout = 1500) =>
+  'requestIdleCallback' in window ? requestIdleCallback(fn, { timeout }) : setTimeout(fn, 200);
+const afterLoad = (fn) =>
+  document.readyState === 'complete' ? fn() : window.addEventListener('load', fn, { once: true });
+afterLoad(() =>
+  whenIdle(() =>
+    import('./gl/home.js')
+      .then(({ initHome }) => initHome({ quality, manifestoState }))
+      .catch((err) => {
+        console.warn('3D layer unavailable:', err);
+        root.classList.add('no-gl');
+      })
+  )
+);
+
+/* ── Trustpilot: its script loads only when the reviews strip nears ─── */
+const reviewsEl = $('.reviews');
+if (reviewsEl && 'IntersectionObserver' in window) {
+  const tpIo = new IntersectionObserver(
+    (entries) => {
+      if (!entries.some((en) => en.isIntersecting)) return;
+      tpIo.disconnect();
+      const s = document.createElement('script');
+      s.src = 'https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js';
+      s.async = true;
+      document.head.appendChild(s);
+    },
+    { rootMargin: '800px 0px' }
+  );
+  tpIo.observe(reviewsEl);
+}
 
 /* ── Smooth scroll ──────────────────────────────────────────────────── */
 const lenis = reduced ? null : new Lenis({ lerp: 0.1, smoothWheel: true });
@@ -188,6 +216,8 @@ function fitGiant() {
   if (w > 0) giant.style.fontSize = `${(parseFloat(cs.fontSize) * room) / w}px`;
 }
 fontsReady.then(fitGiant);
+// the fonts load without blocking the paint: refit when they land
+document.fonts?.addEventListener?.('loadingdone', fitGiant);
 window.addEventListener('resize', fitGiant);
 
 // Failsafe: whatever happens above, the hero never stays hidden.

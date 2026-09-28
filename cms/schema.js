@@ -38,23 +38,29 @@ export const site = {
   themeColor: '#06070b',
   ogImage: '/og-image.jpg',
   logo: '/apple-touch-icon.png',
+  logoLarge: '/icon-512.png',
   fontsHref:
     'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Unbounded:wght@400;500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap',
   mark,
   tagline: 'Websites with their own gravity.',
+  email: 'info@astromotions.com',
+  // fallbacks for the footer copy (the home page HTML is the real default)
+  about:
+    'Astro Motions is an independent web design and digital marketing studio. We design and build fast, cinematic websites — then grow them with organic SEO, PPC advertising and social media marketing.',
+  response: 'Replies within 2 working days',
+  legal: 'Web design, SEO, PPC and social media marketing. All rights reserved.',
   // header menu of the content pages; `services: true` opens the dropdown
   nav: [
-    { label: 'Services', key: 'nav.services', href: '/services/', services: true },
+    { label: 'Services', key: 'nav.services', href: '/#services', services: true },
     { label: 'Portfolio', key: 'nav.portfolio', href: '/portfolio/' },
-    { label: 'Team', key: 'nav.team', href: '/team/' },
     { label: 'Blog', key: 'nav.blog', href: '/blog/' },
   ],
   cta: { label: 'Book a launch', key: 'nav.contact', href: '/contact/' },
   footerStudio: [
     { label: 'Portfolio', key: 'nav.portfolio', href: '/portfolio/' },
-    { label: 'Team', key: 'nav.team', href: '/team/' },
     { label: 'Blog', key: 'nav.blog', href: '/blog/' },
     { label: 'Contact', href: '/contact/' },
+    { label: 'Sitemap', href: '/sitemap/' },
   ],
   homeLink: { label: 'Home', href: '/', menuLabel: 'Home' },
   notFound: {
@@ -108,11 +114,13 @@ const settingsAndHome = [
       text('brand.wordmark', 'Wordmark (header + footer)', { max: 20, target: { sel: 'brand.wordmark' }, help: 'Set in the display face next to the mark, and huge across the home-page footer.' }),
       text('nav.services', 'Menu · Services', { max: 24, target: { sel: 'nav.services' } }),
       text('nav.portfolio', 'Menu · Portfolio', { max: 24, target: { sel: 'nav.portfolio' } }),
-      text('nav.team', 'Menu · Team', { max: 24, target: { sel: 'nav.team' } }),
       text('nav.blog', 'Menu · Blog', { max: 24, target: { sel: 'nav.blog' } }),
       text('nav.contact', 'Menu button · contact', { max: 24, target: { sel: 'nav.contact' } }),
       text('nav.workLink', 'Home page · hero link to the launch log', { max: 24, target: { sel: 'nav.workLink' } }),
+      area('footer.about', 'Footer · studio description', { max: 300, target: { sel: 'footer.about' }, help: 'Two sentences on what the studio does. Shown in the footer of every page.' }),
+      text('footer.response', 'Footer · reply time', { max: 60, target: { sel: 'footer.response' }, help: 'Shown under the email address in every footer.' }),
       text('footer.copyright', 'Footer line', { max: 60, target: { sel: 'footer.copyright' } }),
+      text('footer.legal', 'Footer · small print', { max: 120, target: { sel: 'footer.legal' } }),
       text('footer.top', 'Footer · back-to-top label', { max: 30, target: { sel: 'footer.top' } }),
       socialField,
     ],
@@ -125,6 +133,7 @@ const settingsAndHome = [
     fields: [
       text('hero.word', 'Hero · wordmark, line 1', { max: 8, target: { sel: 'hero.word', letters: true }, help: 'Set huge across the hero. Keep it short — each letter rises in on load.' }),
       text('hero.sub', 'Hero · wordmark, line 2', { max: 12, target: { sel: 'hero.sub' } }),
+      text('hero.kicker', 'Hero · keyword line (part of the H1)', { max: 70, target: { sel: 'hero.kicker' }, help: 'The small line above the tagline. Together they are the page heading (H1) — say what the studio does, e.g. "Web design & digital marketing agency".' }),
       text('hero.tagline', 'Hero · tagline', { max: 60, target: { sel: 'hero.tagline' }, help: 'Also shown at the top of the footer.' }),
       area('hero.intro', 'Hero · intro', { max: 200, target: { sel: 'hero.intro' } }),
       text('hero.cta', 'Hero · button', { max: 24, target: { sel: 'hero.cta' } }),
@@ -139,7 +148,6 @@ const settingsAndHome = [
       text('stage3.d3', 'Discipline 3', { max: 16, target: { sel: 'stage3.d3' } }),
       text('home.servicesLabel', 'Services · label', { max: 30, target: { sel: 'home.servicesLabel' } }),
       text('home.servicesTitle', 'Services · heading', { max: 60, target: { sel: 'home.servicesTitle' } }),
-      text('home.servicesLink', 'Services · link label', { max: 30, target: { sel: 'home.servicesLink' } }),
       text('stage4.index', 'Process · label', { max: 30, target: { sel: 'stage4.index' } }),
       text('stage4.line', 'Process · heading', { max: 60, target: { sel: 'stage4.line' } }),
       list('process.items', 'Process · steps', [text('n', 'Marker', { max: 6, help: 'e.g. T–3' }), text('title', 'Step', { max: 40 }), area('text', 'Text', { max: 240 })], {
@@ -207,10 +215,10 @@ const settingsAndHome = [
           text('alt', 'Image alt text', { max: 160, help: 'Describe the image for screen readers and search engines.' }),
         ],
         default: [
-          { title: 'A Year of Discovery', meta: 'OceanX · Year in review · 2025', description: 'Twelve months of ocean missions retold as one continuous voyage: you scroll, the globe turns, and each expedition surfaces where it happened.', href: 'https://2025.oceanx.org/', tags: 'WebGL, Narrative, Scroll', image: '/work/oceanx-2025.jpg', alt: 'OceanX 2025 Year in Review — a globe over a deep-sea blue field' },
-          { title: 'The Intelligent File Browser', meta: 'Poly · Product site', description: 'A file browser you talk to, introduced on a rendered desk the camera settles into — search, chat and sync shown in place, not in a feature grid.', href: 'https://poly.app/', tags: '3D, Product, Motion', image: '/work/poly.jpg', alt: 'Poly — the intelligent file browser, shown on a laptop on a sunlit desk' },
-          { title: 'You Are Limitless', meta: 'Organimo · Brand commerce', description: 'A supplement sold the way a fragrance is: dark, slow, sound-led, with the product held up like an object worth wanting.', href: 'https://organimo.com/', tags: 'Commerce, Brand, Audio', image: '/work/organimo.jpg', alt: 'Organimo — Limitless begins here: a pastel dreamscape with floating stone, a shell and a goldfish' },
-          { title: 'Yard Operating System', meta: 'Terminal Industries · Product site', description: 'Logistics software given the treatment of a car film: wide photography, product renders, and a page that moves at the pace of a trailer.', href: 'https://terminal-industries.com/', tags: 'Industrial, Photography, Scroll', image: '/work/terminal-industries.jpg', alt: 'Terminal Industries — a semi truck silhouetted against a sunset' },
+          { title: 'A Year of Discovery', meta: 'OceanX · Year in review · 2025', description: 'Twelve months of ocean missions retold as one continuous voyage: you scroll, the globe turns, and each expedition surfaces where it happened.', href: 'https://2025.oceanx.org/', tags: 'WebGL, Narrative, Scroll', image: '/work/oceanx-2025.webp', alt: 'OceanX 2025 Year in Review — a globe over a deep-sea blue field' },
+          { title: 'The Intelligent File Browser', meta: 'Poly · Product site', description: 'A file browser you talk to, introduced on a rendered desk the camera settles into — search, chat and sync shown in place, not in a feature grid.', href: 'https://poly.app/', tags: '3D, Product, Motion', image: '/work/poly.webp', alt: 'Poly — the intelligent file browser, shown on a laptop on a sunlit desk' },
+          { title: 'You Are Limitless', meta: 'Organimo · Brand commerce', description: 'A supplement sold the way a fragrance is: dark, slow, sound-led, with the product held up like an object worth wanting.', href: 'https://organimo.com/', tags: 'Commerce, Brand, Audio', image: '/work/organimo.webp', alt: 'Organimo — Limitless begins here: a pastel dreamscape with floating stone, a shell and a goldfish' },
+          { title: 'Yard Operating System', meta: 'Terminal Industries · Product site', description: 'Logistics software given the treatment of a car film: wide photography, product renders, and a page that moves at the pace of a trailer.', href: 'https://terminal-industries.com/', tags: 'Industrial, Photography, Scroll', image: '/work/terminal-industries.webp', alt: 'Terminal Industries — a semi truck silhouetted against a sunset' },
         ],
       },
     ],

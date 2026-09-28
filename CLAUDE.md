@@ -42,8 +42,8 @@ editorial page, all made of dots.
   `pages.js` is a second Vite entry built to the fixed name
   `dist/assets/pages-gl.js`, which server/pages.js links (`GL_SRC`);
   `SHAPES` there maps each page to its hero shape (web design → browser,
-  SEO → helix, PPC → bars, social → network, hub → cube, portfolio/blog →
-  galaxy, team → torus, contact/post → sphere, 404 → dust).
+  SEO → helix, PPC → bars, social → network, sitemap → cube, portfolio/blog
+  → galaxy, contact/post → sphere, 404 → dust).
 - Dev gotchas: Vite proxies `/assets` to the API server, so run
   `npm run build` before checking content pages in dev; and the API server
   caches dist/shell.html, so restart it after a build or the home page
@@ -148,9 +148,21 @@ open; `name` keeps the full name. Budget and services pickers were removed
 ## Content pages & blog (server-rendered, no WebGL)
 
 Routes (exact, trailing slash canonical — `/web-design` 301s to `/web-design/`):
-`/services/` hub · `/web-design/` · `/organic-seo/` · `/ppc-marketing/` ·
-`/social-media-marketing/` · `/portfolio/` · `/team/` · `/contact/` ·
-`/blog/` · `/blog/<slug>/` · `/blog/feed.xml` (RSS) · `/sitemap.xml`.
+`/web-design/` · `/organic-seo/` · `/ppc-marketing/` ·
+`/social-media-marketing/` · `/portfolio/` · `/contact/` · `/blog/` ·
+`/blog/<slug>/` · `/blog/feed.xml` (RSS, not linked in menus) · `/sitemap/`
+(HTML sitemap, linked in the footers) · `/sitemap.xml` · `/llms.txt`.
+The Services hub and the Team page were removed (2026-09-28 SEO audit):
+`LEGACY_REDIRECTS` in server/pages.js 301s `/services/` → `/#services`,
+`/team/` → `/` and the old post slug → `/blog/website-not-showing-on-google/`.
+The home page has exactly one H1 (`.hero-h1` = `hero.kicker` keyword line +
+`hero.tagline`); the giant wordmark is a `<p>`. Posts end with an author box
+(Blog page → Post author; empty name credits "Astro Motions Studio", no
+invented people) and Published/Updated dates. Footer = studio description
+(`footer.about`), Services, Company, Contact (email + `footer.response`),
+small print (`footer.legal`). Work images are WebP. Perf: the 3D loads after
+`load` + idle, below-fold views build near the viewport, Google Fonts load
+non-blocking, Trustpilot loads when the reviews strip nears.
 Unknown paths get a styled 404 (`site.notFound`, a giant "4◐4").
 
 - `server/pages.js` — renders every page (layout, header with Services

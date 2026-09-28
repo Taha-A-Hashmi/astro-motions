@@ -29,7 +29,7 @@ export const lists = {
       .map(
         (it, i) => `
             <a class="wk" href="${esc(safeHref(it.href))}" target="_blank" rel="noopener">
-              <figure class="wk-media">${it.image ? `<img src="${esc(it.image)}" alt="${esc(it.alt || it.title || '')}" loading="lazy" width="1600" height="1000" />` : ''}</figure>
+              <figure class="wk-media">${it.image ? `<img src="${esc(it.image)}" alt="${esc(it.alt || it.title || '')}" loading="lazy" decoding="async" width="1440" height="900" />` : ''}</figure>
               <div class="wk-info">
                 <span class="wk-n">${String(i + 1).padStart(2, '0')}</span>
                 <div class="wk-text">

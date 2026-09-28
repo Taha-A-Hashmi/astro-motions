@@ -10,6 +10,21 @@ import * as V from './views.js';
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
 
+// Views below the fold are built only when their placeholder comes within
+// a screen of the viewport: less work (and GPU memory) up front.
+function whenNear(el, fn) {
+  if (!('IntersectionObserver' in window)) return fn();
+  const io = new IntersectionObserver(
+    (entries) => {
+      if (!entries.some((en) => en.isIntersecting)) return;
+      io.disconnect();
+      fn();
+    },
+    { rootMargin: '100% 0px' }
+  );
+  io.observe(el);
+}
+
 export async function initHome({ quality, manifestoState }) {
   const stage = createStage({ quality });
   if (!stage) return null;
@@ -21,7 +36,7 @@ export async function initHome({ quality, manifestoState }) {
 
   // services: the cloud becomes whichever service is hovered / in view
   const svcEl = $('[data-gl="services"]');
-  if (svcEl) {
+  if (svcEl) whenNear(svcEl, () => {
     const view = V.services(stage, svcEl, { quality });
     const rows = $$('.svc-rows > li');
     rows.forEach((li, i) => {
@@ -36,11 +51,11 @@ export async function initHome({ quality, manifestoState }) {
         if (view.visible) view.morph.goTo((k = (k % rows.length) + 1));
       }, 2600);
     }
-  }
+  });
 
   // process: the step in the middle of the screen lights its planet
   const orreryEl = $('[data-gl="orrery"]');
-  if (orreryEl) {
+  if (orreryEl) whenNear(orreryEl, () => {
     const steps = $$('.steps > .step');
     const view = V.orrery(stage, orreryEl, { quality, steps: Math.max(steps.length, 1) });
     const io = new IntersectionObserver(
@@ -60,19 +75,19 @@ export async function initHome({ quality, manifestoState }) {
         if (view.visible) view.active = (view.active + 1) % steps.length;
       }, 2200);
     }
-  }
+  });
 
   const warpEl = $('[data-gl="warp"]');
-  if (warpEl) V.warp(stage, warpEl, { quality, trigger: warpEl.parentElement.querySelector('.btn') });
+  if (warpEl) whenNear(warpEl, () => V.warp(stage, warpEl, { quality, trigger: warpEl.parentElement.querySelector('.btn') }));
 
   // the manifesto needs the brand face loaded to sample the word
   const mEl = $('[data-gl="manifesto"]');
-  if (mEl) {
+  if (mEl) whenNear(mEl, async () => {
     try {
       await document.fonts.load('700 220px Unbounded');
     } catch {}
     const word = ($('[data-cms="hero.word"]')?.textContent || 'Astro').trim().toUpperCase();
     V.manifesto(stage, mEl, { quality, word, state: manifestoState });
-  }
+  });
   return stage;
 }

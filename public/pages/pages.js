@@ -55,7 +55,26 @@
     if (w > 0) giant.style.fontSize = (parseFloat(cs.fontSize) * room) / w + 'px';
   };
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(fitGiant);
+  // the fonts load without blocking the paint: refit when they land
+  document.fonts?.addEventListener?.('loadingdone', fitGiant);
   window.addEventListener('resize', fitGiant);
+
+  /* ── Trustpilot: its script loads only when the reviews strip nears ─── */
+  const reviews = document.querySelector('.reviews');
+  if (reviews && 'IntersectionObserver' in window) {
+    const tpIo = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((en) => en.isIntersecting)) return;
+        tpIo.disconnect();
+        const s = document.createElement('script');
+        s.src = 'https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js';
+        s.async = true;
+        document.head.appendChild(s);
+      },
+      { rootMargin: '800px 0px' }
+    );
+    tpIo.observe(reviews);
+  }
 
   /* ── Services dropdown: hover on desktop, tap to toggle elsewhere ──── */
   for (const item of document.querySelectorAll('.has-sub')) {

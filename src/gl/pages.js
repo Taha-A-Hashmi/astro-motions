@@ -12,8 +12,10 @@ import { quality } from '../quality.js';
 import { createStage } from './stage.js';
 import * as V from './views.js';
 
-const stage = createStage({ quality });
-if (stage) {
+// starts after the load event and an idle moment, so the copy paints first
+function start() {
+  const stage = createStage({ quality });
+  if (!stage) return;
   V.stars(stage, { quality });
   for (const el of document.querySelectorAll('[data-gl="shape"]')) {
     V.shape(stage, el, { quality, name: el.dataset.shape });
@@ -21,3 +23,6 @@ if (stage) {
   const warpEl = document.querySelector('[data-gl="warp"]');
   if (warpEl) V.warp(stage, warpEl, { quality, trigger: warpEl.parentElement.querySelector('.btn') });
 }
+const idle = (fn) => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 1500 }) : setTimeout(fn, 200));
+if (document.readyState === 'complete') idle(start);
+else window.addEventListener('load', () => idle(start), { once: true });

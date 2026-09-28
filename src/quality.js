@@ -5,8 +5,8 @@
 
    Tiers:
      high  desktop with a real GPU: every dot, DPR 2
-     mid   laptops with few cores, big tablets: ~60% of the dots, DPR 1.75
-     low   phones: ~40% of the dots, DPR 1.5
+     mid   laptops with few cores, big tablets: ~55% of the dots, DPR 1.5
+     low   phones: ~a third of the dots, DPR 1.25
 
    `?q=low|mid|high` on the URL forces a tier for testing.
    ═══════════════════════════════════════════════════════════════════════ */
@@ -30,7 +30,7 @@ export const quality = Object.freeze({
   coarse,
   reduced,
   /** multiplier for the planet's dot counts */
-  particles: pick({ high: 1, mid: 0.6, low: 0.42 }),
+  particles: pick({ high: 1, mid: 0.55, low: 0.32 }),
   /** hard cap on devicePixelRatio for the planet canvas */
-  maxDpr: pick({ high: 2, mid: 1.75, low: 1.5 }),
+  maxDpr: pick({ high: 2, mid: 1.5, low: 1.25 }),
 });

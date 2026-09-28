@@ -172,6 +172,8 @@ export function createApp() {
 
   const dist = path.resolve('dist');
   if (!config.onVercel) {
+    // hashed build files never change: cache them for a year (as vercel.json does)
+    if (fs.existsSync(dist)) app.use('/assets', express.static(path.join(dist, 'assets'), { maxAge: '365d', immutable: true }));
     if (fs.existsSync(dist)) app.use(express.static(dist, { index: 'index.html', maxAge: '1h' })); // dist has no root index.html — only /admin/
     app.use('/uploads', express.static(uploadsDir(), { maxAge: '1d' }));
   }

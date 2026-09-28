@@ -128,7 +128,7 @@ export function readDefaults(html) {
       if (t.sel) v = readSel(html, t.sel);
       else if (t.meta) v = readMetaLike(html, 'name', t.meta, 'content');
       else if (t.prop) v = readMetaLike(html, 'property', t.prop, 'content');
-      else if (t.title) v = (html.match(/<title>([\s\S]*?)<\/title>/) || [, ''])[1].trim();
+      else if (t.title) v = (html.match(/<title>([\s\S]*?)<\/title>/) || [, ''])[1].trim().replace(/&amp;/g, '&');
       else if (t.link) v = readMetaLike(html, 'rel', t.link, 'href');
       else if (t.jsonld) v = ld[t.jsonld] ?? '';
       else if (t.headHtml) v = '';
@@ -149,6 +149,15 @@ export function renderShell(html, values) {
     if (!f) continue;
     if (f.type === 'list') {
       const items = Array.isArray(raw) ? raw : [];
+      // social profiles also become the Organization's sameAs
+      if (key === 'social.links') {
+        const sameAs = items.map((s) => String(s?.url || '').trim()).filter((u) => /^https?:\/\//i.test(u));
+        if (sameAs.length) {
+          ld ??= readJsonLd(out) || {};
+          ld.sameAs = sameAs;
+          ldDirty = true;
+        }
+      }
       const tpl = lists[targetsOf(f)[0]?.list];
       if (!tpl) continue;
       out = replaceInner(out, 'data-cms-list', targetsOf(f)[0].list, `\n${tpl(items)}\n          `);

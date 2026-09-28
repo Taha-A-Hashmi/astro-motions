@@ -55,11 +55,11 @@ export function serviceSection(slug, d) {
     title: d.name,
     prefix: p,
     page: { path, template: 'service' },
-    intro: pageIntro(path, 'listed on the Services hub and in the Services menu'),
+    intro: pageIntro(path, 'listed in the Services menu and on the home page'),
     fields: [
       ...seoFields(p, d),
       text(`${p}.name`, 'Service name', { max: 40, default: d.name, target: { sel: `${p}.name` }, help: 'Used in menus, breadcrumbs, the home-page services list and marquee.' }),
-      area(`${p}.summary`, 'Summary', { max: 160, default: d.summary, target: { sel: `${p}.summary` }, help: 'One line for the home page, the Services hub and the "other services" list.' }),
+      area(`${p}.summary`, 'Summary', { max: 160, default: d.summary, target: { sel: `${p}.summary` }, help: 'One line for the home page, the Services menu and the "other services" list.' }),
       ...heroFields(p, d),
       text(`${p}.featuresTitle`, 'Deliverables · heading', { max: 60, default: d.featuresTitle }),
       list(`${p}.features`, 'Deliverables', [text('title', 'Title', { max: 60 }), area('text', 'Text', { max: 300 })], {
@@ -117,7 +117,12 @@ export function portfolioSection(d) {
     prefix: p,
     page: { path: '/portfolio/', template: 'portfolio' },
     intro: pageIntro('/portfolio/', 'the projects themselves are edited under Home page → Launch log'),
-    fields: [...seoFields(p, d), ...heroFields(p, d), ...ctaFields(p, d)],
+    fields: [
+      ...seoFields(p, d),
+      ...heroFields(p, d),
+      html(`${p}.body`, 'Long-form copy', { default: d.body || '' }),
+      ...ctaFields(p, d),
+    ],
   };
 }
 
@@ -190,6 +195,11 @@ export function blogPageSection(d) {
       ...heroFields(p, d),
       text(`${p}.emptyText`, 'Text when there are no posts', { max: 120, default: d.emptyText }),
       text(`${p}.moreTitle`, 'Post page · "more posts" heading', { max: 60, default: d.moreTitle }),
+      text(`${p}.authorName`, 'Post author · name', { max: 60, default: d.authorName || '', help: 'Shown on every post with the bio below. Leave empty to credit the studio.' }),
+      text(`${p}.authorRole`, 'Post author · role', { max: 80, default: d.authorRole || '' }),
+      area(`${p}.authorBio`, 'Post author · bio', { max: 400, default: d.authorBio || '' }),
+      image(`${p}.authorPhoto`, 'Post author · photo', { default: d.authorPhoto || '', help: 'Square, at least 240px.' }),
+      text(`${p}.authorUrl`, 'Post author · profile link', { max: 200, default: d.authorUrl || '', help: 'A page about the author, e.g. LinkedIn.' }),
       ...ctaFields(p, d),
     ],
   };

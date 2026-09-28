@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="google-site-verification" content="TJXV0jaur1_aR-wUCvO5tdHoU8rz5lhAkPuI6l_-JIg" />
 
-    <title>Astro Motions — Websites with their own gravity</title>
+    <title>Web Design &amp; Digital Marketing Agency | Astro Motions</title>
     <meta
       name="description"
-      content="Astro Motions is an independent studio for cinematic, fast websites — web design, organic SEO, PPC and social media marketing from one small crew."
+      content="Astro Motions is a web design and digital marketing agency: fast, cinematic websites plus organic SEO, PPC and social media marketing that grow traffic."
     />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="Astro Motions" />
@@ -19,20 +19,20 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Astro Motions" />
     <meta property="og:url" content="https://www.astromotions.com/" />
-    <meta property="og:title" content="Astro Motions — Websites with their own gravity" />
+    <meta property="og:title" content="Web Design &amp; Digital Marketing Agency | Astro Motions" />
     <meta
       property="og:description"
-      content="Cinematic, fast websites — and the search, ads and social that bring people to them. One small crew, a few launches a year."
+      content="Fast, cinematic websites — and the organic SEO, PPC and social media marketing that bring people to them. Web design and digital marketing from one studio."
     />
     <meta property="og:image" content="https://www.astromotions.com/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Astro Motions — websites with their own gravity" />
+    <meta property="og:image:alt" content="Astro Motions — web design and digital marketing agency" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Astro Motions — Websites with their own gravity" />
+    <meta name="twitter:title" content="Web Design &amp; Digital Marketing Agency | Astro Motions" />
     <meta
       name="twitter:description"
-      content="Cinematic, fast websites — and the search, ads and social that bring people to them. One small crew, a few launches a year."
+      content="Fast, cinematic websites — and the organic SEO, PPC and social media marketing that bring people to them. Web design and digital marketing from one studio."
     />
     <meta name="twitter:image" content="https://www.astromotions.com/og-image.jpg" />
 
@@ -42,31 +42,162 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    <link rel="alternate" type="application/rss+xml" title="Astro Motions — Blog" href="/blog/feed.xml" />
 
-    <!-- ── Structured data ──────────────────────────────────────────────── -->
+    <!-- ── Structured data ──────────────────────────────────────────────
+         Block 1 is the Organization — the dashboard edits its name, image
+         and description, and the server adds sameAs from the social links.
+         Block 2 is the WebSite, this page and the service catalogue. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Organization",
+        "@id": "https://www.astromotions.com/#organization",
         "name": "Astro Motions",
         "url": "https://www.astromotions.com/",
-        "logo": "https://www.astromotions.com/apple-touch-icon.png",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.astromotions.com/icon-512.png",
+          "width": 512,
+          "height": 512
+        },
         "image": "https://www.astromotions.com/og-image.jpg",
-        "description": "Astro Motions is an independent studio building cinematic, fast websites — plus the organic SEO, PPC and social media marketing that bring people to them."
+        "description": "Astro Motions is an independent web design and digital marketing agency. We design and build fast, cinematic websites, then grow them with organic SEO, PPC advertising and social media marketing.",
+        "email": "info@astromotions.com",
+        "contactPoint": [
+          {
+            "@type": "ContactPoint",
+            "contactType": "sales",
+            "email": "info@astromotions.com",
+            "url": "https://www.astromotions.com/contact/",
+            "availableLanguage": [
+              "English"
+            ],
+            "areaServed": "Worldwide"
+          }
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://www.astromotions.com/#website",
+            "url": "https://www.astromotions.com/",
+            "name": "Astro Motions",
+            "description": "Astro Motions is a web design and digital marketing agency: fast, cinematic websites plus organic SEO, PPC and social media marketing that grow traffic.",
+            "inLanguage": "en",
+            "publisher": {
+              "@id": "https://www.astromotions.com/#organization"
+            }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://www.astromotions.com/#webpage",
+            "url": "https://www.astromotions.com/",
+            "name": "Web Design & Digital Marketing Agency | Astro Motions",
+            "description": "Astro Motions is a web design and digital marketing agency: fast, cinematic websites plus organic SEO, PPC and social media marketing that grow traffic.",
+            "isPartOf": {
+              "@id": "https://www.astromotions.com/#website"
+            },
+            "about": {
+              "@id": "https://www.astromotions.com/#organization"
+            },
+            "primaryImageOfPage": "https://www.astromotions.com/og-image.jpg",
+            "inLanguage": "en"
+          },
+          {
+            "@type": "ProfessionalService",
+            "@id": "https://www.astromotions.com/#studio",
+            "name": "Astro Motions",
+            "url": "https://www.astromotions.com/",
+            "image": "https://www.astromotions.com/og-image.jpg",
+            "logo": "https://www.astromotions.com/icon-512.png",
+            "email": "info@astromotions.com",
+            "description": "Web design, organic SEO, PPC marketing and social media marketing for brands worldwide.",
+            "areaServed": "Worldwide",
+            "parentOrganization": {
+              "@id": "https://www.astromotions.com/#organization"
+            },
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Web design and digital marketing services",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "position": 1,
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Web design",
+                    "description": "Cinematic, fast, search-ready websites — designed and engineered by the same hands.",
+                    "url": "https://www.astromotions.com/web-design/",
+                    "areaServed": "Worldwide",
+                    "provider": {
+                      "@id": "https://www.astromotions.com/#organization"
+                    }
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "position": 2,
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Organic SEO",
+                    "description": "Technical fixes, content and authority that compound — traffic you don't pay for by the click.",
+                    "url": "https://www.astromotions.com/organic-seo/",
+                    "areaServed": "Worldwide",
+                    "provider": {
+                      "@id": "https://www.astromotions.com/#organization"
+                    }
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "position": 3,
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "PPC marketing",
+                    "description": "Google, Microsoft and paid social campaigns built around profit, not clicks.",
+                    "url": "https://www.astromotions.com/ppc-marketing/",
+                    "areaServed": "Worldwide",
+                    "provider": {
+                      "@id": "https://www.astromotions.com/#organization"
+                    }
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "position": 4,
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Social media marketing",
+                    "description": "Strategy, content and community management that turns followers into an audience.",
+                    "url": "https://www.astromotions.com/social-media-marketing/",
+                    "areaServed": "Worldwide",
+                    "provider": {
+                      "@id": "https://www.astromotions.com/#organization"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
       }
     </script>
 
-    <!-- Brand type: Unbounded (display) · Instrument Sans (text). -->
+    <!-- Brand type: Unbounded (display) · Instrument Sans (text). Loaded
+         without blocking the first paint (display=swap): the copy shows in
+         the fallback face at once and swaps when the fonts land. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Unbounded:wght@400;500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap"
-    />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&amp;family=Unbounded:wght@400;500;600;700&amp;family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&amp;display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&amp;family=Unbounded:wght@400;500;600;700&amp;family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&amp;display=swap" /></noscript>
 
-    <!-- TrustBox script -->
-    <script type="text/javascript" src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
-    <!-- End TrustBox script -->
+    <!-- The Trustpilot TrustBox script is added by main.js when the reviews
+         strip nears the viewport, so it never competes with the first paint. -->
 
     <!-- Motion is opt-in: without JS every element renders in place. -->
     <script>document.documentElement.classList.add('js');</script>
@@ -83,9 +214,8 @@
         <span class="hd-word" data-cms="brand.wordmark">Astro</span>
       </a>
       <nav class="hd-nav" aria-label="Main">
-        <a href="/services/" data-cms="nav.services">Services</a>
+        <a href="#services" data-cms="nav.services">Services</a>
         <a href="/portfolio/" data-cms="nav.portfolio">Portfolio</a>
-        <a href="/team/" data-cms="nav.team">Team</a>
         <a href="/blog/" data-cms="nav.blog">Blog</a>
       </nav>
       <a class="btn btn-solid hd-cta" href="/contact/" data-open="contact">
@@ -100,7 +230,10 @@
       <!-- ── Hero: a poster. Tagline top, the dot planet, the wordmark ──── -->
       <section class="hero" id="top">
         <div class="hero-top wrap">
-          <p class="hero-tagline" data-cms="hero.tagline">Websites with their own gravity.</p>
+          <h1 class="hero-h1">
+            <span class="hero-kicker" data-cms="hero.kicker">Web design &amp; digital marketing agency</span>
+            <span class="hero-tagline" data-cms="hero.tagline">Websites with their own gravity.</span>
+          </h1>
           <div class="hero-aside">
             <p class="hero-intro" data-cms="hero.intro">An independent studio for cinematic, fast websites — and for the search, ads and social that bring people to them.</p>
             <div class="hero-actions">
@@ -112,10 +245,10 @@
 
         <div class="hero-planet" data-gl="planet" aria-hidden="true"></div>
 
-        <h1 class="hero-word">
+        <p class="hero-word">
           <span class="hw hw-1" data-cms="hero.word"><span class="ch">A</span><span class="ch">s</span><span class="ch">t</span><span class="ch">r</span><span class="ch">o</span></span>
           <span class="hw hw-2" data-cms="hero.sub">Motions</span>
-        </h1>
+        </p>
 
         <div class="hero-foot wrap" aria-hidden="true">
           <span class="hero-coord">Web design · SEO · PPC · Social</span>
@@ -186,7 +319,6 @@
           <div class="sec-head">
             <p class="label"><span class="label-n">04</span><span data-cms="home.servicesLabel">Services</span></p>
             <h2 class="h-sec" data-cms="home.servicesTitle">One crew, four orbits.</h2>
-            <a class="link-go" href="/services/"><span data-cms="home.servicesLink">All services</span> <i aria-hidden="true">→</i></a>
           </div>
           <div class="svc-layout">
           <ol class="svc-rows">
@@ -241,7 +373,7 @@
 
           <div class="work-grid" data-cms-list="work">
             <a class="wk" href="https://2025.oceanx.org/" target="_blank" rel="noopener">
-              <figure class="wk-media"><img src="/work/oceanx-2025.jpg" alt="OceanX 2025 Year in Review — a globe over a deep-sea blue field" loading="lazy" width="1600" height="1000" /></figure>
+              <figure class="wk-media"><img src="/work/oceanx-2025.webp" alt="OceanX 2025 Year in Review — a globe over a deep-sea blue field" loading="lazy" decoding="async" width="1440" height="900" /></figure>
               <div class="wk-info">
                 <span class="wk-n">01</span>
                 <div class="wk-text">
@@ -254,7 +386,7 @@
               </div>
             </a>
             <a class="wk" href="https://poly.app/" target="_blank" rel="noopener">
-              <figure class="wk-media"><img src="/work/poly.jpg" alt="Poly — the intelligent file browser, shown on a laptop on a sunlit desk" loading="lazy" width="1600" height="1000" /></figure>
+              <figure class="wk-media"><img src="/work/poly.webp" alt="Poly — the intelligent file browser, shown on a laptop on a sunlit desk" loading="lazy" decoding="async" width="1440" height="900" /></figure>
               <div class="wk-info">
                 <span class="wk-n">02</span>
                 <div class="wk-text">
@@ -267,7 +399,7 @@
               </div>
             </a>
             <a class="wk" href="https://organimo.com/" target="_blank" rel="noopener">
-              <figure class="wk-media"><img src="/work/organimo.jpg" alt="Organimo — Limitless begins here: a pastel dreamscape with floating stone, a shell and a goldfish" loading="lazy" width="1600" height="1000" /></figure>
+              <figure class="wk-media"><img src="/work/organimo.webp" alt="Organimo — Limitless begins here: a pastel dreamscape with floating stone, a shell and a goldfish" loading="lazy" decoding="async" width="1440" height="900" /></figure>
               <div class="wk-info">
                 <span class="wk-n">03</span>
                 <div class="wk-text">
@@ -280,7 +412,7 @@
               </div>
             </a>
             <a class="wk" href="https://terminal-industries.com/" target="_blank" rel="noopener">
-              <figure class="wk-media"><img src="/work/terminal-industries.jpg" alt="Terminal Industries — a semi truck silhouetted against a sunset" loading="lazy" width="1600" height="1000" /></figure>
+              <figure class="wk-media"><img src="/work/terminal-industries.webp" alt="Terminal Industries — a semi truck silhouetted against a sunset" loading="lazy" decoding="async" width="1440" height="900" /></figure>
               <div class="wk-info">
                 <span class="wk-n">04</span>
                 <div class="wk-text">
@@ -370,6 +502,7 @@
       <div class="wrap ft-cols">
         <div class="ft-brand">
           <p class="ft-tag" data-cms="hero.tagline">Websites with their own gravity.</p>
+          <p class="ft-about" data-cms="footer.about">Astro Motions is an independent web design and digital marketing studio. We design and build fast, cinematic websites — then grow them with organic SEO, PPC advertising and social media marketing.</p>
           <div class="social-links" data-cms-list="socials"></div>
         </div>
         <nav class="ft-col" aria-label="Services">
@@ -381,27 +514,27 @@
             <li><a href="/social-media-marketing/" data-cms="svc.social-media-marketing.name">Social media marketing</a></li>
           </ul>
         </nav>
-        <nav class="ft-col" aria-label="Studio">
-          <h2>Studio</h2>
+        <nav class="ft-col" aria-label="Company">
+          <h2>Company</h2>
           <ul>
             <li><a href="/portfolio/" data-cms="nav.portfolio">Portfolio</a></li>
-            <li><a href="/team/" data-cms="nav.team">Team</a></li>
             <li><a href="/blog/" data-cms="nav.blog">Blog</a></li>
             <li><a href="/contact/">Contact</a></li>
+            <li><a href="/sitemap/">Sitemap</a></li>
           </ul>
         </nav>
-        <div class="ft-col">
-          <h2>Elsewhere</h2>
+        <div class="ft-col ft-contact">
+          <h2>Contact</h2>
           <ul>
-            <li><a href="/services/">All services</a></li>
-            <li><a href="/blog/feed.xml">RSS feed</a></li>
-            <li><a href="/sitemap.xml">Sitemap</a></li>
+            <li><a href="mailto:info@astromotions.com">info@astromotions.com</a></li>
+            <li class="ft-note" data-cms="footer.response">Replies within 2 working days</li>
+            <li><a href="/contact/" data-open="contact">Start a project →</a></li>
           </ul>
         </div>
       </div>
       <p class="ft-giant" aria-hidden="true"><span data-cms="brand.name">Astro Motions</span></p>
       <div class="wrap ft-bottom">
-        <span data-cms="footer.copyright">© 2026 Astro Motions</span>
+        <p class="ft-legal"><span data-cms="footer.copyright">© 2026 Astro Motions</span> <span class="ft-legal-sep" aria-hidden="true">·</span> <span data-cms="footer.legal">Web design, SEO, PPC and social media marketing. All rights reserved.</span></p>
         <a class="to-top" href="#top" data-cms="footer.top">Back to the pad ↑</a>
       </div>
     </footer>
@@ -409,11 +542,10 @@
     <!-- ── Phone menu ─────────────────────────────────────────────────── -->
     <div class="menu" id="menu" hidden>
       <nav class="menu-nav" aria-label="Menu">
-        <a href="/services/"><span class="menu-n">01</span><span data-cms="nav.services">Services</span></a>
+        <a href="#services"><span class="menu-n">01</span><span data-cms="nav.services">Services</span></a>
         <a href="/portfolio/"><span class="menu-n">02</span><span data-cms="nav.portfolio">Portfolio</span></a>
-        <a href="/team/"><span class="menu-n">03</span><span data-cms="nav.team">Team</span></a>
-        <a href="/blog/"><span class="menu-n">04</span><span data-cms="nav.blog">Blog</span></a>
-        <a href="/contact/"><span class="menu-n">05</span><span>Contact</span></a>
+        <a href="/blog/"><span class="menu-n">03</span><span data-cms="nav.blog">Blog</span></a>
+        <a href="/contact/"><span class="menu-n">04</span><span>Contact</span></a>
       </nav>
       <div class="menu-foot">
         <a class="btn btn-lime" href="/contact/" data-open="contact"><span data-cms="nav.contact">Book a launch</span><i class="btn-ico" aria-hidden="true">→</i></a>

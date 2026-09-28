@@ -1,7 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   server/pages.js — the server-rendered content pages: the Services hub,
-   one page per service, Portfolio, Team, Contact, the blog (index, posts,
-   RSS), the sitemap and the styled 404.
+   server/pages.js — the server-rendered content pages: one page per
+   service, Portfolio, Contact, the blog (index, posts, RSS), the HTML and
+   XML sitemaps, /llms.txt and the styled 404. (The Services hub and the
+   Team page were retired on 2026-09-28 — see LEGACY_REDIRECTS.)
 
    Pages are plain HTML (no WebGL) so they are fast on phones and fully
    readable by search engines. Their copy comes from the dashboard: saved
@@ -36,9 +37,8 @@ const SHAPES = {
   'organic-seo': 'helix',
   'ppc-marketing': 'bars',
   'social-media-marketing': 'network',
-  services: 'cube',
   portfolio: 'galaxy',
-  team: 'torus',
+  sitemap: 'cube',
   contact: 'sphere',
   blog: 'galaxy',
   post: 'sphere',
@@ -136,7 +136,7 @@ function header(ctx, current) {
           (s, i) =>
             `<li><a href="${s.href}"${current === s.href ? ' aria-current="page"' : ''}><span class="sub-n">${pad(i + 1)}</span><span class="sub-name">${esc(s.name)}</span><span class="sub-sum">${esc(s.summary)}</span></a></li>`
         )
-        .join('')}</ul><a class="sub-all" href="/services/">All services <span aria-hidden="true">→</span></a></div></li>`;
+        .join('')}</ul></div></li>`;
     })
     .join('');
   return `<header class="hd">
@@ -195,40 +195,65 @@ function footer(ctx) {
   <div class="wrap ft-cols">
     <div class="ft-brand">
       <p class="ft-tag">${esc(ctx.get('hero.tagline') || site.tagline)}</p>
+      <p class="ft-about">${multiline(ctx.get('footer.about') || site.about)}</p>
       ${socials ? `<div class="social-links">${socials}</div>` : ''}
     </div>
     <nav class="ft-col" aria-label="Services"><h2>${esc(ctx.get('nav.services') || 'Services')}</h2><ul>${svc
       .map((s) => `<li><a href="${s.href}">${esc(s.name)}</a></li>`)
       .join('')}</ul></nav>
-    <nav class="ft-col" aria-label="Studio"><h2>Studio</h2><ul>${studio}</ul></nav>
-    <div class="ft-col"><h2>Elsewhere</h2><ul><li><a href="${esc(site.homeLink.href)}">${esc(site.homeLink.label)}</a></li><li><a href="/services/">All services</a></li><li><a href="/blog/feed.xml">RSS feed</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul></div>
+    <nav class="ft-col" aria-label="Company"><h2>Company</h2><ul>${studio}</ul></nav>
+    <div class="ft-col ft-contact"><h2>Contact</h2><ul><li><a href="mailto:${esc(site.email)}">${esc(site.email)}</a></li><li class="ft-note">${esc(ctx.get('footer.response') || site.response)}</li><li><a href="/contact/">Start a project →</a></li></ul></div>
   </div>
   <p class="ft-giant" aria-hidden="true"><span>${esc(ctx.brand)}</span></p>
-  <div class="wrap ft-bottom"><span>${esc(copyright)}</span><a href="#top" class="to-top">${esc(ctx.get('footer.top') || 'Back to top ↑')}</a></div>
+  <div class="wrap ft-bottom"><p class="ft-legal"><span>${esc(copyright)}</span> <span class="ft-legal-sep" aria-hidden="true">·</span> <span>${esc(ctx.get('footer.legal') || site.legal)}</span></p><a href="#top" class="to-top">${esc(ctx.get('footer.top') || 'Back to top ↑')}</a></div>
 </footer>`;
 }
 
-function organizationLd(ctx) {
-  const sameAs = arr(ctx.get('social.links'))
+/* ── Structured data shared by every page ───────────────────────────── */
+const ORG_ID = `${ORIGIN}/#organization`;
+const WEBSITE_ID = `${ORIGIN}/#website`;
+const orgRef = (ctx) => ({ '@type': 'Organization', '@id': ORG_ID, name: ctx.brand, url: site.url });
+
+export const sameAsOf = (links) =>
+  arr(links)
     .map((s) => String(s?.url || '').trim())
     .filter((u) => /^https?:\/\//i.test(u));
+
+function organizationLd(ctx) {
+  const sameAs = sameAsOf(ctx.get('social.links'));
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
+    '@id': ORG_ID,
     name: ctx.brand,
     url: site.url,
-    logo: abs(site.logo),
-    description: ctx.get('seo.orgDescription') || undefined,
+    logo: { '@type': 'ImageObject', url: abs(site.logoLarge || site.logo) },
+    image: abs(ctx.get('seo.ogImage') || site.ogImage),
+    description: ctx.get('seo.orgDescription') || ctx.get('footer.about') || site.about,
+    email: site.email,
+    contactPoint: [
+      { '@type': 'ContactPoint', contactType: 'sales', email: site.email, url: abs('/contact/'), availableLanguage: ['English'], areaServed: 'Worldwide' },
+    ],
     ...(sameAs.length ? { sameAs } : {}),
   };
 }
+
+const websiteLd = (ctx) => ({
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': WEBSITE_ID,
+  url: site.url,
+  name: ctx.brand,
+  inLanguage: 'en',
+  publisher: { '@id': ORG_ID },
+});
 
 export function layout(ctx, page) {
   const canonical = abs(page.path);
   const ogImage = abs(page.ogImage || ctx.get('seo.ogImage') || site.ogImage);
   const robots = page.noindex ? 'noindex, nofollow' : ctx.get('seo.robots') || 'index, follow';
   const headCode = String(ctx.get('seo.headHtml') || '').trim();
-  const ld = [organizationLd(ctx), ...(page.jsonld || [])];
+  const ld = [organizationLd(ctx), websiteLd(ctx), ...(page.jsonld || [])];
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -257,11 +282,10 @@ ${page.extraHead || ''}
 <link rel="alternate" type="application/rss+xml" title="${esc(ctx.brand)} — Blog" href="/blog/feed.xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="${esc(site.fontsHref)}" />
+<link rel="preload" as="style" href="${esc(site.fontsHref)}" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript><link rel="stylesheet" href="${esc(site.fontsHref)}" /></noscript>
 <link rel="stylesheet" href="/pages/pages.css?v=${VERSION}" />
-<!-- TrustBox script -->
-<script type="text/javascript" src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
-<!-- End TrustBox script -->
+<!-- the Trustpilot TrustBox script is added by pages.js when the reviews strip nears -->
 <script>document.documentElement.classList.add('js')</script>
 ${ld.map(ldScript).join('\n')}
 ${headCode ? `<!-- custom head code (dashboard) -->\n${headCode}` : ''}
@@ -356,7 +380,7 @@ const templates = {
     const features = arr(P('features'));
     const steps = arr(P('process'));
     const faqs = arr(P('faqs')).filter((q) => q && q.q);
-    const trail = [home, { label: ctx.get('nav.services') || 'Services', href: '/services/' }, { label: name, href: sec.page.path }];
+    const trail = [home, { label: name, href: sec.page.path }];
     const all = serviceLinks(ctx).map((s, i) => ({ ...s, i: i + 1 }));
     const me = all.find((s) => s.href === sec.page.path);
     const others = all.filter((s) => s.href !== sec.page.path);
@@ -407,7 +431,7 @@ ${
 ${
   others.length
     ? `<section class="band band-soft"><div class="wrap">
-  ${secHead('+', { label: ctx.get('nav.services') || 'Services', text: 'Other services' }, `<a class="link-go" href="/services/">All services <i aria-hidden="true">→</i></a>`)}
+  ${secHead('+', { label: ctx.get('nav.services') || 'Services', text: 'Other services' })}
   ${serviceRows(others)}
 </div></section>`
     : ''
@@ -421,7 +445,17 @@ ${ctaBand(P('ctaTitle'), P('ctaText'), P('ctaLabel'))}`;
         serviceType: name,
         description: P('metaDescription'),
         url: abs(sec.page.path),
-        provider: { '@type': 'Organization', name: ctx.brand, url: site.url },
+        provider: orgRef(ctx),
+        areaServed: 'Worldwide',
+        ...(features.length
+          ? {
+              hasOfferCatalog: {
+                '@type': 'OfferCatalog',
+                name: P('featuresTitle') || name,
+                itemListElement: features.map((f) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: f.title, description: f.text } })),
+              },
+            }
+          : {}),
       },
       crumbsLd(trail),
     ];
@@ -435,29 +469,6 @@ ${ctaBand(P('ctaTitle'), P('ctaText'), P('ctaLabel'))}`;
     return { title: P('seoTitle'), description: P('metaDescription'), ogImage: P('ogImage'), body, jsonld, bodyClass: 'pg-service' };
   },
 
-  services(sec, ctx) {
-    const P = pv(ctx, sec);
-    const trail = [home, { label: ctx.get('nav.services') || 'Services', href: sec.page.path }];
-    const svc = serviceLinks(ctx).map((s, i) => ({ ...s, i: i + 1 }));
-    const body = `
-${hero({ trail, shape: SHAPES.services, n: pad(svc.length), eyebrow: P('eyebrow'), h1: P('h1'), lede: P('lede'), actions: ctaButton(P('ctaLabel') || site.cta.label) })}
-<section class="band"><div class="wrap">
-  ${secHead('A', { label: P('eyebrow'), text: P('cardsTitle') })}
-  ${serviceRows(svc)}
-</div></section>
-${prose(P('body'))}
-${ctaBand(P('ctaTitle'), P('ctaText'), P('ctaLabel'))}`;
-    const jsonld = [
-      {
-        '@context': 'https://schema.org',
-        '@type': 'ItemList',
-        itemListElement: svc.map((s, i) => ({ '@type': 'ListItem', position: i + 1, name: s.name, url: abs(s.href) })),
-      },
-      crumbsLd(trail),
-    ];
-    return { title: P('seoTitle'), description: P('metaDescription'), ogImage: P('ogImage'), body, jsonld, bodyClass: 'pg-services' };
-  },
-
   portfolio(sec, ctx) {
     const P = pv(ctx, sec);
     const trail = [home, { label: ctx.get('nav.portfolio') || 'Portfolio', href: sec.page.path }];
@@ -465,60 +476,46 @@ ${ctaBand(P('ctaTitle'), P('ctaText'), P('ctaLabel'))}`;
     const body = `
 ${hero({ trail, shape: SHAPES.portfolio, n: pad(items.length), eyebrow: P('eyebrow'), h1: P('h1'), lede: P('lede') })}
 <section class="band band-ink"><div class="wrap">
+  ${secHead(pad(items.length), { label: ctx.get('work.eyebrow') || 'Launch log', text: String(ctx.get('work.title') || 'Selected launches').replace(/\*/g, '') })}
   <div class="work-grid">${lists.work(items)}</div>
 </div></section>
+${prose(P('body'), 'About the work')}
 ${ctaBand(P('ctaTitle'), P('ctaText'), P('ctaLabel'))}`;
-    return { title: P('seoTitle'), description: P('metaDescription'), ogImage: P('ogImage'), body, jsonld: [crumbsLd(trail)], bodyClass: 'pg-portfolio' };
-  },
-
-  team(sec, ctx) {
-    const P = pv(ctx, sec);
-    const trail = [home, { label: ctx.get('nav.team') || 'Team', href: sec.page.path }];
-    const members = arr(P('members')).filter((m) => m && (m.name || m.role));
-    const values = arr(P('values')).filter((v) => v && v.title);
-    const body = `
-${hero({ trail, shape: SHAPES.team, n: pad(members.length || 1), eyebrow: P('eyebrow'), h1: P('h1'), lede: P('lede') })}
-${
-  members.length
-    ? `<section class="band"><div class="wrap">
-  ${secHead('A', { label: P('eyebrow'), text: P('membersTitle') })}
-  <div class="team-grid">${members
-    .map(
-      (m, i) => `<article class="member">
-    <div class="member-photo${m.photo ? '' : ' member-photo--art'}">${
-        m.photo
-          ? `<img src="${esc(m.photo)}" alt="${esc(m.alt || m.name || m.role)}" loading="lazy" />`
-          : `<span class="halftone halftone--${(i % 4) + 1}" aria-hidden="true"></span>`
-      }<span class="member-n">${pad(i + 1)}</span></div>
-    <div class="member-body">
-      ${m.name ? `<p class="member-role">${esc(m.role)}</p><h3>${esc(m.name)}</h3>` : `<h3>${esc(m.role)}</h3>`}
-      ${m.bio ? `<p>${multiline(m.bio)}</p>` : ''}
-    </div>
-  </article>`
-    )
-    .join('')}</div>
-</div></section>`
-    : ''
-}
-${
-  values.length
-    ? `<section class="band band-ink"><div class="wrap">
-  ${secHead('B', { label: 'Values', text: P('valuesTitle') })}
-  <ol class="deliver deliver--3">${values
-    .map((v, i) => `<li class="deliver-item"><span class="deliver-n">${pad(i + 1)}</span><h3>${esc(v.title)}</h3><p>${multiline(v.text)}</p></li>`)
-    .join('')}</ol>
-</div></section>`
-    : ''
-}
-${ctaBand(P('ctaTitle'), P('ctaText'), P('ctaLabel'))}`;
-    return { title: P('seoTitle'), description: P('metaDescription'), ogImage: P('ogImage'), body, jsonld: [crumbsLd(trail)], bodyClass: 'pg-team' };
+    const jsonld = [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: P('h1'),
+        description: P('metaDescription'),
+        url: abs(sec.page.path),
+        isPartOf: { '@id': WEBSITE_ID },
+        about: { '@id': ORG_ID },
+        mainEntity: {
+          '@type': 'ItemList',
+          itemListElement: items.map((it, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            item: {
+              '@type': 'CreativeWork',
+              name: it.title,
+              ...(it.description ? { description: it.description } : {}),
+              ...(/^https?:\/\//i.test(String(it.href || '')) ? { url: it.href } : {}),
+              ...(it.image ? { image: abs(it.image) } : {}),
+            },
+          })),
+        },
+      },
+      crumbsLd(trail),
+    ];
+    return { title: P('seoTitle'), description: P('metaDescription'), ogImage: P('ogImage'), body, jsonld, bodyClass: 'pg-portfolio' };
   },
 
   contact(sec, ctx) {
     const P = pv(ctx, sec);
     const trail = [home, { label: 'Contact', href: sec.page.path }];
     const socials = lists.socials(ctx.get('social.links'));
-    const email = String(P('email') || '').trim();
+    const email = String(P('email') || site.email || '').trim();
+    const response = P('responseLine') || ctx.get('footer.response') || site.response;
     const L = (k, fb) => ctx.get(`contact.${k}`) || fb;
     const body = `
 <section class="contact-page">
@@ -530,7 +527,8 @@ ${ctaBand(P('ctaTitle'), P('ctaText'), P('ctaLabel'))}`;
       <p class="lede">${multiline(P('lede'))}</p>
       <ul class="facts">
         ${email ? `<li><span class="fact-k">Email</span><a href="mailto:${esc(email)}">${esc(email)}</a></li>` : ''}
-        ${P('responseLine') ? `<li><span class="fact-k">Response</span><span>${esc(P('responseLine'))}</span></li>` : ''}
+        ${response ? `<li><span class="fact-k">Response</span><span>${esc(response)}</span></li>` : ''}
+        <li><span class="fact-k">Studio</span><span>Independent studio · clients worldwide</span></li>
       </ul>
       ${socials ? `<div class="social-links">${socials}</div>` : ''}
       ${glShape(SHAPES.contact, 'contact-gl')}
@@ -555,7 +553,26 @@ ${ctaBand(P('ctaTitle'), P('ctaText'), P('ctaLabel'))}`;
     <div class="form-done" hidden role="status"><span class="done-mark" aria-hidden="true"></span><h3>${esc(L('doneTitle', 'Received.'))}</h3><p>${multiline(L('doneText', 'We will reply soon.'))}</p></div>
   </div>
 </section>`;
-    return { title: P('seoTitle'), description: P('metaDescription'), ogImage: P('ogImage'), body, jsonld: [crumbsLd(trail)], bodyClass: 'pg-contact' };
+    const jsonld = [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ContactPage',
+        name: P('h1'),
+        description: P('metaDescription'),
+        url: abs(sec.page.path),
+        isPartOf: { '@id': WEBSITE_ID },
+        mainEntity: {
+          '@type': 'Organization',
+          '@id': ORG_ID,
+          name: ctx.brand,
+          url: site.url,
+          ...(email ? { email } : {}),
+          contactPoint: { '@type': 'ContactPoint', contactType: 'sales', ...(email ? { email } : {}), url: abs(sec.page.path), areaServed: 'Worldwide' },
+        },
+      },
+      crumbsLd(trail),
+    ];
+    return { title: P('seoTitle'), description: P('metaDescription'), ogImage: P('ogImage'), body, jsonld, bodyClass: 'pg-contact' };
   },
 
   blog(sec, ctx) {
@@ -589,7 +606,7 @@ function postCard(p, i = 0, featured = false) {
   <a href="/blog/${esc(p.slug)}/">
     <div class="pc-media">${
       p.cover
-        ? `<img src="${esc(p.cover)}" alt="${esc(p.coverAlt || p.title)}" loading="lazy" />`
+        ? `<img src="${esc(p.cover)}" alt="${esc(p.coverAlt || p.title)}" loading="lazy" decoding="async" />`
         : `<span class="halftone halftone--${(i % 4) + 1}" aria-hidden="true"></span>`
     }</div>
     <div class="pc-body">
@@ -603,6 +620,34 @@ function postCard(p, i = 0, featured = false) {
 }
 
 /* ── A single post ──────────────────────────────────────────────────── */
+/* The author credited on every post (Blog page → Post author). Astro has
+   no named people by default, so an empty name credits the studio. */
+const STUDIO_BIO =
+  'Written by the Astro Motions studio team — the designers, developers and marketers who build and grow websites for our clients. Every article is reviewed before publishing and updated when the advice changes.';
+function postAuthor(ctx, B) {
+  const name = String(B('authorName') || '').trim();
+  const safeUrl = (u) => (/^https?:\/\//i.test(String(u || '').trim()) ? String(u).trim() : '');
+  if (name) {
+    return { person: true, name, role: B('authorRole'), bio: B('authorBio'), photo: B('authorPhoto'), url: safeUrl(B('authorUrl')) };
+  }
+  return { person: false, name: `${ctx.brand} Studio`, role: 'Editorial team', bio: B('authorBio') || STUDIO_BIO, photo: B('authorPhoto'), url: '' };
+}
+function authorBox(a, dates) {
+  const name = a.url ? `<a href="${esc(a.url)}" rel="author">${esc(a.name)}</a>` : esc(a.name);
+  return `<aside class="wrap author-box" aria-label="About the author">
+    <div class="author-photo">${
+      a.photo ? `<img src="${esc(a.photo)}" alt="${esc(a.name)}" width="240" height="240" loading="lazy" decoding="async" />` : `<span class="author-mark">${site.mark('author')}</span>`
+    }</div>
+    <div class="author-body">
+      ${label('✎', 'Written by')}
+      <p class="author-name">${name}</p>
+      ${a.role ? `<p class="author-role">${esc(a.role)}</p>` : ''}
+      ${a.bio ? `<p class="author-bio">${multiline(a.bio)}</p>` : ''}
+      <p class="author-dates">${dates}</p>
+    </div>
+  </aside>`;
+}
+
 export function postPage(ctx, post, { preview = false } = {}) {
   const path = `/blog/${post.slug}/`;
   const B = blogSection ? pv(ctx, blogSection) : () => '';
@@ -613,19 +658,24 @@ export function postPage(ctx, post, { preview = false } = {}) {
   const more = publishedPosts(ctx)
     .filter((p) => p.id !== post.id)
     .slice(0, 3);
+  const author = postAuthor(ctx, B);
+  const published = String(post.date || '').slice(0, 10);
+  const updated = String(post.updated || post.date || '').slice(0, 10);
+  const dates = `<span>Published <time datetime="${esc(published)}">${esc(fmtDate(published))}</time></span><span aria-hidden="true">·</span><span>Updated <time datetime="${esc(updated)}">${esc(fmtDate(updated))}</time></span>`;
   const html = `
 <article class="post">
   <header class="post-head"><div class="wrap">
     <div class="phero-top">${crumbs(trail)}</div>
     ${tags.length ? label('#', tags.join(' · ')) : ''}
     <h1 class="post-title">${esc(post.title)}</h1>
-    <p class="post-meta"><time datetime="${esc(post.date)}">${esc(fmtDate(post.date))}</time><span aria-hidden="true">·</span><span>${readingTime(body)} min read</span><span aria-hidden="true">·</span><span>${esc(ctx.brand)}</span></p>
+    <p class="post-meta"><span>By ${author.url ? `<a href="${esc(author.url)}" rel="author">${esc(author.name)}</a>` : esc(author.name)}</span><span aria-hidden="true">·</span>${dates}<span aria-hidden="true">·</span><span>${readingTime(body)} min read</span></p>
   </div></header>
-  ${post.cover ? `<figure class="post-cover wrap"><img src="${esc(post.cover)}" alt="${esc(post.coverAlt || post.title)}" /></figure>` : ''}
+  ${post.cover ? `<figure class="post-cover wrap"><img src="${esc(post.cover)}" alt="${esc(post.coverAlt || post.title)}" fetchpriority="high" decoding="async" /></figure>` : ''}
   <div class="wrap post-grid">
     <aside class="post-aside" aria-hidden="true">${glShape(SHAPES.post, 'post-gl')}</aside>
     <div class="prose post-body">${body}</div>
   </div>
+  ${authorBox(author, dates)}
   <footer class="wrap post-foot">
     ${tags.length ? `<ul class="tags">${tags.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : '<span></span>'}
     ${btn('All posts', '/blog/', 'line', '←')}
@@ -662,9 +712,21 @@ ${ctaBand(B('ctaTitle'), B('ctaText'), B('ctaLabel'))}`;
         description,
         image: [image],
         datePublished: post.date,
-        dateModified: (post.updated || post.date).slice(0, 10),
-        author: { '@type': 'Organization', name: ctx.brand, url: site.url },
-        publisher: { '@type': 'Organization', name: ctx.brand, logo: { '@type': 'ImageObject', url: abs(site.logo) } },
+        dateModified: updated,
+        isPartOf: { '@id': WEBSITE_ID },
+        inLanguage: 'en',
+        author: author.person
+          ? {
+              '@type': 'Person',
+              name: author.name,
+              ...(author.role ? { jobTitle: author.role } : {}),
+              ...(author.url ? { url: author.url } : {}),
+              ...(author.photo ? { image: abs(author.photo) } : {}),
+              ...(author.bio ? { description: author.bio } : {}),
+              worksFor: { '@id': ORG_ID },
+            }
+          : { '@type': 'Organization', '@id': ORG_ID, name: ctx.brand, url: site.url },
+        publisher: { '@type': 'Organization', '@id': ORG_ID, name: ctx.brand, logo: { '@type': 'ImageObject', url: abs(site.logoLarge || site.logo) } },
         mainEntityOfPage: abs(path),
         ...(tags.length ? { keywords: tags.join(', ') } : {}),
       },
@@ -688,7 +750,7 @@ function notFoundPage(ctx, path) {
     ${label('404', 'Lost signal')}
     <h1 class="phero-h1">${esc(nf.h1 || 'This page could not be found.')}</h1>
     <div class="phero-foot"><p class="lede">${esc(nf.lede || 'The link may be old or mistyped. Try one of these instead.')}</p>
-    <div class="actions">${btn('Back to home', '/', 'solid', '←')}${btn('Services', '/services/', 'line')}${btn('Blog', '/blog/', 'line')}</div></div>
+    <div class="actions">${btn('Back to home', '/', 'solid', '←')}${btn('Services', '/#services', 'line')}${btn('Sitemap', '/sitemap/', 'line')}${btn('Blog', '/blog/', 'line')}</div></div>
   </div>
 </section>`,
   };
@@ -713,6 +775,123 @@ export async function renderPostPreview(post) {
   return layout(ctx, postPage(ctx, post, { preview: true }));
 }
 
+/* ── The HTML sitemap (/sitemap/) ───────────────────────────────────── */
+/* Every public page, grouped, for people (and crawlers that follow links
+   rather than read XML). Listed in /sitemap.xml and linked in the footers. */
+function mainPages(ctx) {
+  const P = (path, key) => {
+    const sec = byPath.get(path);
+    return sec ? ctx.get(`${sec.prefix}.${key}`) : '';
+  };
+  return [
+    { href: '/', name: 'Home', text: ctx.get('seo.description') || ctx.get('hero.intro') },
+    { href: '/portfolio/', name: ctx.get('nav.portfolio') || 'Portfolio', text: P('/portfolio/', 'metaDescription') },
+    { href: '/blog/', name: ctx.get('nav.blog') || 'Blog', text: P('/blog/', 'metaDescription') },
+    { href: '/contact/', name: 'Contact', text: P('/contact/', 'metaDescription') },
+    { href: '/sitemap/', name: 'Sitemap', text: 'Every page on the site, in one list.' },
+  ].filter((p) => p.href === '/' || p.href === '/sitemap/' || byPath.has(p.href));
+}
+
+function sitemapPage(ctx) {
+  const path = '/sitemap/';
+  const trail = [home, { label: 'Sitemap', href: path }];
+  const svc = serviceLinks(ctx);
+  const posts = publishedPosts(ctx);
+  const main = mainPages(ctx);
+  const h1 = `Sitemap — every page on ${ctx.brand}`;
+  const group = (n, title, items) => `<section class="smap-group">
+    ${label(n, title)}
+    <ul class="smap-list">${items.join('')}</ul>
+  </section>`;
+  const row = (href, name, text = '', meta = '') =>
+    `<li><a class="smap-item" href="${esc(href)}"><span class="smap-name">${esc(name)}</span>${
+      meta ? `<span class="smap-meta">${meta}</span>` : ''
+    }${text ? `<span class="smap-text">${esc(text)}</span>` : ''}<span class="smap-go" aria-hidden="true">↗</span></a></li>`;
+  const body = `
+${hero({
+  trail,
+  shape: SHAPES.sitemap,
+  n: pad(main.length + svc.length + posts.length),
+  eyebrow: 'Sitemap',
+  h1,
+  lede: 'All of our pages in one place: the main pages, the four services and every article on the blog.',
+})}
+<section class="band"><div class="wrap smap">
+  ${group('A', 'Main pages', main.map((p) => row(p.href, p.name, p.text)))}
+  ${group('B', ctx.get('nav.services') || 'Services', svc.map((s) => row(s.href, s.name, s.summary)))}
+  ${group(
+    'C',
+    'Blog posts',
+    posts.length
+      ? posts.map((p) => row(`/blog/${p.slug}/`, p.title, p.excerpt, `<time datetime="${esc(p.date)}">${esc(fmtDate(p.date))}</time>`))
+      : ['<li class="smap-empty">No posts yet.</li>']
+  )}
+</div></section>`;
+  const jsonld = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: h1,
+      url: abs(path),
+      isPartOf: { '@id': WEBSITE_ID },
+      hasPart: [...main, ...svc, ...posts.map((p) => ({ href: `/blog/${p.slug}/`, name: p.title }))]
+        .filter((p) => p.href !== path)
+        .map((p) => ({ '@type': 'WebPage', name: p.name, url: abs(p.href) })),
+    },
+    crumbsLd(trail),
+  ];
+  return {
+    path,
+    title: `Sitemap — Every Page on ${ctx.brand}`,
+    description: `Every page on ${ctx.brand} in one list: web design, organic SEO, PPC and social media marketing services, our portfolio, contact details and every blog post.`,
+    body,
+    jsonld,
+    bodyClass: 'pg-sitemap',
+  };
+}
+
+/* ── /llms.txt (llmstxt.org): a plain-text map of the site for LLMs ─── */
+async function llmsTxt(req, res) {
+  const ctx = await getCtx();
+  const clean = (s) => String(s || '').replace(/\s+/g, ' ').trim();
+  const line = (href, name, text) => `- [${clean(name)}](${abs(href)})${clean(text) ? `: ${clean(text)}` : ''}`;
+  const main = mainPages(ctx).filter((p) => p.href !== '/');
+  const posts = publishedPosts(ctx);
+  const summary =
+    clean(ctx.get('seo.description')) ||
+    `${ctx.brand} is a web design and digital marketing agency: websites, organic SEO, PPC and social media marketing.`;
+  const about = clean(ctx.get('footer.about') || site.about);
+  const out = [
+    `# ${ctx.brand}`,
+    '',
+    `> ${summary}`,
+    '',
+    `${about} New projects start through the contact form or by email at ${site.email} (${clean(ctx.get('footer.response') || site.response).toLowerCase()}).`,
+    '',
+    '## Services',
+    '',
+    ...serviceLinks(ctx).map((s) => line(s.href, s.name, s.summary)),
+    '',
+    '## Portfolio & company',
+    '',
+    line('/', `${ctx.brand} — home`, ctx.get('hero.intro')),
+    ...main.map((p) => line(p.href, p.name, p.text)),
+    '',
+    '## Blog',
+    '',
+    ...(posts.length ? posts.map((p) => line(`/blog/${p.slug}/`, p.title, p.excerpt || p.metaDescription)) : ['- No posts yet.']),
+    '',
+    '## Optional',
+    '',
+    line('/sitemap.xml', 'XML sitemap', 'Every URL with its last-modified date.'),
+    line('/blog/feed.xml', 'Blog RSS feed', 'The latest posts in full.'),
+    '',
+  ];
+  res.set('Content-Type', 'text/plain; charset=utf-8');
+  res.set('Cache-Control', 'public, max-age=0, s-maxage=300');
+  res.send(out.join('\n'));
+}
+
 /* ── XML: sitemap + RSS ─────────────────────────────────────────────── */
 const xmlEsc = (s) => String(s ?? '').replace(/[<>&'"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' })[c]);
 
@@ -721,6 +900,7 @@ async function sitemap(req, res) {
   const urls = [
     { loc: abs('/'), priority: '1.0' },
     ...pageSections.map((s) => ({ loc: abs(s.page.path), priority: s.page.template === 'service' ? '0.9' : '0.7' })),
+    { loc: abs('/sitemap/'), priority: '0.3' },
     ...publishedPosts(ctx).map((p) => ({ loc: abs(`/blog/${p.slug}/`), lastmod: String(p.updated || p.date).slice(0, 10), priority: '0.6' })),
   ];
   res.set('Content-Type', 'application/xml; charset=utf-8');
@@ -767,16 +947,34 @@ ${posts
 }
 
 /* ── Router ─────────────────────────────────────────────────────────── */
+/* Retired and renamed URLs → their new home (301, so links and rankings
+   carry over). Keys are matched with and without the trailing slash. */
+const LEGACY_REDIRECTS = {
+  '/services/': '/#services', // the Services hub (retired 2026-09-28)
+  '/team/': '/', // the Team page (retired 2026-09-28)
+  '/blog/why-a-beautiful-website-can-still-be-invisible/': '/blog/website-not-showing-on-google/',
+};
+
 export function pagesRouter() {
   const r = express.Router();
   const wrap = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+
+  r.use((req, res, next) => {
+    if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+    const to = LEGACY_REDIRECTS[req.path.endsWith('/') ? req.path : `${req.path}/`];
+    if (!to) return next();
+    const i = req.originalUrl.indexOf('?');
+    const qs = i >= 0 ? req.originalUrl.slice(i) : '';
+    const [base, hash] = to.split('#');
+    res.redirect(301, `${base}${qs}${hash ? `#${hash}` : ''}`);
+  });
 
   // /web-design → /web-design/ (and /blog/x → /blog/x/): one canonical URL
   r.use((req, res, next) => {
     if (req.method !== 'GET' && req.method !== 'HEAD') return next();
     const p = req.path;
     if (p.endsWith('/') || p.includes('.')) return next();
-    if (byPath.has(`${p}/`) || /^\/blog\/[^/]+$/.test(p)) {
+    if (byPath.has(`${p}/`) || p === '/sitemap' || /^\/blog\/[^/]+$/.test(p)) {
       return res.redirect(301, `${p}/${req.originalUrl.slice(p.length)}`);
     }
     next();
@@ -795,9 +993,19 @@ export function pagesRouter() {
 
   r.get('/blog/feed.xml', wrap(feed));
   r.get('/sitemap.xml', wrap(sitemap));
+  r.get('/llms.txt', wrap(llmsTxt));
+  r.get(
+    '/sitemap/',
+    wrap(async (req, res) => {
+      const ctx = await getCtx();
+      send(res, layout(ctx, sitemapPage(ctx)));
+    })
+  );
   r.get(
     '/blog/:slug/',
-    wrap(async (req, res) => {
+    wrap(async (req, res, next) => {
+      // /blog/<file>.webp etc. are static files (public/blog/), not posts
+      if (req.params.slug.includes('.')) return next();
       const ctx = await getCtx();
       const post = publishedPosts(ctx).find((p) => p.slug === req.params.slug);
       if (!post) return renderNotFound(req, res);
