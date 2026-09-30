@@ -134,8 +134,10 @@ carry a `sel` target (cms/fields.js) for exactly that reason. Empty value =
 Apex, which is cPanel shared hosting). SMTP: `mail.privateemail.com`, 465,
 SSL, user = the address, pass = the mailbox password (Vercel env only,
 never committed). `CONTACT_TO` and `CONTACT_FROM` are the same address.
-Until those env vars are on the Vercel project, live submissions are only
-stored in /tmp (effectively lost).
+All of these are set on the Vercel project (Production/Preview/Development,
+SMTP_PASS sensitive) since 2026-09-30; a live POST to /api/contact
+delivered both the studio notification and the visitor receipt (checked
+over IMAP, mail.privateemail.com:993).
 
 **The contact form** (home drawer + /contact/): first name, last name,
 email, country (`<select>` from cms/countries.js — index.html's copy is
